@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" width="1080" height="1350">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14171f"/>
+      <stop offset="50%" stop-color="#0f1117"/>
+      <stop offset="100%" stop-color="#0a0b0e"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C05621"/>
+      <stop offset="100%" stop-color="#FBD38D"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1350" fill="url(#bgGrad)"/>
+  <rect width="1080" height="1350" fill="url(#grid)"/>
+
+  <!-- Border Frame -->
+  <rect x="36" y="36" width="1008" height="1278" rx="24" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  <rect x="44" y="44" width="992" height="1262" rx="18" fill="none" stroke="#C05621" stroke-opacity="0.25" stroke-width="1.5"/>
+
+  <!-- Top Brand Navigation Bar -->
+  <g transform="translate(80, 90)">
+    <!-- SWE Notebook Brand Seal -->
+    <rect x="0" y="0" width="84" height="34" rx="6" fill="#ffe600"/>
+    <text x="42" y="24" font-family="'JetBrains Mono', 'Courier New', monospace" font-size="18" font-weight="900" fill="#121316" text-anchor="middle" letter-spacing="1">SWE</text>
+    <text x="96" y="24" font-family="'Playfair Display', Georgia, serif" font-size="20" font-style="italic" font-weight="700" fill="#ffffff">notebook</text>
+    
+    <!-- Category Badge -->
+    <rect x="580" y="0" width="340" height="34" rx="17" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <text x="750" y="23" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#FBD38D" text-anchor="middle" letter-spacing="0.5">DATA STRUCTURES VISUALS</text>
+  </g>
+
+  <!-- Track Header Tag -->
+  <g transform="translate(80, 180)">
+    <rect x="0" y="0" width="12" height="12" rx="3" fill="#C05621"/>
+    <text x="24" y="11" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" fill="#94a3b8" letter-spacing="1">TRACK 6 — PROBLEM SOLVING & DSA</text>
+  </g>
+
+  <!-- Central Visual Showcase Card -->
+  <g transform="translate(80, 240)">
+    <rect width="920" height="720" rx="20" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.07)" stroke-width="2"/>
+    <rect x="0" y="0" width="920" height="6" fill="url(#accentGrad)"/>
+
+    <!-- Central Icon/Symbol Enclosure -->
+    <circle cx="460" cy="260" r="110" fill="rgba(0,0,0,0.4)" stroke="#C05621" stroke-width="3" stroke-dasharray="8 6" filter="url(#glow)"/>
+    <circle cx="460" cy="260" r="85" fill="#C05621" fill-opacity="0.15"/>
+    
+    <!-- Stylized Placeholder Graphic -->
+    <text x="460" y="278" font-family="'JetBrains Mono', monospace" font-size="52" font-weight="900" fill="#FBD38D" text-anchor="middle">#</text>
+
+    <!-- Item Identifier Code -->
+    <rect x="260" y="420" width="400" height="42" rx="8" fill="rgba(0,0,0,0.5)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <text x="460" y="447" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" fill="#ffe600" text-anchor="middle">dsa-trie</text>
+
+    <!-- Asset Title -->
+    <text x="460" y="525" font-family="'Playfair Display', Georgia, serif" font-size="34" font-weight="800" fill="#ffffff" text-anchor="middle">Prefix Trie for Autocomplete</text>
+
+    <!-- Asset Description -->
+    <text x="460" y="575" font-family="'Inter', sans-serif" font-size="17" font-weight="400" fill="#94a3b8" text-anchor="middle">Character branches spelling out dictionary words</text>
+    
+    <!-- Specs Meta Pill -->
+    <g transform="translate(310, 625)">
+      <rect x="0" y="0" width="300" height="34" rx="6" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)"/>
+      <text x="150" y="22" font-family="'JetBrains Mono', monospace" font-size="12" fill="#64748b" text-anchor="middle">ASPECT RATIO 4:5 (1080x1350)</text>
+    </g>
+  </g>
+
+  <!-- Bottom Visual Directive Guidance Footer -->
+  <g transform="translate(80, 1010)">
+    <rect width="920" height="240" rx="16" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
+    <rect x="0" y="0" width="6" height="240" rx="3" fill="#C05621"/>
+    
+    <text x="40" y="45" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="800" fill="#FBD38D" letter-spacing="1">RECOMMENDED BRANDING STYLE</text>
+    <text x="40" y="85" font-family="'Inter', sans-serif" font-size="18" font-weight="600" fill="#e2e8f0">Clean geometric nodes and pointers, high contrast, Amber / Sepia accent</text>
+    
+    <line x1="40" y1="120" x2="880" y2="120" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    
+    <text x="40" y="160" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" fill="#64748b">SWE NOTEBOOK ZERO TO HERO SERIES • VECTOR ASSET PLACEHOLDER</text>
+    <text x="40" y="195" font-family="'Inter', sans-serif" font-size="14" fill="#94a3b8">Ready for automated image harvesting, DALL-E 3, Midjourney v6, or manual vector design.</text>
+  </g>
+</svg>
