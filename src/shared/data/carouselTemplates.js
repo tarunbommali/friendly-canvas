@@ -1,5 +1,3 @@
-import React from 'react'
-
 export const CAROUSEL_TEMPLATES = {
   'hook-open': {
     name: 'Hook / Open',
@@ -98,8 +96,7 @@ export const CAROUSEL_TEMPLATES = {
         y: 180,
         width: 460,
         height: 180,
-        borderRadius: 16,
-        opacity: 0.95,
+        borderRadius: 12,
       },
       {
         type: 'icon',
@@ -288,7 +285,7 @@ export const CAROUSEL_TEMPLATES = {
         x: 35,
         y: 140,
         width: 220,
-        height: 270,
+        height: 273,
         borderRadius: 14,
       },
       {
@@ -298,7 +295,7 @@ export const CAROUSEL_TEMPLATES = {
         y: 155,
         width: 200,
         height: 230,
-        font: { family: 'Inter', size: 14, weight: 'normal', color: '#7F1D1D' },
+        font: { family: 'Inter', size: 14, weight: 'normal', color: '#991B1B' },
         align: 'left',
       },
       {
@@ -309,7 +306,7 @@ export const CAROUSEL_TEMPLATES = {
         x: 285,
         y: 140,
         width: 220,
-        height: 270,
+        height: 273,
         borderRadius: 14,
       },
       {
@@ -453,20 +450,23 @@ export const CAROUSEL_TEMPLATES = {
     ],
     config: {
       background: '#FFFFFF',
-      backgroundType: 'gradient',
+      backgroundType: 'dots',
       currentSlideNo: 6,
       totalSlides: 7,
     },
   },
 
-  'next-up': {
-    name: 'Next Up / Closing CTA',
-    badge: 'Slide 7 · Brand Seal & Closer',
-    icon: '🏵️',
-    description: 'Official circular SWE brand seal + upcoming post preview card + follow CTA.',
+  'series-finale': {
+    name: 'Series Finale',
+    badge: 'Slide 7 · Outro & CTA',
+    icon: '🚀',
+    description: 'High-converting closing slide with next episode teaser and bookmark CTA.',
     elements: [
       {
-        type: 'logo',
+        type: 'icon',
+        icon: 'rocket',
+        size: 70,
+        color: '#1E5FA8',
         x: 235,
         y: 80,
         width: 70,
@@ -539,411 +539,4 @@ export const CAROUSEL_TEMPLATES = {
       },
     },
   },
-
-  'timeline-ribbon': {
-    name: 'Timeline Ribbon',
-    badge: 'Slide 4-5 · Milestones',
-    icon: '📅',
-    description: 'Continuous chronological milestone line with event marker nodes.',
-    elements: [
-      {
-        type: 'badge',
-        content: '[ TIMELINE ]',
-        x: 40,
-        y: 70,
-        width: 120,
-        height: 28,
-        font: { family: 'monospace', size: 11, weight: 'bold', color: '#1E5FA8' },
-        backgroundColor: 'rgba(30, 95, 168, 0.1)',
-        borderColor: 'rgba(30, 95, 168, 0.3)',
-      },
-      {
-        type: 'text',
-        content: 'Evolution of Modern Computing',
-        x: 40,
-        y: 110,
-        width: 460,
-        height: 50,
-        font: { family: 'Georgia', size: 28, weight: 'bold', color: '#0f172a' },
-        align: 'left',
-        highlight: true,
-        highlightColor: '#A9D0F5',
-      },
-      {
-        type: 'shape',
-        shape: 'rectangle',
-        fill: 'rgba(30, 95, 168, 0.15)',
-        stroke: 'none',
-        x: 60,
-        y: 260,
-        width: 420,
-        height: 4,
-        borderRadius: 2,
-      },
-      {
-        type: 'shape',
-        shape: 'rectangle',
-        fill: '#1E5FA8',
-        stroke: '2px solid #FFFFFF',
-        x: 90,
-        y: 254,
-        width: 16,
-        height: 16,
-        borderRadius: 8,
-      },
-      {
-        type: 'text',
-        content: '1837\nAnalytical Engine',
-        x: 50,
-        y: 280,
-        width: 100,
-        height: 60,
-        font: { family: 'Inter', size: 11, weight: 'bold', color: '#1E293B' },
-        align: 'center',
-      },
-      {
-        type: 'shape',
-        shape: 'rectangle',
-        fill: '#1E5FA8',
-        stroke: '2px solid #FFFFFF',
-        x: 220,
-        y: 254,
-        width: 16,
-        height: 16,
-        borderRadius: 8,
-      },
-      {
-        type: 'text',
-        content: '1945\nENIAC & Von Neumann',
-        x: 170,
-        y: 280,
-        width: 120,
-        height: 60,
-        font: { family: 'Inter', size: 11, weight: 'bold', color: '#1E293B' },
-        align: 'center',
-      },
-      {
-        type: 'shape',
-        shape: 'rectangle',
-        fill: '#1E5FA8',
-        stroke: '2px solid #FFFFFF',
-        x: 350,
-        y: 254,
-        width: 16,
-        height: 16,
-        borderRadius: 8,
-      },
-      {
-        type: 'text',
-        content: '1971\nMicroprocessors',
-        x: 300,
-        y: 280,
-        width: 110,
-        height: 60,
-        font: { family: 'Inter', size: 11, weight: 'bold', color: '#1E293B' },
-        align: 'center',
-      },
-      {
-        type: 'shape',
-        shape: 'rectangle',
-        fill: '#0284C7',
-        stroke: '2px solid #FFFFFF',
-        x: 440,
-        y: 254,
-        width: 16,
-        height: 16,
-        borderRadius: 8,
-      },
-      {
-        type: 'text',
-        content: '2025+\nAutonomous AI',
-        x: 390,
-        y: 280,
-        width: 110,
-        height: 60,
-        font: { family: 'Inter', size: 11, weight: 'bold', color: '#0284C7' },
-        align: 'center',
-      },
-      {
-        type: 'text',
-        content: 'Each breakthrough in computing reduced mechanical friction and amplified human cognition.',
-        x: 40,
-        y: 380,
-        width: 460,
-        height: 60,
-        font: { family: 'Inter', size: 14, weight: '500', color: '#475569' },
-        align: 'left',
-      },
-    ],
-    config: {
-      background: '#FFFFFF',
-      backgroundType: 'dots',
-      currentSlideNo: 5,
-      totalSlides: 7,
-    },
-  },
-
-  'architecture-blueprint': {
-    name: 'Architecture Blueprint',
-    badge: 'Slide 3-5 · System Design',
-    icon: '🏗️',
-    description: 'Clean system design nodes with directional request/response flow.',
-    elements: [
-      {
-        type: 'badge',
-        content: '[ SYSTEM BLUEPRINT ]',
-        x: 40,
-        y: 70,
-        width: 160,
-        height: 28,
-        font: { family: 'monospace', size: 11, weight: 'bold', color: '#0E8FA0' },
-        backgroundColor: 'rgba(14, 143, 160, 0.1)',
-        borderColor: 'rgba(14, 143, 160, 0.3)',
-      },
-      {
-        type: 'text',
-        content: 'Event-Driven Pipeline Architecture',
-        x: 40,
-        y: 110,
-        width: 460,
-        height: 50,
-        font: { family: 'Georgia', size: 28, weight: 'bold', color: '#0f172a' },
-        align: 'left',
-        highlight: true,
-        highlightColor: '#A9E7EE',
-      },
-      {
-        type: 'shape',
-        shape: 'rectangle',
-        fill: '#FFFFFF',
-        stroke: '1.5px solid #0E8FA0',
-        x: 40,
-        y: 170,
-        width: 120,
-        height: 90,
-        borderRadius: 12,
-      },
-      {
-        type: 'text',
-        content: '🌐\nAPI Gateway',
-        x: 45,
-        y: 185,
-        width: 110,
-        height: 60,
-        font: { family: 'Inter', size: 12, weight: 'bold', color: '#0f172a' },
-        align: 'center',
-      },
-      {
-        type: 'icon',
-        icon: 'arrow',
-        size: 24,
-        color: '#0E8FA0',
-        x: 170,
-        y: 205,
-        width: 24,
-        height: 24,
-      },
-      {
-        type: 'shape',
-        shape: 'rectangle',
-        fill: '#FFFFFF',
-        stroke: '1.5px solid #0E8FA0',
-        x: 205,
-        y: 170,
-        width: 130,
-        height: 90,
-        borderRadius: 12,
-      },
-      {
-        type: 'text',
-        content: '⚙️\nWorker Queue',
-        x: 210,
-        y: 185,
-        width: 120,
-        height: 60,
-        font: { family: 'Inter', size: 12, weight: 'bold', color: '#0f172a' },
-        align: 'center',
-      },
-      {
-        type: 'icon',
-        icon: 'arrow',
-        size: 24,
-        color: '#0E8FA0',
-        x: 345,
-        y: 205,
-        width: 24,
-        height: 24,
-      },
-      {
-        type: 'shape',
-        shape: 'rectangle',
-        fill: '#FFFFFF',
-        stroke: '1.5px solid #0E8FA0',
-        x: 380,
-        y: 170,
-        width: 120,
-        height: 90,
-        borderRadius: 12,
-      },
-      {
-        type: 'text',
-        content: '🗃️\nPrimary DB',
-        x: 385,
-        y: 185,
-        width: 110,
-        height: 60,
-        font: { family: 'Inter', size: 12, weight: 'bold', color: '#0f172a' },
-        align: 'center',
-      },
-      {
-        type: 'text',
-        content: 'Decoupling ingress from batch processing prevents thread pool starvation under bursty traffic.',
-        x: 40,
-        y: 300,
-        width: 460,
-        height: 60,
-        font: { family: 'Inter', size: 14, weight: '500', color: '#334155' },
-        align: 'left',
-      },
-    ],
-    config: {
-      background: '#FFFFFF',
-      backgroundType: 'grid',
-      currentSlideNo: 3,
-      totalSlides: 7,
-    },
-  },
-
-  'matrix-replace': {
-    name: 'Matrix Replace',
-    badge: 'Slide 4 · Transformation',
-    icon: '🔄',
-    description: '2-column role-to-AI replacement matrix with arrows and indicator icons.',
-    elements: [
-      {
-        type: 'badge',
-        content: '[ PARADIGM SHIFT ]',
-        x: 40,
-        y: 70,
-        width: 160,
-        height: 28,
-        font: { family: 'monospace', size: 11, weight: 'bold', color: '#C84B31' },
-        backgroundColor: 'rgba(200, 75, 49, 0.1)',
-        borderColor: 'rgba(200, 75, 49, 0.3)',
-      },
-      {
-        type: 'text',
-        content: 'How AI Upgrades SWE Workflows',
-        x: 40,
-        y: 110,
-        width: 460,
-        height: 50,
-        font: { family: 'Georgia', size: 28, weight: 'bold', color: '#0f172a' },
-        align: 'left',
-        highlight: true,
-        highlightColor: '#FAD4C0',
-      },
-      {
-        type: 'shape',
-        shape: 'rectangle',
-        fill: '#FEF2F2',
-        stroke: '1px solid #FECACA',
-        x: 40,
-        y: 170,
-        width: 200,
-        height: 180,
-        borderRadius: 12,
-      },
-      {
-        type: 'text',
-        content: '❌ Legacy Approach\n\n• Hand-written boilerplate\n• Manual regex parsing\n• Fragile mock fixtures\n• 4h troubleshooting',
-        x: 50,
-        y: 185,
-        width: 180,
-        height: 150,
-        font: { family: 'Inter', size: 12, weight: '500', color: '#991B1B' },
-        align: 'left',
-      },
-      {
-        type: 'shape',
-        shape: 'rectangle',
-        fill: '#F0FDF4',
-        stroke: '1px solid #BBF7D0',
-        x: 300,
-        y: 170,
-        width: 200,
-        height: 180,
-        borderRadius: 12,
-      },
-      {
-        type: 'text',
-        content: '✅ Agentic Workflow\n\n• Intent-driven code gen\n• AST semantic transforms\n• Auto-derived unit suites\n• 30s root-cause trace',
-        x: 310,
-        y: 185,
-        width: 180,
-        height: 150,
-        font: { family: 'Inter', size: 12, weight: '500', color: '#166534' },
-        align: 'left',
-      },
-      {
-        type: 'text',
-        content: 'The leverage shift: You evolve from typing syntax to validating architecture and edge-case contracts.',
-        x: 40,
-        y: 380,
-        width: 460,
-        height: 60,
-        font: { family: 'Inter', size: 14, weight: '500', color: '#334155' },
-        align: 'left',
-      },
-    ],
-    config: {
-      background: '#FFFFFF',
-      backgroundType: 'solid',
-      currentSlideNo: 4,
-      totalSlides: 7,
-    },
-  },
-}
-
-export default function SlideTemplates({ onLoadTemplate, trackColor = { primary: '#1E5FA8', accent: '#A9D0F5' } }) {
-  return (
-    <div className="flex flex-col gap-4 font-sans select-none">
-      <div>
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
-          Carousel Templates
-        </h3>
-        <p className="text-[11px] text-slate-500">
-          Load production-ready slide LayoutCategorys with one click.
-        </p>
-      </div>
-
-      <div className="flex flex-col gap-2.5">
-        {Object.entries(CAROUSEL_TEMPLATES).map(([key, template]) => (
-          <button
-            key={key}
-            type="button"
-            className="flex items-start gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 transition-all border border-white/5 hover:border-cyan-400/40 text-left group cursor-pointer"
-            onClick={() => onLoadTemplate(template)}
-          >
-            <span className="text-xl p-2 rounded-lg bg-black/40 border border-white/10">
-              {template.icon}
-            </span>
-            <div className="flex flex-col flex-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-100 group-hover:text-cyan-300">
-                  {template.name}
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-cyan-400 font-semibold mt-0.5">
-                {template.badge}
-              </span>
-              <span className="text-[11px] text-slate-400 font-normal mt-1 leading-snug">
-                {template.description}
-              </span>
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  )
 }

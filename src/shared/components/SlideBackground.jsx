@@ -10,6 +10,13 @@ export function getStoredGlobalBackground() {
   }
 }
 
+export function setStoredGlobalBackground(value) {
+  try {
+    localStorage.setItem(GLOBAL_BG_KEY, value)
+    window.dispatchEvent(new Event('storage-bg-update'))
+  } catch {}
+}
+
 /**
  * getBackgroundPreset(type, trackColor, options)
  * ------------------------------------------------
@@ -219,7 +226,7 @@ function GradientLayer({ config }) {
     angle = 135,
     stops = [
       { color: '#ffffff', at: '0%' },
-      { color: 'var(--slide-accent)', at: '100%' },
+      { color: '#A9D0F5', at: '100%' },
     ],
   } = config
 
@@ -281,7 +288,7 @@ function svgDataUri(inner) {
 }
 
 function TextureLayer({ config }) {
-  const { style = 'grain', color = 'var(--slide-primary)', opacity = 0.4, base = '#FFFFFF' } = config
+  const { style = 'grain', color = '#1E5FA8', opacity = 0.4, base = '#FFFFFF' } = config
   const generator = TEXTURE_SVG[style] || TEXTURE_SVG.grain
   const resolvedColor = color.startsWith('var(') ? '#8a8d94' : color
   const dataUri = generator(resolvedColor)
@@ -333,7 +340,7 @@ const BLOB_PATHS = [
 
 function BlobsLayer({ config, seed }) {
   const {
-    colors = ['var(--slide-primary)', 'var(--slide-accent)'],
+    colors = ['#1E5FA8', '#A9D0F5'],
     count = 3,
     opacity = 0.2,
     blur = 40,
@@ -380,7 +387,7 @@ function BlobsLayer({ config, seed }) {
 function PatternLayer({ config }) {
   const {
     style = 'dots',
-    color = 'var(--slide-primary)',
+    color = '#1E5FA8',
     opacity = 0.14,
     spacing = 20,
     base = '#FFFFFF',

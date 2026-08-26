@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { BACKGROUND_TYPE_OPTIONS } from '../../../shared/components/SlideBackground'
-import { getLayoutOptions } from '../../layout-library/registry/LayoutRegistry'
 
-const LAYOUT_OPTIONS = getLayoutOptions()
+const LAYOUT_OPTIONS = [
+  { id: 'hook-open', name: 'Hook / Open — Bold Question or Statement' },
+  { id: 'concept-explain', name: 'Concept / Explain — Icon + 1-2 Sentences' },
+  { id: 'process-flow', name: 'Process / Flow — Step-by-Step Visual' },
+  { id: 'comparison', name: 'Comparison — Split-Screen Two Columns' },
+  { id: 'recap-close', name: 'Recap / Close — Summary Checklist or CTA' },
+]
 
 export function SlideEditor({
   slide,

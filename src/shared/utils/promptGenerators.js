@@ -22,15 +22,7 @@ const BACKGROUND_PROMPT_DESCRIPTIONS = {
   blurPhoto: 'Softly blurred photographic ambient backdrop with 75% clean white overlay.',
 }
 
-const LAYOUT_LayoutCategory_DESCRIPTIONS = {
-  'hook-open': 'LayoutCategory: hook-open — Scroll-stopping asymmetric big-type layout with glowing fluorescent accent highlighter block.',
-  'concept-explain': 'LayoutCategory: concept-explain — Split container layout pairing a centered technical vector diagram with a structured insight card.',
-  'process-flow': 'LayoutCategory: process-flow — Sequential 3-stage visual pipeline with connecting arrows, numbered badge pills, and concise step cards.',
-  'comparison': 'LayoutCategory: comparison — Dual-column side-by-side contrast card comparing trade-offs with distinct visual borders and indicator icons.',
-  'recap-close': 'LayoutCategory: recap-close — Scannable 4-point summary card with circular checkmark indicators and highlighted takeaways.',
-  'real-world': 'LayoutCategory: real-world — Production engineering moment featuring a dark-mode terminal window with syntax-highlighted code.',
-  'closing-cta': 'LayoutCategory: closing-cta — Branded final card featuring official SWE Notebook circular vector seal, Next-Up topic preview, and Save/Follow CTA.',
-}
+
 
 export function getBackgroundDescription(bgType, primary, accent) {
   const handler = BACKGROUND_PROMPT_DESCRIPTIONS[bgType] || BACKGROUND_PROMPT_DESCRIPTIONS.dots
@@ -86,32 +78,46 @@ export function generatePostMasterPrompt(post, trackColor) {
   const primary = trackColor?.primary || '#1E5FA8'
   const accent = trackColor?.accent || '#A9D0F5'
   const paletteName = trackColor?.palette || 'Curated'
-  const totalSlides = post.Slides?.length || 7
+  const slides = post.Slides || post.slides || []
+  const totalSlides = slides.length || 7
+  const trackName = post.Track || post.trackName || post.trackId || 'SWE Notebook'
+  const postTitle = post.PostTitle || post.title || 'Post'
 
   let prompt = `Please generate the content illustration & diagram asset pack for SWE Notebook:
 
-Track: ${post.Track} (${paletteName} Palette: Primary ${primary}, Accent ${accent})
-Post: "${post.PostTitle}"
+Track: ${trackName} (${paletteName} Palette: Primary ${primary}, Accent ${accent})
+Post: "${postTitle}"
 Total Asset Count: ${totalSlides} isolated visual assets
 
 Asset Manifest:
 `
 
-  post.Slides?.forEach((s) => {
+  slides.forEach((s, idx) => {
+    const slideNo = s.SlideNo || s.slideNo || idx + 1
+    const slideTitle = s.SlideTitle || s.title || s.content?.title || `Slide ${slideNo}`
+    const visualDirective = s.VisualDirective || s.visualDirective || s.content?.visualDirective || 'Minimal technical vector diagram'
+    const content = s.Content || s.body || (typeof s.content === 'string' ? s.content : s.content?.body) || ''
+
     prompt += `
---- Slide ${s.SlideNo}: "${s.SlideTitle}" ---
-Visual Directive: ${s.VisualDirective || 'Minimal technical vector diagram'}
-Concept: ${s.Content}
+--- Slide ${slideNo}: "${slideTitle}" ---
+Visual Directive: ${visualDirective}
+Concept: ${content}
 Asset Style: Isolated subject on transparent or clean #F8F7F4 background with ${primary} and ${accent} accents.
 `
   })
 
-  if (post.SuggestedAudio) {
-    prompt += `\nAudio Mood: ${post.SuggestedAudio.Mood} (Search: ${post.SuggestedAudio.SearchTerms?.join(', ')})`
+  const audio = post.SuggestedAudio || post.metadata?.suggestedAudio
+  if (audio) {
+    const mood = audio.Mood || audio.mood || (typeof audio === 'string' ? audio : '')
+    const searchTerms = audio.SearchTerms || audio.searchTerms || []
+    if (mood) {
+      prompt += `\nAudio Mood: ${mood}${searchTerms.length ? ` (Search: ${searchTerms.join(', ')})` : ''}`
+    }
   }
 
-  if (post.Hashtags?.length) {
-    prompt += `\nHashtags: ${post.Hashtags.join(' ')}`
+  const hashtags = post.Hashtags || post.metadata?.hashtags || []
+  if (hashtags.length) {
+    prompt += `\nHashtags: ${hashtags.join(' ')}`
   }
 
   return prompt
@@ -121,23 +127,34 @@ Asset Style: Isolated subject on transparent or clean #F8F7F4 background with ${
  * Generate Instagram Caption copy with slide breakdown and hashtags
  */
 export function generateCaptionText(post) {
-  let text = `${post.PostTitle} 🚀\n\n`
+  const postTitle = post.PostTitle || post.title || 'SWE Notebook'
+  const description = post.Description || post.metadata?.description || ''
+  const slides = post.Slides || post.slides || []
 
-  if (post.Description) {
-    text += `${post.Description}\n\n`
+  let text = `${postTitle} 🚀\n\n`
+
+  if (description) {
+    text += `${description}\n\n`
   }
 
   text += `📌 Slide Breakdown:\n`
-  post.Slides?.forEach((s) => {
-    text += `• Slide ${s.SlideNo}: ${s.SlideTitle}\n`
+  slides.forEach((s, idx) => {
+    const slideNo = s.SlideNo || s.slideNo || idx + 1
+    const slideTitle = s.SlideTitle || s.title || s.content?.title || `Slide ${slideNo}`
+    text += `• Slide ${slideNo}: ${slideTitle}\n`
   })
+
+  const hashtags = post.Hashtags || post.metadata?.hashtags || []
+  const hashtagStr = hashtags.length
+    ? hashtags.join(' ')
+    : '#softwareengineering #webdevelopment #programming #learncoding #developer'
 
   text += `
 💡 Save this post for quick reference and share with a fellow engineer!
 
 Follow for more daily SWE & AI visual breakdowns! 💻✨
 
-${post.Hashtags?.join(' ') || '#softwareengineering #webdevelopment #programming #learncoding #developer'}`
+${hashtagStr}`
 
   return text
 }

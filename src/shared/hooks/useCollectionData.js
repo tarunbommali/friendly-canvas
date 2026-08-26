@@ -1,75 +1,85 @@
 import { useMemo } from 'react'
 import data from '../data/data.json'
-import { getNormalizedPalette } from '../../utils/normalizedPalettes'
+import { getNormalizedPalette } from '../utils/normalizedPalettes'
 
 export function useCollectionData() {
-  const designSystem = data.designSystem || data.DesignSystem || {}
-  const visualGlossary = data.visualGlossary || data.VisualGlossary || {}
-  const chapterCovers = data.chapterCovers || data.ChapterCovers || []
-  const rawPosts = data.posts || data.Posts || []
+  const designSystem = data.designSystem || {}
+  const visualGlossary = data.visualGlossary || {}
+  const chapterCovers = data.chapterCovers || []
+  const rawPosts = data.posts || []
+  const rawPalettes = data.trackPalettes || {}
 
-  // Normalized collection themes / palettes map
   const { collectionThemes, collections, collectionIdMap } = useMemo(() => {
-    const rawPalettes = data.trackPalettes || designSystem.TrackColorPalettes || {}
     const palettesByCollectionName = {}
     const palettesByCollectionId = {}
     const collectionNamesList = []
 
-    if (data.trackPalettes) {
-      Object.entries(data.trackPalettes).forEach(([collectionId, item]) => {
-        const collectionName = item.name
-        const norm = getNormalizedPalette(collectionName, item)
-        palettesByCollectionName[collectionName] = norm
-        palettesByCollectionId[collectionId] = norm
-        palettesByCollectionId[String(parseInt(collectionId, 10))] = norm
-        collectionNamesList.push(collectionName)
+    const sortedEntries = Object.entries(rawPalettes)
+      .map(([collectionId, item]) => {
+        const match = item.name?.match(/\d+/)
+        const trackNo = match ? parseInt(match[0], 10) : parseInt(collectionId, 10)
+        return { collectionId, trackNo, item }
       })
-    } else {
-      Object.entries(rawPalettes).forEach(([collectionName, rawPalette], idx) => {
-        const collectionId = String(idx + 1).padStart(2, '0')
-        const norm = getNormalizedPalette(collectionName, rawPalette)
-        palettesByCollectionName[collectionName] = norm
-        palettesByCollectionId[collectionId] = norm
-        palettesByCollectionId[String(idx + 1)] = norm
-        collectionNamesList.push(collectionName)
-      })
-    }
+      .sort((a, b) => a.trackNo - b.trackNo)
+
+    sortedEntries.forEach(({ collectionId, trackNo, item }) => {
+      const collectionName = item.name
+      const norm = getNormalizedPalette(collectionName, item)
+      palettesByCollectionName[collectionName] = norm
+      palettesByCollectionId[collectionId] = norm
+      palettesByCollectionId[String(trackNo)] = norm
+      palettesByCollectionId[String(trackNo).padStart(2, '0')] = norm
+      collectionNamesList.push(collectionName)
+    })
 
     return {
       collectionThemes: palettesByCollectionName,
       collectionIdMap: palettesByCollectionId,
       collections: collectionNamesList,
     }
-  }, [designSystem])
+  }, [rawPalettes])
 
-  // Normalized designs / posts with aliases
   const designs = useMemo(() => {
     return rawPosts.map((p, idx) => {
-      const collectionId = p.trackId || p.track?.id || String(p.TrackNo || 1).padStart(2, '0')
+      const collectionId = p.trackId || String(idx + 1).padStart(2, '0')
       const collectionName =
         collectionIdMap[collectionId]?.name ||
-        p.track?.name ||
-        p.Track ||
         collections[parseInt(collectionId, 10) - 1] ||
         'Collection 1'
-      const designNo = p.postNo || p.PostNo || idx + 1
-      const title = p.title || p.PostTitle || `Design ${designNo}`
-      const slides = p.slides || p.Slides || []
+      const designNo = p.postNo || idx + 1
+      const title = p.title || `Design ${designNo}`
+      const slides = p.slides || []
 
-      // Normalize slides
-      const normalizedSlides = slides.map((s, sIdx) => ({
-        ...s,
-        slideNo: s.slideNo || s.SlideNo || sIdx + 1,
-        SlideNo: s.slideNo || s.SlideNo || sIdx + 1,
-        title: s.content?.title || s.SlideTitle || `Slide ${sIdx + 1}`,
-        SlideTitle: s.content?.title || s.SlideTitle || `Slide ${sIdx + 1}`,
-        body: s.content?.body || s.Content || '',
-        Content: s.content?.body || s.Content || '',
-        visualDirective: s.content?.visualDirective || s.VisualDirective || '',
-        VisualDirective: s.content?.visualDirective || s.VisualDirective || '',
-        archetypeKey: s.layout?.id || s.Layout || 'concept-explain',
-        Layout: s.layout?.id || s.Layout || 'concept-explain',
-      }))
+      const normalizedSlides = slides.map((s, sIdx) => {
+        const slideNo = s.slideNo || sIdx + 1
+        const slideTitle = s.content?.title || `Slide ${sIdx + 1}`
+        const body = s.content?.body || ''
+        const visualDirective = s.content?.visualDirective || ''
+        const layoutId = s.layout?.id || 'concept-explain'
+        return {
+          ...s,
+          slideNo,
+          SlideNo: slideNo,
+          title: slideTitle,
+          SlideTitle: slideTitle,
+          body,
+          Content: body,
+          visualDirective,
+          VisualDirective: visualDirective,
+          archetypeKey: layoutId,
+          Layout: layoutId,
+        }
+      })
+
+      const palette =
+        collectionIdMap[collectionId] ||
+        collectionThemes[collectionName] ||
+        { primary: '#C84B31', accent: '#FAD4C0' }
+
+      const audio = p.metadata?.suggestedAudio
+      const suggestedAudio = audio
+        ? { Mood: audio.mood, SearchTerms: audio.searchTerms || [], Note: audio.note }
+        : { Mood: 'Curious / Educational', SearchTerms: ['tech beats', 'coding focus'] }
 
       return {
         ...p,
@@ -81,31 +91,27 @@ export function useCollectionData() {
         postNo: designNo,
         slides: normalizedSlides,
         collectionName,
+        trackColor: palette,
+        palette,
         // Legacy props for existing components
         Track: collectionName,
         TrackNo: parseInt(collectionId, 10),
         PostNo: designNo,
         PostTitle: title,
         Slides: normalizedSlides,
-        Description: p.metadata?.description || p.Description || '',
-        Hashtags: p.metadata?.hashtags || p.Hashtags || [],
-        SuggestedAudio: p.metadata?.suggestedAudio || p.SuggestedAudio || {
-          Mood: 'Curious / Educational',
-          SearchTerms: ['tech beats', 'coding focus'],
-        },
+        Description: p.metadata?.description || '',
+        Hashtags: p.metadata?.hashtags || [],
+        SuggestedAudio: suggestedAudio,
       }
     })
-  }, [rawPosts, collectionIdMap, collections])
+  }, [rawPosts, collectionIdMap, collectionThemes, collections])
 
   const designsByCollection = useMemo(() => {
     const map = {}
-    collections.forEach((c) => {
-      map[c] = []
-    })
+    collections.forEach((c) => { map[c] = [] })
     designs.forEach((d) => {
-      const cName = d.collectionName
-      if (!map[cName]) map[cName] = []
-      map[cName].push(d)
+      if (!map[d.collectionName]) map[d.collectionName] = []
+      map[d.collectionName].push(d)
     })
     return map
   }, [collections, designs])
@@ -114,13 +120,12 @@ export function useCollectionData() {
     designSystem,
     visualGlossary,
     chapterCovers,
-    // Modern SaaS Terminology
     collections,
     collectionThemes,
     collectionIdMap,
     designs,
     designsByCollection,
-    // Backward Compatibility
+    // Backward compatibility
     tracks: collections,
     trackPalettes: collectionThemes,
     trackIdMap: collectionIdMap,

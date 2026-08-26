@@ -50,13 +50,26 @@ export function SlideThumbnails() {
 
               {/* Thumbnail Mini Canvas Preview */}
               <div
-                className="w-full aspect-square rounded-lg border border-slate-800 flex items-center justify-center overflow-hidden relative"
+                className="w-full aspect-[4/5] rounded-lg border border-slate-800 flex flex-col justify-between p-2 overflow-hidden relative shadow-inner"
                 style={{ backgroundColor: slide.backgroundColor || "#ffffff" }}
               >
-                <div className="text-[10px] font-medium text-slate-400 opacity-60 pointer-events-none px-2 text-center">
-                  {slide.elements.find((e) => e.type === "text")?.text ||
-                    `Slide ${index + 1}`}
+                <div className="space-y-1">
+                  <div className="text-[9px] font-bold text-slate-900 line-clamp-2 leading-tight">
+                    {slide.elements.find((e) => e.type === "headline" || e.id?.includes("head") || e.id?.includes("title"))?.text ||
+                     slide.elements.find((e) => e.type === "headline" || e.id?.includes("head") || e.id?.includes("title"))?.content ||
+                     `Slide ${index + 1}`}
+                  </div>
+                  <div className="text-[7.5px] text-slate-600 line-clamp-3 leading-tight opacity-75">
+                    {slide.elements.find((e) => e.type === "text" && !e.id?.includes("head") && !e.id?.includes("title"))?.text ||
+                     slide.elements.find((e) => e.type === "text" && !e.id?.includes("head") && !e.id?.includes("title"))?.content ||
+                     ""}
+                  </div>
                 </div>
+                {slide.visualDirective && (
+                  <div className="text-[6.5px] text-amber-700 bg-amber-50 border border-amber-200/60 p-0.5 rounded line-clamp-1 font-mono">
+                    💡 AI Image Prompt Available
+                  </div>
+                )}
               </div>
 
               {/* Quick Hover Actions */}

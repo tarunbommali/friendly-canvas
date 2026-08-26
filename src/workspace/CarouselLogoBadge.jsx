@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useId } from 'react'
 
 export default function CarouselLogoBadge({ size = 36, className = '' }) {
+  const gradId = useId()
+  const glowId = useId()
+
   return (
     <div
       className={`flex items-center justify-center shrink-0 transition-transform duration-150 group-hover:scale-105 ${className}`}
@@ -15,12 +18,12 @@ export default function CarouselLogoBadge({ size = 36, className = '' }) {
         style={{ display: 'block', overflow: 'visible' }}
       >
         <defs>
-          <linearGradient id="carouselGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#06b6d4" />
             <stop offset="50%" stopColor="#3b82f6" />
             <stop offset="100%" stopColor="#6366f1" />
           </linearGradient>
-          <filter id="badgeGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <filter id={glowId} x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="2" stdDeviation="4" floodOpacity="0.25" floodColor="#06b6d4" />
           </filter>
         </defs>
@@ -70,8 +73,8 @@ export default function CarouselLogoBadge({ size = 36, className = '' }) {
           width="36"
           height="54"
           rx="7"
-          fill="url(#carouselGrad)"
-          filter="url(#badgeGlow)"
+          fill={`url(#${gradId})`}
+          filter={`url(#${glowId})`}
         />
 
         {/* Inner slide detail line */}

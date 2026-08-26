@@ -1,4 +1,4 @@
-import { Rect, Circle, IText, FabricImage, FabricObject } from "fabric";
+import { Rect, Circle, Textbox, FabricImage, FabricObject } from "fabric";
 
 // High-visibility dark selection controls and resize handles
 export const SELECTION_CONTROL_CONFIG = {
@@ -37,7 +37,10 @@ export function createFabricObject(element) {
         fill: element.fill,
         stroke: element.stroke || "#000000",
         strokeWidth: element.strokeWidth || 0,
+        strokeDashArray: element.strokeDashArray || null,
         angle: element.rotation || 0,
+        originX: element.originX || "left",
+        originY: element.originY || "top",
         data: { id: element.id },
         ...SELECTION_CONTROL_CONFIG,
       });
@@ -55,14 +58,21 @@ export function createFabricObject(element) {
         ...SELECTION_CONTROL_CONFIG,
       });
 
+    case "headline":
+    case "badge":
     case "text":
-      return new IText(element.text || "", {
+      return new Textbox(element.text || element.content || "", {
         left: element.x,
         top: element.y,
+        width: element.width || 840,
         fontSize: element.fontSize || 32,
         fontFamily: element.fontFamily || "Inter",
         fill: element.fill || "#000000",
         angle: element.rotation || 0,
+        originX: element.originX || "left",
+        originY: element.originY || "top",
+        textAlign: element.textAlign || "left",
+        splitByGrapheme: false,
         data: { id: element.id },
         ...SELECTION_CONTROL_CONFIG,
       });

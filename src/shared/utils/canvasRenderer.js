@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import html2canvas from 'html2canvas'
-import SlideRenderer from '../projects/track-content/components/SlideRenderer'
+import SlideRenderer from '../../projects/track-content/components/SlideRenderer'
 
 // ── Persistent 1×1 canvas for reliable sRGB color conversion ───────────────
 let colorCtx = null
@@ -127,8 +127,11 @@ export async function renderSlideToCanvas({
     })
   )
 
-  // Give React time to render and fonts to compute layout
-  await new Promise((resolve) => setTimeout(resolve, 80))
+  // Ensure document fonts and layout frame are fully ready
+  await Promise.all([
+    document.fonts ? document.fonts.ready : Promise.resolve(),
+    new Promise((resolve) => setTimeout(resolve, 80)),
+  ])
 
   try {
     const targetElement = container.firstElementChild || container

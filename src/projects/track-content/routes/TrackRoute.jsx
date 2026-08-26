@@ -2,7 +2,7 @@ import React from 'react'
 import { Outlet, useOutletContext, useParams } from 'react-router-dom'
 import NotFoundPage from '../pages/NotFoundPage'
 
-export default function TrackLayout() {
+export default function TrackRoute() {
   const context = useOutletContext()
   const { trackId } = useParams()
   const { tracks } = context

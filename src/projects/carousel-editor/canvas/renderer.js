@@ -1,4 +1,6 @@
+import { Pattern } from "fabric";
 import { createFabricObject } from "./fabricAdapter";
+import { getPatternDataUrl } from "./patterns";
 
 /**
  * Slide Renderer: Synchronizes a slide JSON document onto the Fabric Canvas.
@@ -14,10 +16,34 @@ export function renderSlide(fabricCanvas, slide, metadata) {
 
   fabricCanvas.setDimensions({
     width: metadata.width || 1080,
-    height: metadata.height || 1080,
+    height: metadata.height || 1350,
   });
 
-  fabricCanvas.backgroundColor = slide.backgroundColor || "#ffffff";
+  const bgColor = slide.backgroundColor || "#ffffff";
+  fabricCanvas.backgroundColor = bgColor;
+
+  // Add pattern background if configured
+  const patternType = slide.bgPattern || metadata.bgPattern || "solid";
+  if (patternType && patternType !== "solid") {
+    const dataUrl = getPatternDataUrl(patternType, "#94a3b8");
+    if (dataUrl) {
+      const imgEl = new Image();
+      imgEl.crossOrigin = "anonymous";
+      imgEl.src = dataUrl;
+      imgEl.onload = () => {
+        try {
+          const pattern = new Pattern({
+            source: imgEl,
+            repeat: "repeat",
+          });
+          fabricCanvas.backgroundColor = pattern;
+          fabricCanvas.renderAll();
+        } catch (e) {
+          console.warn("Pattern creation failed:", e);
+        }
+      };
+    }
+  }
 
   const sortedElements = [...(slide.elements || [])].sort(
     (a, b) => (a.zIndex || 0) - (b.zIndex || 0)

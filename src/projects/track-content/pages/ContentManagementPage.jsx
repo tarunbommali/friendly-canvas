@@ -18,6 +18,7 @@ import {
 import { useProjectData } from '../hooks/useProjectData'
 import { useTrackData } from '../../../shared/hooks/useTrackData'
 import CategoryIcon from '../../../shared/components/CategoryIcon'
+import TrackSidebar from '../components/TrackSidebar'
 
 export default function ContentManagementPage() {
   const { projectSlug = 'swe-notebook', trackId = '1', postId = '1' } = useParams()
@@ -26,41 +27,46 @@ export default function ContentManagementPage() {
   const { project, tracks, updateSlideContent } = useProjectData(projectSlug)
   const { trackPalettes } = useTrackData()
 
-  const [expandedTracks, setExpandedTracks] = useState(() => new Set([trackId || '1']))
   const [activeTab, setActiveTab] = useState('content') // 'content' | 'storyboard' | 'assets' | 'music'
-  const [search, setSearch] = useState('')
   const [toastMsg, setToastMsg] = useState('')
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
 
   const showToast = (msg) => {
     setToastMsg(msg)
     setTimeout(() => setToastMsg(''), 2500)
   }
 
-  const activeTrack = tracks?.find((t) => t.id === String(trackId)) || tracks?.[0]
-  const activePost = activeTrack?.posts?.find((p) => p.id === String(postId)) || activeTrack?.posts?.[0]
+  const activeTrack = tracks?.find((t) => String(t.id) === String(trackId)) || tracks?.[0]
+  const activePost = activeTrack?.posts?.find((p) => String(p.id) === String(postId)) || activeTrack?.posts?.[0]
 
-  const filteredTracks = useMemo(() => {
-    if (!search) return tracks
-    const q = search.toLowerCase()
-    return tracks
-      ?.map((t) => ({
-        ...t,
-        posts: t.posts.filter((p) => p.title.toLowerCase().includes(q)),
-      }))
-      .filter((t) => t.title.toLowerCase().includes(q) || t.posts.length > 0)
-  }, [tracks, search])
+  const sidebarTracks = useMemo(() => {
+    return tracks?.map((t) => t.title || t.name) || []
+  }, [tracks])
 
-  const toggleTrack = (id) => {
-    setExpandedTracks((prev) => {
-      const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
-      return next
+  const postsByTrackMap = useMemo(() => {
+    const map = {}
+    tracks?.forEach((t) => {
+      const trackName = t.title || t.name
+      map[trackName] = t.posts?.map((p, pIdx) => ({
+        Track: trackName,
+        PostNo: p.postNo || pIdx + 1,
+        PostTitle: p.title || p.PostTitle,
+        id: p.id,
+        trackId: t.id,
+      })) || []
     })
-  }
+    return map
+  }, [tracks])
 
-  const goToPost = (tId, pId) => {
-    navigate(`/${projectSlug}/content/track/${tId}/post/${pId}`)
-  }
+  const formattedActivePost = useMemo(() => {
+    if (!activePost || !activeTrack) return null
+    return {
+      Track: activeTrack.title || activeTrack.name,
+      PostNo: activePost.postNo || 1,
+      PostTitle: activePost.title,
+      id: activePost.id,
+    }
+  }, [activeTrack, activePost])
 
   return (
     <div className="flex h-[calc(100vh-53px)] w-full bg-[#0b0d13] text-slate-100 font-sans overflow-hidden select-none">
@@ -71,94 +77,33 @@ export default function ContentManagementPage() {
         </div>
       )}
 
-      {/* ── LEFT: Track > Post > Slide Hierarchy ── */}
-      <aside className="w-80 bg-[#141721] border-r border-white/10 flex flex-col shrink-0">
-        <div className="p-3 border-b border-white/10 flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="text-xs font-serif font-bold text-slate-400 hover:text-cyan-300 no-underline transition-colors flex items-center gap-1">
-              ← {project?.title || 'Workspace'}
-            </Link>
-            <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-cyan-500/10 text-cyan-300 border border-cyan-400/20">
-              Content Manager
-            </span>
-          </div>
-
-          <div className="relative mt-1">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
-            <input
-              className="w-full bg-black/40 border border-white/10 rounded-lg pl-8 pr-2 py-1.5 text-xs text-white placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none transition-colors"
-              placeholder="Search tracks, posts..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto custom-scrollbar p-1">
-          {filteredTracks?.map((track) => {
-            const isExpanded = expandedTracks.has(track.id)
-            const isCurrentTrack = track.id === String(trackId)
-
-            return (
-              <div key={track.id} className="border-b border-white/5 last:border-b-0">
-                <button
-                  type="button"
-                  className={`w-full flex items-center gap-2 px-3 py-2.5 hover:bg-white/5 text-left rounded-lg transition-colors cursor-pointer ${isCurrentTrack ? 'bg-white/[0.03]' : ''
-                    }`}
-                  onClick={() => toggleTrack(track.id)}
-                >
-                  {isExpanded ? (
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  ) : (
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  )}
-                  <span
-                    className="w-2 h-2 rounded-full shrink-0 shadow-xs"
-                    style={{ backgroundColor: track.palette?.primary || '#1E5FA8' }}
-                  />
-                  <span className="text-xs font-bold text-slate-200 truncate flex-1">
-                    {track.title}
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-mono font-bold bg-white/5 px-1.5 py-0.5 rounded">
-                    {track.posts.length}
-                  </span>
-                </button>
-
-                {isExpanded && (
-                  <div className="pl-6 pr-2 pb-1 space-y-0.5">
-                    {track.posts.map((post) => {
-                      const isSelected = isCurrentTrack && post.id === String(postId)
-                      return (
-                        <button
-                          key={post.id}
-                          type="button"
-                          className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-2 transition-all cursor-pointer ${isSelected
-                              ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-400/30'
-                              : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
-                            }`}
-                          onClick={() => goToPost(track.id, post.id)}
-                        >
-                          <FileText className="w-3 h-3 shrink-0" />
-                          <span className="truncate flex-1">{post.title}</span>
-                          <span className="text-[9px] text-slate-500 font-mono">
-                            {post.slides.length}s
-                          </span>
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      </aside>
+      {/* ── LEFT: TrackSidebar (Identical to Carousel Design Sidebar) ── */}
+      <TrackSidebar
+        tracks={sidebarTracks}
+        trackPalettes={trackPalettes}
+        activeTrack={activeTrack?.title || activeTrack?.name}
+        activePost={formattedActivePost}
+        onSelectTrack={(trackTitle) => {
+          const t = tracks?.find((tr) => (tr.title || tr.name) === trackTitle)
+          if (t && t.posts?.[0]) {
+            navigate(`/${projectSlug}/content/track/${t.id}/post/${t.posts[0].id}`)
+          }
+        }}
+        onSelectPost={(post) => {
+          if (post?.trackId && post?.id) {
+            navigate(`/${projectSlug}/content/track/${post.trackId}/post/${post.id}`)
+          }
+        }}
+        postsByTrack={postsByTrackMap}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+      />
 
       {/* ── CENTER: Content Management Tabs & Editors ── */}
       <main className="flex-1 flex flex-col min-w-0 bg-[#0e1017]">
         {activePost ? (
           <>
-            {/* Header with Title and 'Edit Slides' Studio Button */}
+            {/* Header with Title and 'Create Design' Button */}
             <header className="h-16 border-b border-white/10 px-6 flex items-center justify-between shrink-0 bg-[#141721]">
               <div className="flex flex-col gap-0.5">
                 <div className="text-[10px] text-cyan-400 font-mono uppercase font-bold tracking-wider">
@@ -211,8 +156,15 @@ export default function ContentManagementPage() {
               {activeTab === 'content' && (
                 <SlideContentList
                   post={activePost}
-                  onUpdateSlide={(slideId, updates) => {
-                    updateSlideContent(activePost.id, slideId, updates)
+                  onUpdateSlide={(slideId, updates, slideNo) => {
+                    updateSlideContent(
+                      activePost.id,
+                      slideId,
+                      updates,
+                      activeTrack?.title || activeTrack?.name,
+                      activePost.postNo || 1,
+                      slideNo
+                    )
                     showToast('Slide content updated & saved!')
                   }}
                 />
@@ -282,7 +234,7 @@ function SlideContentList({ post, onUpdateSlide }) {
               className="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-sm font-bold font-serif text-white focus:border-cyan-400 focus:outline-none transition-colors"
               value={slide.content?.title || ''}
               placeholder="Headline title..."
-              onChange={(e) => onUpdateSlide(slide.id, { title: e.target.value })}
+              onChange={(e) => onUpdateSlide(slide.id, { title: e.target.value }, slide.slideNo || idx + 1)}
             />
           </div>
 
@@ -296,7 +248,7 @@ function SlideContentList({ post, onUpdateSlide }) {
               rows={3}
               value={slide.content?.body || ''}
               placeholder="Detailed content for this slide..."
-              onChange={(e) => onUpdateSlide(slide.id, { body: e.target.value })}
+              onChange={(e) => onUpdateSlide(slide.id, { body: e.target.value }, slide.slideNo || idx + 1)}
             />
           </div>
 
@@ -310,7 +262,7 @@ function SlideContentList({ post, onUpdateSlide }) {
               rows={2}
               value={slide.content?.visualDirective || ''}
               placeholder="Art direction for background and diagrams..."
-              onChange={(e) => onUpdateSlide(slide.id, { visualDirective: e.target.value })}
+              onChange={(e) => onUpdateSlide(slide.id, { visualDirective: e.target.value }, slide.slideNo || idx + 1)}
             />
           </div>
         </div>

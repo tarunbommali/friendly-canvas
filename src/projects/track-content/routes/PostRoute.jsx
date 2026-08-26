@@ -2,7 +2,7 @@ import React from 'react'
 import { Outlet, useOutletContext } from 'react-router-dom'
 import PostNavigation from '../components/PostNavigation'
 
-export default function PostLayout() {
+export default function PostRoute() {
   const context = useOutletContext()
   const { currentTrackIndex, activeTrack, postsByTrack } = context
   const currentTrackPosts = postsByTrack[activeTrack] || []

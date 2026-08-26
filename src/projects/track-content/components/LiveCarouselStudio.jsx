@@ -1,17 +1,21 @@
 import React, { useState, useRef } from 'react'
 import { Edit3, Check, Sparkles, Layout, X } from 'lucide-react'
-import { renderSlideToCanvas } from '../../../utils/canvasRenderer'
+import { renderSlideToCanvas } from '../../../shared/utils/canvasRenderer'
 import { SlideCarousel } from './SlideCarousel'
-import { SlidePreview } from './SlidePreview'
+import { SlidePreview } from './SlideRenderer'
 import { ImageActionButtons } from './ImageActionButtons'
 import { SlideEditor } from './SlideEditor'
 import { PromptDisplay } from './PromptDisplay'
 import AssetGallery from './AssetGallery'
 import { useSlideOverrides, useTrackColorOverride } from '../hooks/useSlideOverrides'
-import { generateSlideImagePrompt } from '../../../utils/promptGenerators'
-import { getLayoutOptions } from '../../layout-library/registry/LayoutRegistry'
-
-const LAYOUT_OPTIONS = getLayoutOptions()
+import { generateSlideImagePrompt } from '../../../shared/utils/promptGenerators'
+const LAYOUT_OPTIONS = [
+  { id: 'hook-open', name: 'Hook / Open — Bold Question or Statement' },
+  { id: 'concept-explain', name: 'Concept / Explain — Icon + 1-2 Sentences' },
+  { id: 'process-flow', name: 'Process / Flow — Step-by-Step Visual' },
+  { id: 'comparison', name: 'Comparison — Split-Screen Two Columns' },
+  { id: 'recap-close', name: 'Recap / Close — Summary Checklist or CTA' },
+]
 
 export default function LiveCarouselStudio({ post, trackColor, onCopy }) {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
@@ -168,7 +172,6 @@ export default function LiveCarouselStudio({ post, trackColor, onCopy }) {
 
   const handleLayoutTypeChange = (newLayout) => {
     setOverride(currentSlide.SlideNo, {
-      ...currentSlide,
       Layout: newLayout,
     })
     onCopy?.('', `Switched Layout to ${newLayout}!`, `Slide ${currentSlide.SlideNo} layout updated.`)

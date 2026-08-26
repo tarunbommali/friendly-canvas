@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { BookOpen, Palette, ChevronDown } from 'lucide-react'
 
@@ -40,6 +40,12 @@ export default function TrackSidebar({
   const [expandedTracks, setExpandedTracks] = useState({
     [activeTrack]: true,
   })
+
+  useEffect(() => {
+    if (activeTrack) {
+      setExpandedTracks((prev) => ({ ...prev, [activeTrack]: true }))
+    }
+  }, [activeTrack])
 
   const toggleTrackAccordion = (e, trackName) => {
     e.stopPropagation()
@@ -170,7 +176,8 @@ export default function TrackSidebar({
 
             <nav className="flex flex-col gap-1.5 pb-6">
               {tracks.map((trackName, index) => {
-                const trackNo = index + 1
+                const match = trackName.match(/\d+/)
+                const trackNo = match ? parseInt(match[0], 10) : index + 1
                 const palette = trackPalettes[trackName] || {}
                 const trackPosts = postsByTrack[trackName] || []
                 const isSelectedTrack = activeTrack === trackName

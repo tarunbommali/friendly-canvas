@@ -15,7 +15,7 @@ import LiveCarouselStudio from './LiveCarouselStudio'
 import {
   generatePostMasterPrompt,
   generateCaptionText,
-} from '../../../utils/promptGenerators'
+} from '../../../shared/utils/promptGenerators'
 
 export default function PostCard({
   post,
@@ -29,10 +29,11 @@ export default function PostCard({
 
   const handleCopyMasterPrompt = () => {
     const prompt = generatePostMasterPrompt(post, trackColor)
+    const slideCount = post.Slides?.length || post.slides?.length || 0
     onCopy(
       prompt,
       `Master Storyboard Prompt Copied!`,
-      `Complete prompt for "${post.PostTitle}" with all ${post.Slides.length} slides ready to paste.`
+      `Complete prompt for "${post.PostTitle || post.title}" with all ${slideCount} slides ready to paste.`
     )
   }
 

@@ -3,22 +3,16 @@ import data from '../../../shared/data/data.json'
 import { slideOverridesRepo } from '../../../infrastructure/persistence/localStorageRepository'
 
 export function useProjectData(projectSlug = 'swe-notebook') {
-  const [overrides, setOverrides] = useState(() => {
-    return slideOverridesRepo.get() || {}
-  })
+  const [overrides, setOverrides] = useState(() => slideOverridesRepo.get() || {})
 
-  // Normalize project configuration according to Schema v1.1.0
   const project = useMemo(() => {
-    const rawTrackPalettes = data.trackPalettes || data.DesignSystem?.TrackColorPalettes || {}
+    const rawTrackPalettes = data.trackPalettes || {}
     const trackPalettes = {}
 
-    Object.entries(rawTrackPalettes).forEach(([key, val], idx) => {
-      const trackId = key.length <= 2 ? key : String(idx + 1).padStart(2, '0')
+    Object.entries(rawTrackPalettes).forEach(([trackId, val]) => {
       trackPalettes[trackId] = val
       trackPalettes[String(parseInt(trackId, 10))] = val
-      if (val.name) {
-        trackPalettes[val.name] = val
-      }
+      if (val.name) trackPalettes[val.name] = val
     })
 
     return {
@@ -29,7 +23,7 @@ export function useProjectData(projectSlug = 'swe-notebook') {
         'Complete Software Engineering Zero to Hero curriculum. Includes track-wise content management, post inspectors, interactive live slide studio, prompt copiers, and slide override editors.',
       stats: {
         trackCount: Object.keys(rawTrackPalettes).length,
-        postCount: (data.posts || data.Posts || []).length,
+        postCount: (data.posts || []).length,
       },
       config: {
         trackPalettes,
@@ -56,79 +50,60 @@ export function useProjectData(projectSlug = 'swe-notebook') {
     }
   }, [])
 
-  // Normalize curriculum tracks and posts
   const tracks = useMemo(() => {
     const rawPalettes = data.trackPalettes || {}
-    const rawPosts = data.posts || data.Posts || []
+    const rawPosts = data.posts || []
 
-    const trackEntries = Object.entries(rawPalettes).length > 0
-      ? Object.entries(rawPalettes).map(([trackId, p]) => ({
-          trackId,
-          trackNo: parseInt(trackId, 10),
-          title: p.name,
-          palette: p,
-        }))
-      : Object.keys(data.DesignSystem?.TrackColorPalettes || {}).map((name, idx) => ({
-          trackId: String(idx + 1).padStart(2, '0'),
-          trackNo: idx + 1,
-          title: name,
-          palette: data.DesignSystem?.TrackColorPalettes[name] || { primary: '#1E5FA8', accent: '#A9D0F5' },
-        }))
+    const trackEntries = Object.entries(rawPalettes)
+      .map(([trackId, p]) => {
+        const match = p.name?.match(/\d+/)
+        const trackNo = match ? parseInt(match[0], 10) : parseInt(trackId, 10)
+        return { trackId: String(trackNo).padStart(2, '0'), trackNo, title: p.name, palette: p }
+      })
+      .sort((a, b) => a.trackNo - b.trackNo)
 
     return trackEntries.map(({ trackId, trackNo, title: trackName, palette }) => {
-      // Filter posts matching this track
-      const matchingPosts = rawPosts.filter((p) => {
-        const pTrackId = p.trackId || (p.track?.id ? String(p.track.id).padStart(2, '0') : null)
-        if (pTrackId === trackId || pTrackId === String(trackNo)) return true
-        if (p.Track === trackName || p.track?.name === trackName) return true
-        return false
-      })
+      const matchingPosts = rawPosts.filter((p) => p.trackId === trackId)
 
       const posts = matchingPosts.map((p, pIdx) => {
-        const postNo = p.postNo || p.PostNo || pIdx + 1
+        const postNo = p.postNo || pIdx + 1
         const postId = String(postNo)
-        const rawSlides = p.slides || p.Slides || []
+        const rawSlides = p.slides || []
 
         const slides = rawSlides.map((s, sIdx) => {
-          const slideNo = s.slideNo || s.SlideNo || sIdx + 1
+          const slideNo = s.slideNo || sIdx + 1
           const slideId =
             s.id || `slide_t${trackId}_p${String(postNo).padStart(2, '0')}_s${String(slideNo).padStart(2, '0')}`
-          const slideOverride = overrides[slideId] || {}
-          const rawLayout = s.layout?.id || s.Layout || 'concept-explain'
-
-          const rawAudio = p.metadata?.suggestedAudio || p.SuggestedAudio || {}
-          const audioTitle =
-            typeof rawAudio === 'string'
-              ? rawAudio
-              : rawAudio.mood || rawAudio.Mood || 'Lo-fi Tech Beats / Deep Focus Ambient'
+          const legacyKey = `${trackName}|${postNo}|${slideNo}`
+          const slideOverride = overrides[slideId] || overrides[legacyKey] || {}
+          const layoutId = slideOverride.Layout || slideOverride.layout || s.layout?.id || 'concept-explain'
+          const audio = p.metadata?.suggestedAudio || {}
+          const audioTitle = typeof audio === 'string' ? audio : audio.mood || 'Lo-fi Tech Beats / Deep Focus Ambient'
 
           return {
             id: slideId,
             postId,
             order: slideNo,
             slideNo,
-            archetypeKey: rawLayout,
-            layout: s.layout || { id: rawLayout, version: '1.0.0' },
+            archetypeKey: layoutId,
+            layout: s.layout || { id: layoutId, version: '1.0.0' },
             content: {
-              title: slideOverride.title ?? (s.content?.title || s.SlideTitle || `Slide ${slideNo}`),
-              body: slideOverride.body ?? (s.content?.body || s.Content || ''),
-              visualDirective: slideOverride.visualDirective ?? (s.content?.visualDirective || s.VisualDirective || ''),
+              title: slideOverride.title ?? slideOverride.SlideTitle ?? (s.content?.title || `Slide ${slideNo}`),
+              body: slideOverride.body ?? slideOverride.Content ?? (s.content?.body || ''),
+              visualDirective: slideOverride.visualDirective ?? slideOverride.VisualDirective ?? (s.content?.visualDirective || ''),
             },
             elements: s.elements || [],
             slideConfig: s.config || { width: 1080, height: 1350, background: '#F8F7F4' },
             assets: {
-              matched: s.assets?.map((a) => (typeof a === 'string' ? a : a.title || a.name)) || [
-                'Abacus (Vintage Computer)',
-                'C Language Architecture',
-              ],
+              matched: (s.assets || []).map((a) => (typeof a === 'string' ? a : a.title || a.name)),
               uploaded: [],
             },
             musicReference: {
               id: `music_${trackId}_${postNo}`,
               title: audioTitle,
-              mood: rawAudio.mood || rawAudio.Mood,
-              searchTerms: rawAudio.searchTerms || rawAudio.SearchTerms || [],
-              notes: rawAudio.note || rawAudio.Note,
+              mood: audio.mood,
+              searchTerms: audio.searchTerms || [],
+              notes: audio.note,
             },
           }
         })
@@ -139,16 +114,12 @@ export function useProjectData(projectSlug = 'swe-notebook') {
           order: postNo,
           postNo,
           code: `${trackNo}.${postNo}`,
-          title: p.title || p.PostTitle || `Post ${postNo}`,
+          title: p.title || `Post ${postNo}`,
           status: 'ready',
           slideCount: slides.length,
           palette,
           slides,
-          metadata: p.metadata || {
-            description: p.Description || '',
-            hashtags: p.Hashtags || [],
-            suggestedAudio: p.SuggestedAudio || '',
-          },
+          metadata: p.metadata || { description: '', hashtags: [], suggestedAudio: '' },
         }
       })
 
@@ -166,25 +137,27 @@ export function useProjectData(projectSlug = 'swe-notebook') {
     })
   }, [overrides])
 
-  // Update slide content with persistence
-  const updateSlideContent = useCallback((postId, slideId, contentUpdates) => {
+  const updateSlideContent = useCallback((postId, slideId, contentUpdates, trackName, postNo, slideNo) => {
     setOverrides((prev) => {
-      const existing = prev[slideId] || {}
-      const nextOverrides = {
-        ...prev,
-        [slideId]: {
-          ...existing,
-          ...contentUpdates,
-        },
+      const existingSlideId = prev[slideId] || {}
+      const pascalUpdates = {}
+      if (contentUpdates.title !== undefined) pascalUpdates.SlideTitle = contentUpdates.title
+      if (contentUpdates.body !== undefined) pascalUpdates.Content = contentUpdates.body
+      if (contentUpdates.visualDirective !== undefined) pascalUpdates.VisualDirective = contentUpdates.visualDirective
+
+      const updatedObj = { ...existingSlideId, ...contentUpdates, ...pascalUpdates }
+      const nextOverrides = { ...prev, [slideId]: updatedObj }
+
+      if (trackName && postNo && slideNo) {
+        const legacyKey = `${trackName}|${postNo}|${slideNo}`
+        const existingLegacy = prev[legacyKey] || {}
+        nextOverrides[legacyKey] = { ...existingLegacy, ...updatedObj }
       }
+
       slideOverridesRepo.set(nextOverrides)
       return nextOverrides
     })
   }, [])
 
-  return {
-    project,
-    tracks,
-    updateSlideContent,
-  }
+  return { project, tracks, updateSlideContent }
 }

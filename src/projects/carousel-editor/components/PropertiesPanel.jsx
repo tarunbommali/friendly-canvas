@@ -1,5 +1,19 @@
+import { useState } from "react";
 import { useCarouselStore } from "../store/carouselStore";
-import { Trash2, Sliders, Image as ImageIcon } from "lucide-react";
+import {
+  Trash2,
+  Sliders,
+  Image as ImageIcon,
+  Grid,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Sparkles,
+  Copy,
+  Check,
+  Upload,
+} from "lucide-react";
+import { THEME } from "../theme/theme";
 
 export function PropertiesPanel() {
   const document = useCarouselStore((state) => state.document);
@@ -9,9 +23,17 @@ export function PropertiesPanel() {
   const updateSlideBackground = useCarouselStore(
     (state) => state.updateSlideBackground
   );
+  const showSafeAreaGuides = useCarouselStore(
+    (state) => state.showSafeAreaGuides
+  );
+  const toggleSafeAreaGuides = useCarouselStore(
+    (state) => state.toggleSafeAreaGuides
+  );
+
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
 
   const canvasWidth = document.metadata.width || 1080;
-  const canvasHeight = document.metadata.height || 1080;
+  const canvasHeight = document.metadata.height || 1350;
 
   const activeSlide = document.slides.find(
     (s) => s.id === document.activeSlideId
@@ -23,31 +45,49 @@ export function PropertiesPanel() {
 
   const centerHorizontally = () => {
     if (!selectedElement) return;
-    const elWidth = selectedElement.width || (selectedElement.radius ? selectedElement.radius * 2 : 400);
-    const newX = Math.round((canvasWidth - elWidth) / 2);
+    const elWidth =
+      (selectedElement.width ||
+        (selectedElement.radius ? selectedElement.radius * 2 : 400)) *
+      (selectedElement.scaleX || 1);
+
+    let newX;
+    if (selectedElement.originX === "center") {
+      newX = Math.round(canvasWidth / 2);
+    } else if (selectedElement.originX === "right") {
+      newX = Math.round((canvasWidth + elWidth) / 2);
+    } else {
+      newX = Math.round((canvasWidth - elWidth) / 2);
+    }
     updateElement(selectedElement.id, { x: newX });
   };
 
   const centerVertically = () => {
     if (!selectedElement) return;
-    const elHeight = selectedElement.height || (selectedElement.radius ? selectedElement.radius * 2 : 300);
-    const newY = Math.round((canvasHeight - elHeight) / 2);
+    const elHeight =
+      (selectedElement.height ||
+        (selectedElement.radius ? selectedElement.radius * 2 : 300)) *
+      (selectedElement.scaleY || 1);
+
+    let newY;
+    if (selectedElement.originY === "center") {
+      newY = Math.round(canvasHeight / 2);
+    } else if (selectedElement.originY === "bottom") {
+      newY = Math.round((canvasHeight + elHeight) / 2);
+    } else {
+      newY = Math.round((canvasHeight - elHeight) / 2);
+    }
     updateElement(selectedElement.id, { y: newY });
   };
 
   const centerBoth = () => {
-    if (!selectedElement) return;
-    const elWidth = selectedElement.width || (selectedElement.radius ? selectedElement.radius * 2 : 400);
-    const elHeight = selectedElement.height || (selectedElement.radius ? selectedElement.radius * 2 : 300);
-    const newX = Math.round((canvasWidth - elWidth) / 2);
-    const newY = Math.round((canvasHeight - elHeight) / 2);
-    updateElement(selectedElement.id, { x: newX, y: newY });
+    centerHorizontally();
+    centerVertically();
   };
 
-  // If no element is selected, show Slide properties
+  // If no element is selected, show Slide properties & Safe Area Specs
   if (!selectedElement) {
     return (
-      <div className="w-72 bg-slate-900 border-l border-slate-800 p-4 h-full flex flex-col gap-4 text-xs text-slate-300">
+      <div className="w-72 bg-slate-900 border-l border-slate-800 p-4 h-full flex flex-col gap-4 text-xs text-slate-300 overflow-y-auto">
         <div className="flex items-center gap-2 text-slate-200 font-semibold border-b border-slate-800 pb-3">
           <Sliders className="w-4 h-4 text-blue-400" />
           <span>Slide Properties</span>
@@ -76,6 +116,137 @@ export function PropertiesPanel() {
               }
               className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1.5 font-mono text-slate-200"
             />
+          </div>
+        </div>
+
+        {/* AI Image Generation Prompt Card */}
+        {activeSlide?.visualDirective && (
+          <div className="border-t border-slate-800 pt-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-slate-200 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" /> AI Image Prompt
+              </span>
+            </div>
+            <div className="p-2.5 rounded-lg bg-slate-950 border border-amber-900/40 space-y-2">
+              <p className="text-[11px] text-slate-300 leading-relaxed font-sans select-text">
+                {activeSlide.visualDirective}
+              </p>
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(activeSlide.visualDirective);
+                    setCopiedPrompt(true);
+                    setTimeout(() => setCopiedPrompt(false), 2000);
+                  }}
+                  className="flex-1 py-1.5 px-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-medium rounded border border-amber-500/30 flex items-center justify-center gap-1.5 transition-colors text-[11px]"
+                >
+                  {copiedPrompt ? (
+                    <>
+                      <Check className="w-3 h-3 text-emerald-400" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>Copy Prompt</span>
+                    </>
+                  )}
+                </button>
+                <label className="flex-1 py-1.5 px-2 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded flex items-center justify-center gap-1.5 cursor-pointer transition-colors text-[11px]">
+                  <Upload className="w-3 h-3" />
+                  <span>Upload Image</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file || !activeSlide) return;
+                      const reader = new FileReader();
+                      reader.onload = (evt) => {
+                        const imageDataUrl = evt.target.result;
+                        // Replace or create image element on canvas
+                        const existingPlaceholder = activeSlide.elements.find(
+                          (el) => el.isPlaceholder || el.id?.includes("placeholder")
+                        );
+                        if (existingPlaceholder) {
+                          updateElement(existingPlaceholder.id, {
+                            type: "image",
+                            src: imageDataUrl,
+                            isPlaceholder: false,
+                            strokeDashArray: null,
+                          });
+                        } else {
+                          useCarouselStore.getState().addElement({
+                            id: `img_${Date.now()}`,
+                            type: "image",
+                            src: imageDataUrl,
+                            x: 540,
+                            y: 794,
+                            width: 760,
+                            height: 480,
+                            originX: "center",
+                            originY: "center",
+                            rotation: 0,
+                            zIndex: 10,
+                          });
+                        }
+                      };
+                      reader.readAsDataURL(file);
+                    }}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Safe Area Margins Section */}
+        <div className="border-t border-slate-800 pt-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="font-semibold text-slate-300 flex items-center gap-1.5">
+              <Grid className="w-3.5 h-3.5 text-cyan-400" /> Safe Area Margins
+            </span>
+            <button
+              onClick={toggleSafeAreaGuides}
+              className={`px-2 py-0.5 rounded text-[10px] font-mono border transition-colors ${
+                showSafeAreaGuides
+                  ? "bg-cyan-950 text-cyan-300 border-cyan-500/40"
+                  : "bg-slate-950 text-slate-400 border-slate-800"
+              }`}
+            >
+              {showSafeAreaGuides ? "Guides ON" : "Guides OFF"}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+            <div className="p-2 rounded bg-slate-950 border border-slate-800 flex justify-between">
+              <span className="text-slate-500">Top/Bottom:</span>
+              <span className="text-cyan-400 font-bold">{THEME.safeArea.top}px</span>
+            </div>
+            <div className="p-2 rounded bg-slate-950 border border-slate-800 flex justify-between">
+              <span className="text-slate-500">Left/Right:</span>
+              <span className="text-cyan-400 font-bold">{THEME.safeArea.left}px</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Zone Padding Specs */}
+        <div className="border-t border-slate-800 pt-3 space-y-2">
+          <span className="font-semibold text-slate-300">Content Zone Bounds</span>
+          <div className="space-y-1.5 text-[11px] font-mono">
+            <div className="p-2 rounded bg-slate-950 border border-slate-800 flex justify-between">
+              <span className="text-slate-500">Top Clearance:</span>
+              <span className="text-amber-400 font-bold">{THEME.contentZone.top}px</span>
+            </div>
+            <div className="p-2 rounded bg-slate-950 border border-slate-800 flex justify-between">
+              <span className="text-slate-500">Bottom Clearance:</span>
+              <span className="text-amber-400 font-bold">{THEME.contentZone.bottom}px</span>
+            </div>
+            <div className="p-2 rounded bg-slate-950 border border-slate-800 flex justify-between">
+              <span className="text-slate-500">Draw Width:</span>
+              <span className="text-slate-300 font-bold">{THEME.contentZone.width}px</span>
+            </div>
           </div>
         </div>
 
@@ -192,6 +363,65 @@ export function PropertiesPanel() {
                 <option value="Georgia">Georgia</option>
                 <option value="Courier New">Monospace</option>
               </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-slate-400 font-medium mb-1">
+              Text Alignment
+            </label>
+            <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded p-1">
+              <button
+                type="button"
+                onClick={() =>
+                  updateElement(selectedElement.id, {
+                    textAlign: "left",
+                    originX: "left",
+                    x: 140,
+                  })
+                }
+                className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors ${
+                  (selectedElement.textAlign || "left") === "left"
+                    ? "bg-blue-600 text-white font-bold"
+                    : "text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                <AlignLeft className="w-3.5 h-3.5" /> Left
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  updateElement(selectedElement.id, {
+                    textAlign: "center",
+                    originX: "center",
+                    x: 540,
+                  })
+                }
+                className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors ${
+                  selectedElement.textAlign === "center"
+                    ? "bg-blue-600 text-white font-bold"
+                    : "text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                <AlignCenter className="w-3.5 h-3.5" /> Center
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  updateElement(selectedElement.id, {
+                    textAlign: "right",
+                    originX: "right",
+                    x: 940,
+                  })
+                }
+                className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors ${
+                  selectedElement.textAlign === "right"
+                    ? "bg-blue-600 text-white font-bold"
+                    : "text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                <AlignRight className="w-3.5 h-3.5" /> Right
+              </button>
             </div>
           </div>
 

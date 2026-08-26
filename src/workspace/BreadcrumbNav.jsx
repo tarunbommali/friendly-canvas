@@ -22,7 +22,7 @@ export default function BreadcrumbNav({ tracks = [], trackPalettes = {}, activeT
       // Prepend SWE.notebook project scope if on a track route
       if (items.length === 0 || items[0].segment !== 'swe-notebook') {
         items.push({
-          path: '/track/1/post/1',
+          path: '/',
           label: 'SWE.notebook',
           isLast: false,
           segment: 'swe-notebook',
@@ -30,6 +30,7 @@ export default function BreadcrumbNav({ tracks = [], trackPalettes = {}, activeT
       }
 
       if (pathSegments[i + 1]) {
+        currentPath += `/${pathSegments[i + 1]}`
         const trackIndex = parseInt(pathSegments[i + 1], 10) - 1
         const track = tracks[trackIndex]
         if (track) {
@@ -37,6 +38,7 @@ export default function BreadcrumbNav({ tracks = [], trackPalettes = {}, activeT
         }
       }
     } else if (segment === 'post' && pathSegments[i + 1]) {
+      currentPath += `/${pathSegments[i + 1]}`
       const postIndex = parseInt(pathSegments[i + 1], 10) - 1
       const trackPosts = postsByTrack[activeTrack] || []
       const post = trackPosts[postIndex]

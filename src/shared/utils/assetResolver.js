@@ -256,10 +256,10 @@ function scoreAsset(asset, corpus) {
  */
 function buildSlideCorpus(slide) {
   const raw = [
-    slide?.SlideTitle || '',
-    slide?.Content || '',
-    slide?.VisualDirective || '',
-    slide?.Layout || '',
+    slide?.SlideTitle || slide?.title || slide?.content?.title || '',
+    slide?.Content || slide?.body || (typeof slide?.content === 'string' ? slide.content : slide?.content?.body) || '',
+    slide?.VisualDirective || slide?.visualDirective || slide?.content?.visualDirective || '',
+    slide?.Layout || slide?.layout?.id || (typeof slide?.layout === 'string' ? slide.layout : '') || '',
   ].join(' ')
   return tokenise(raw)
 }

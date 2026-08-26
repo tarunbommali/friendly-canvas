@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouteError, Link } from 'react-router-dom'
+import { LocalStorageRepository } from '../../infrastructure/persistence/localStorageRepository'
 
 export default function ErrorBoundary() {
   const error = useRouteError()
@@ -56,8 +57,8 @@ export default function ErrorBoundary() {
           <button
             className="px-4 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-bold transition-all ml-auto cursor-pointer"
             onClick={() => {
-              if (confirm('Reset stored browser overrides? This might resolve corrupt state.')) {
-                localStorage.removeItem('swe_notebook_slide_overrides')
+              if (confirm('Reset stored browser overrides? This will restore fresh default state.')) {
+                LocalStorageRepository.clearAll()
                 window.location.href = '/'
               }
             }}

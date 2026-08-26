@@ -2,7 +2,7 @@
 
 ## 1. Canvas Dimensions & Aspect Ratio
 - **Aspect Ratio**: `4:5 Vertical Portrait` (Instagram optimal feed format).
-- **Pixel Resolution**: `1080 x 1350 px` (Standard), `2160 x 2700 px` (2x Retina / Hi-Res Export).
+- **Pixel Resolution**: `1080 x 1350 px` (Standard), `2160 x 2730 px` (2x Retina / Hi-Res Export).
 - **Safe Zone**:
   - Top margin: `96px` safe zone (keeps clear of Instagram header UI and profile badges).
   - Bottom margin: `112px` safe zone (keeps clear of carousel dots and audio indicator).

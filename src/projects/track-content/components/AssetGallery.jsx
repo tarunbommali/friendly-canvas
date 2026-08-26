@@ -9,7 +9,7 @@ import {
   Upload,
   Link2,
 } from 'lucide-react'
-import { getAssetsForSlide } from '../../../utils/assetResolver'
+import { getAssetsForSlide } from '../../../shared/utils/assetResolver'
 import { useSlideAssets }  from '../hooks/useSlideAssets'
 import { useCustomAssets } from '../../../shared/hooks/useCustomAssets'
 

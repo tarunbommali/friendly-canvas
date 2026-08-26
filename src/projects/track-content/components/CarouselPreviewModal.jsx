@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { generateSlideImagePrompt } from '../../../utils/promptGenerators'
-import { SlidePreview } from './SlidePreview'
+import { generateSlideImagePrompt } from '../../../shared/utils/promptGenerators'
+import { SlidePreview } from './SlideRenderer'
 import { PromptDisplay } from './PromptDisplay'
 
 export default function CarouselPreviewModal({

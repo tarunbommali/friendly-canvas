@@ -4,18 +4,31 @@ export const THEME = {
     height: 1350,
     aspectRatio: "4:5",
   },
+  // Safe Area: Canvas margins (top: 80, bottom: 80, left: 80, right: 80)
   safeArea: {
     x: 80,
     y: 80,
     width: 920,
     height: 1190,
+    top: 80,
+    bottom: 80,
+    left: 80,
+    right: 80,
   },
-  // Content Zone: Content is strictly constrained between y: 210 and y: 1180
+  // Content Zone: Content is strictly constrained with top/bottom/left/right paddings
   contentZone: {
     x: 140,
     y: 210,
     width: 800,
     height: 970,
+    top: 210,
+    bottom: 1180,
+    left: 140,
+    right: 940,
+    paddingTop: 130, // Clearance below top badge
+    paddingBottom: 140, // Clearance above bottom page number / swipe indicator
+    paddingLeft: 60, // Clearance inside safeArea card
+    paddingRight: 60, // Clearance inside safeArea card
   },
   colors: {
     cardBg: "#f8fafc",
@@ -32,8 +45,8 @@ export const THEME = {
     footer: { fontSize: 24, fontFamily: "Inter" },
   },
   chrome: {
-    badge: { x: 140, y: 140 },
-    pageNumber: { x: 860, y: 1210 },
-    swipeIndicator: { x: 140, y: 1210 },
+    badge: { x: 540, y: 140 },
+    pageNumber: { x: 140, y: 1210 },
+    swipeIndicator: { x: 940, y: 1210 },
   },
 };

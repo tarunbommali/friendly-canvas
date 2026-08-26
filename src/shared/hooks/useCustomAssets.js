@@ -124,7 +124,9 @@ export function useCustomAssets() {
     loading,
     addUpload,
     addUrl,
+    addLink: addUrl,
     removeAsset,
+    remove: removeAsset,
   }
 }
 

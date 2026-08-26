@@ -5,6 +5,8 @@ import BreadcrumbNav from './BreadcrumbNav'
 import Toast from './Toast'
 import TrackSidebar from '../projects/track-content/components/TrackSidebar'
 import { useTrackData } from '../projects/track-content/hooks/useTrackData'
+import { useClipboard } from '../shared/hooks/useClipboard'
+import { routes } from '../shared/config/routes'
 
 export default function WorkspaceLayout() {
   const location = useLocation()
@@ -17,7 +19,7 @@ export default function WorkspaceLayout() {
     }
     return ''
   })
-  const [toast, setToast] = useState(null)
+  const { copyText, status: clipboardStatus, resetStatus } = useClipboard()
 
   // Sync navbar search term with URL search params on direct navigation
   useEffect(() => {
@@ -77,57 +79,28 @@ export default function WorkspaceLayout() {
   const handleSearch = (term) => {
     setSearchTerm(term)
     if (term.trim()) {
-      navigate(`/search?q=${encodeURIComponent(term)}`)
+      navigate(routes.search(term), { replace: location.pathname === '/search' })
     } else {
-      navigate('/')
+      navigate(routes.home())
     }
   }
 
   const handleSelectTrack = (trackName) => {
     const tIdx = tracks.indexOf(trackName) + 1
-    navigate(`/track/${tIdx}/post/1`)
+    navigate(routes.collectionPost(tIdx, 1))
   }
 
   const handleSelectPost = (post, trackName) => {
     const tIdx = tracks.indexOf(trackName) + 1
     const pIdx =
       postsByTrack[trackName]?.findIndex(
-        (p) => p.PostNo === post.PostNo || p.PostTitle === post.PostTitle
+        (p) => p.id === post.id || p.postNo === post.postNo || p.PostNo === post.PostNo
       ) + 1
-    navigate(`/track/${tIdx}/post/${pIdx > 0 ? pIdx : 1}`)
+    navigate(routes.collectionPost(tIdx, pIdx > 0 ? pIdx : 1))
   }
 
   const handleCopy = (text, title, message) => {
-    if (typeof text === 'string' && text.trim().length > 0) {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(
-          () => {
-            setToast({ title: title || 'Copied!', message, type: 'success' })
-            setTimeout(() => setToast(null), 3500)
-          },
-          () => {
-            fallbackCopy(text, title, message)
-          }
-        )
-      } else {
-        fallbackCopy(text, title, message)
-      }
-    } else {
-      // Notification-only toast (preserves existing clipboard content)
-      setToast({ title: title || 'Success', message, type: 'success' })
-      setTimeout(() => setToast(null), 3500)
-    }
-  }
-
-  const fallbackCopy = (text, title, message) => {
-    const textarea = document.createElement('textarea')
-    textarea.value = text
-    document.body.appendChild(textarea)
-    textarea.select()
-    document.execCommand('copy')
-    document.body.removeChild(textarea)
-    setToast({ title: title || 'Copied!', message, type: 'success' })
-    setTimeout(() => setToast(null), 3500)
+    copyText(text, title || 'Copied!', message || '')
   }
 
   // Precise route matching for full-screen immersive studio & layout canvas editors
@@ -203,7 +176,7 @@ export default function WorkspaceLayout() {
         </main>
       </div>
 
-      <Toast toast={toast} onClose={() => setToast(null)} />
+      <Toast toast={clipboardStatus.type ? clipboardStatus : null} onClose={resetStatus} />
     </div>
   )
 }

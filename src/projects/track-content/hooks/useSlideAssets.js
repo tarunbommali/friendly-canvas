@@ -44,6 +44,11 @@ export function useSlideAssets(trackName, postNo, slideNo) {
     return JSON.stringify(store, null, 2)
   }, [store])
 
+  /** Export JSON for the current slide only */
+  const exportSlideJson = useCallback(() => {
+    return JSON.stringify(assigned, null, 2)
+  }, [assigned])
+
   /** Clear all assignments for a specific slide */
   const clearSlide = useCallback(() => {
     setStore((prev) => {
@@ -61,6 +66,7 @@ export function useSlideAssets(trackName, postNo, slideNo) {
     assign,
     unassign,
     exportJson,
+    exportSlideJson,
     clearSlide,
     allAssets: store,
   }

@@ -6,6 +6,7 @@ import {
   Scale,
   Terminal,
   CheckCircle2,
+  Rocket,
   Award,
   Calendar,
   Layers,
@@ -28,6 +29,7 @@ const ICON_MAP = {
   scale: Scale,
   terminal: Terminal,
   'check-circle': CheckCircle2,
+  rocket: Rocket,
   award: Award,
   calendar: Calendar,
   layers: Layers,
@@ -48,10 +50,7 @@ const ICON_MAP = {
   comparison: Scale,
   'real-world': Terminal,
   'recap-close': CheckCircle2,
-  'next-up': Award,
-  'timeline-ribbon': Calendar,
-  'architecture-blueprint': Layers,
-  'matrix-replace': RefreshCw,
+  'series-finale': Rocket,
 
   // Emoji mapping fallbacks
   '🎯': Target,
