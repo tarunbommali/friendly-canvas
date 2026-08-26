@@ -71,16 +71,16 @@ function estimateTextBlockHeight(text, fontSize, lineHeightRatio, maxWidth) {
  * @returns {Array} Position-normalized elements
  */
 export function autoLayoutContent(elements = []) {
-  const HEADLINE_X = 187;
-  const HEADLINE_Y = 273;
-  const HEADLINE_MAX_WIDTH = 680; // matches contentZone width
+  const HEADLINE_X = THEME.contentZone.x; // 140px — aligned with track badge x
+  const HEADLINE_Y = THEME.contentZone.y; // 210px matching CONTENT ZONE top
+  const HEADLINE_MAX_WIDTH = THEME.contentZone.width; // 800px wrap boundary — text wraps before right edge
   const HEADLINE_LINE_HEIGHT_RATIO = 1.2;
-  const HEADLINE_TO_BODY_GAP = 40; // breathing room below the last headline line
+  const HEADLINE_TO_BODY_GAP = 36; // breathing room below the last headline line
 
-  const BODY_X = 179;
-  const BODY_MAX_WIDTH = 680;
+  const BODY_X = THEME.contentZone.x; // 140px — aligned with headline and track badge x
+  const BODY_MAX_WIDTH = THEME.contentZone.width; // 800px wrap boundary — text wraps before right edge
   const BODY_LINE_HEIGHT_RATIO = 1.6;
-  const BODY_TO_DIRECTIVE_GAP = 60;
+  const BODY_TO_DIRECTIVE_GAP = 50;
 
   const DIRECTIVE_RECT_X = 544;
   const DIRECTIVE_RECT_MIN_Y = 700; // never let the visual box climb above this
@@ -156,25 +156,45 @@ export function autoLayoutContent(elements = []) {
       (updated.type === "rect" && !updated.id?.includes("_bg"));
 
     if (isHeadline) {
-      updated.x = HEADLINE_X;
+      updated.textAlign = updated.align || updated.textAlign || "left";
+      if (updated.textAlign === "center") {
+        updated.x = 540;
+        updated.originX = "center";
+      } else if (updated.textAlign === "right") {
+        updated.x = THEME.contentZone.right;
+        updated.originX = "right";
+      } else {
+        updated.x = HEADLINE_X;
+        updated.originX = "left";
+      }
       updated.y = HEADLINE_Y;
+      updated.width = HEADLINE_MAX_WIDTH; // Enforce 800px Content Zone wrap boundary
       if (!updated.fontSize && updated.font?.size) updated.fontSize = updated.font.size;
       updated.fontSize = updated.fontSize || 44;
       if (!updated.fontFamily && updated.font?.family) updated.fontFamily = updated.font.family;
       updated.fontFamily = updated.fontFamily || "Inter";
       if (!updated.fill && updated.font?.color) updated.fill = updated.font.color;
       updated.fill = updated.fill || "#0f172a";
-      updated.textAlign = updated.align || updated.textAlign || "left";
     } else if (isBody) {
-      updated.x = BODY_X;
+      updated.textAlign = updated.align || updated.textAlign || "left";
+      if (updated.textAlign === "center") {
+        updated.x = 540;
+        updated.originX = "center";
+      } else if (updated.textAlign === "right") {
+        updated.x = THEME.contentZone.right;
+        updated.originX = "right";
+      } else {
+        updated.x = BODY_X;
+        updated.originX = "left";
+      }
       updated.y = bodyY; // <-- now dynamic, derived from headline height
+      updated.width = BODY_MAX_WIDTH; // Enforce 800px Content Zone wrap boundary
       if (!updated.fontSize && updated.font?.size) updated.fontSize = updated.font.size;
       updated.fontSize = updated.fontSize || 30;
       if (!updated.fontFamily && updated.font?.family) updated.fontFamily = updated.font.family;
       updated.fontFamily = updated.fontFamily || "Inter";
       if (!updated.fill && updated.font?.color) updated.fill = updated.font.color;
       updated.fill = updated.fill || "#475569";
-      updated.textAlign = updated.align || updated.textAlign || "left";
     } else if (isDirectiveText) {
       updated.x = 200;
       updated.y = directiveTextY; // <-- now dynamic too

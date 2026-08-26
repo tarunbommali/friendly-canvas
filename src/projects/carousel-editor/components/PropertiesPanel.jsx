@@ -12,6 +12,7 @@ import {
   Copy,
   Check,
   Upload,
+  Tag,
 } from "lucide-react";
 import { THEME } from "../theme/theme";
 
@@ -120,7 +121,7 @@ export function PropertiesPanel() {
         </div>
 
         {/* AI Image Generation Prompt Card */}
-        {activeSlide?.visualDirective && (
+        {(activeSlide?.imagePrompt || activeSlide?.visualDirective) && (
           <div className="border-t border-slate-800 pt-3 space-y-2">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-slate-200 flex items-center gap-1.5">
@@ -129,14 +130,17 @@ export function PropertiesPanel() {
             </div>
             <div className="p-2.5 rounded-lg bg-slate-950 border border-amber-900/40 space-y-2">
               <p className="text-[11px] text-slate-300 leading-relaxed font-sans select-text">
-                {activeSlide.visualDirective}
+                {activeSlide.imagePrompt || activeSlide.visualDirective}
               </p>
               <div className="flex items-center gap-2 pt-1">
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(activeSlide.visualDirective);
-                    setCopiedPrompt(true);
-                    setTimeout(() => setCopiedPrompt(false), 2000);
+                    const promptText = activeSlide.imagePrompt || activeSlide.visualDirective;
+                    if (promptText) {
+                      navigator.clipboard.writeText(promptText);
+                      setCopiedPrompt(true);
+                      setTimeout(() => setCopiedPrompt(false), 2000);
+                    }
                   }}
                   className="flex-1 py-1.5 px-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-medium rounded border border-amber-500/30 flex items-center justify-center gap-1.5 transition-colors text-[11px]"
                 >
@@ -197,6 +201,31 @@ export function PropertiesPanel() {
                   />
                 </label>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Asset Name Container */}
+        {activeSlide?.assetName && (Array.isArray(activeSlide.assetName) ? activeSlide.assetName.length > 0 : Boolean(activeSlide.assetName)) && (
+          <div className="border-t border-slate-800 pt-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-slate-200 flex items-center gap-1.5">
+                <Tag className="w-3.5 h-3.5 text-emerald-400" /> Asset Name
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-1.5 p-2 rounded-lg bg-slate-950 border border-slate-800">
+              {(Array.isArray(activeSlide.assetName)
+                ? activeSlide.assetName
+                : [activeSlide.assetName]
+              ).map((name, idx) => (
+                <div
+                  key={idx}
+                  className="px-2 py-1 rounded bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 font-mono text-[10px] break-all select-all flex items-center gap-1.5"
+                >
+                  <Tag className="w-2.5 h-2.5 text-emerald-400 flex-shrink-0" />
+                  <span>{name}</span>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -567,8 +596,15 @@ export function PropertiesPanel() {
 
         {/* Instant Alignment Buttons */}
         <div className="space-y-1.5 pt-1">
-          <label className="block text-slate-500 mb-1">Align Element</label>
+          <label className="block text-slate-500 mb-1">Align & Distribute</label>
           <div className="grid grid-cols-3 gap-1.5">
+            <button
+              onClick={() => updateElement(selectedElement.id, { x: THEME.contentZone.x })}
+              className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors"
+              title="Align to Left Margin"
+            >
+              ← Left
+            </button>
             <button
               onClick={centerHorizontally}
               className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors"
@@ -577,18 +613,40 @@ export function PropertiesPanel() {
               ↔ Center H
             </button>
             <button
-              onClick={centerVertically}
+              onClick={() => {
+                const w = selectedElement.width || 400;
+                updateElement(selectedElement.id, { x: THEME.contentZone.right - w });
+              }}
               className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors"
-              title="Center Vertically on Canvas"
+              title="Align to Right Margin"
             >
-              ↕ Center V
+              Right →
             </button>
+          </div>
+          <div className="grid grid-cols-2 gap-1.5 pt-1">
             <button
               onClick={centerBoth}
               className="py-1 px-2 bg-blue-600/80 hover:bg-blue-600 text-white rounded border border-blue-500 text-[11px] font-medium transition-colors"
               title="Center Horizontally & Vertically"
             >
-              ⤢ Both
+              ⤢ Both Center
+            </button>
+            <button
+              onClick={() => {
+                if (!activeSlide) return;
+                const els = activeSlide.elements.filter((e) => !e.id?.includes("bg") && !e.id?.includes("page"));
+                if (els.length < 2) return;
+                const minY = THEME.contentZone.y;
+                const maxY = THEME.contentZone.bottom - 100;
+                const step = (maxY - minY) / (els.length - 1);
+                els.forEach((el, idx) => {
+                  updateElement(el.id, { y: Math.round(minY + idx * step) });
+                });
+              }}
+              className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors"
+              title="Distribute Slide Elements Vertically"
+            >
+              ↕ Distribute
             </button>
           </div>
         </div>

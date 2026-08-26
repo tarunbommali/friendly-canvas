@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Canvas } from "fabric";
 import { useCarouselStore } from "../store/carouselStore";
 import { renderSlide } from "../canvas/renderer";
+import { initSnapGuides } from "../canvas/snapGuideEngine";
 import { THEME } from "../theme/theme";
 
 export function CanvasEditor() {
@@ -67,6 +68,9 @@ export function CanvasEditor() {
 
     fabricRef.current = canvas;
 
+    // Attach real-time snap guides and edge alignment listener
+    const cleanupSnapGuides = initSnapGuides(canvas);
+
     // Selection handlers
     canvas.on("selection:created", (event) => {
       if (isRenderingRef.current) return;
@@ -98,25 +102,36 @@ export function CanvasEditor() {
       };
 
       if (target.type === "rect") {
-        updates.width = Math.round(target.width * (target.scaleX || 1));
-        updates.height = Math.round(target.height * (target.scaleY || 1));
+        const scaledW = Math.round(target.getScaledWidth());
+        const scaledH = Math.round(target.getScaledHeight());
+        updates.width = scaledW;
+        updates.height = scaledH;
         target.scaleX = 1;
         target.scaleY = 1;
+        target.width = scaledW;
+        target.height = scaledH;
       } else if (target.type === "circle") {
-        updates.radius = Math.round(target.radius * (target.scaleX || 1));
+        const scaledR = Math.round((target.radius || 50) * Math.max(target.scaleX || 1, target.scaleY || 1));
+        updates.radius = scaledR;
         target.scaleX = 1;
         target.scaleY = 1;
+        target.radius = scaledR;
       } else if (target.type === "textbox" || target.type === "i-text" || target.type === "text") {
         updates.text = target.text;
-        updates.width = Math.round(target.width * (target.scaleX || 1));
-        updates.fontSize = Math.round(target.fontSize * (target.scaleY || 1));
+        const scaledW = Math.round(target.getScaledWidth());
+        updates.width = scaledW;
         target.scaleX = 1;
         target.scaleY = 1;
-      } else if (target.type === "image" || target.type === "FabricImage") {
-        updates.width = Math.round(target.width * (target.scaleX || 1));
-        updates.height = Math.round(target.height * (target.scaleY || 1));
-        target.scaleX = 1;
-        target.scaleY = 1;
+        target.width = scaledW;
+      } else if (target.type === "image" || target.isType?.("image")) {
+        const scaledW = Math.round(target.getScaledWidth());
+        const scaledH = Math.round(target.getScaledHeight());
+        updates.width = scaledW;
+        updates.height = scaledH;
+        if (typeof target.scaleToWidth === "function" && typeof target.scaleToHeight === "function") {
+          target.scaleToWidth(scaledW);
+          target.scaleToHeight(scaledH);
+        }
       }
 
       updateElement(id, updates);
@@ -131,6 +146,7 @@ export function CanvasEditor() {
     });
 
     return () => {
+      cleanupSnapGuides();
       canvas.dispose();
       fabricRef.current = null;
     };
@@ -194,9 +210,9 @@ export function CanvasEditor() {
               <span>SAFE AREA (Top/Bottom: {THEME.safeArea.top}px, L/R: {THEME.safeArea.left}px)</span>
             </div>
 
-            {/* Inner Content Zone Boundary */}
+            {/* Inner Content Zone Boundary with 4-Column Grid Guides */}
             <div
-              className="absolute border border-dashed border-amber-400/60 pointer-events-none rounded-xl"
+              className="absolute border border-dashed border-amber-400/60 pointer-events-none rounded-xl overflow-hidden"
               style={{
                 top: `${THEME.contentZone.paddingTop}px`,
                 left: `${THEME.contentZone.paddingLeft}px`,
@@ -204,9 +220,17 @@ export function CanvasEditor() {
                 height: `${THEME.contentZone.height}px`,
               }}
             >
-              <span className="absolute top-1 left-2 text-[9px] font-mono font-bold text-amber-300 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-500/30">
+              <span className="absolute top-1 left-2 text-[9px] font-mono font-bold text-amber-300 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-500/30 z-10">
                 CONTENT ZONE (Top: {THEME.contentZone.top}px, Bottom: {THEME.contentZone.bottom}px)
               </span>
+
+              {/* 4 Column Grid Overlay Lines */}
+              <div className="w-full h-full grid grid-cols-4 gap-4 px-2 opacity-15 pointer-events-none">
+                <div className="bg-amber-400/20 border-x border-amber-400/40 h-full" />
+                <div className="bg-amber-400/20 border-x border-amber-400/40 h-full" />
+                <div className="bg-amber-400/20 border-x border-amber-400/40 h-full" />
+                <div className="bg-amber-400/20 border-x border-amber-400/40 h-full" />
+              </div>
             </div>
 
             <div className="flex justify-between items-center text-[10px] font-mono text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded w-max self-end border border-cyan-500/30">

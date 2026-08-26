@@ -2,13 +2,83 @@ import { create } from "zustand";
 import { initialCarousel } from "../data/initialCarousel";
 import { THEME } from "../theme/theme";
 
+// Fields that make up a complete image element snapshot to persist in the registry
+const IMAGE_PERSIST_FIELDS = [
+  "type", "src",
+  "x", "y", "width", "height", "rotation",
+  "originX", "originY", "scaleX", "scaleY",
+  "isPlaceholder", "strokeDashArray",
+];
+
+// Extract only the persistable fields from an element into a snapshot
+function pickImageSnapshot(el) {
+  const snapshot = {};
+  for (const key of IMAGE_PERSIST_FIELDS) {
+    if (el[key] !== undefined) snapshot[key] = el[key];
+  }
+  return snapshot;
+}
+
+// Utility: Restore full image element state (src + geometry) from the registry into a document
+function restoreImagesFromRegistry(doc, registry) {
+  if (!doc || !registry || Object.keys(registry).length === 0) return doc;
+  return {
+    ...doc,
+    slides: doc.slides.map((slide) => ({
+      ...slide,
+      elements: slide.elements.map((el) => {
+        const saved = registry[el.id];
+        if (!saved) return el;
+
+        // Restore a fully-converted image element
+        if (saved.type === "image" || el.type === "image") {
+          return {
+            ...el,
+            ...saved,               // merge saved geometry + src on top
+            type: "image",
+            isPlaceholder: false,
+            strokeDashArray: null,
+          };
+        }
+
+        // Restore a placeholder rect that was converted to an image
+        if (el.isPlaceholder || el.id?.includes("placeholder")) {
+          return {
+            ...el,
+            ...saved,
+            type: "image",
+            isPlaceholder: false,
+            strokeDashArray: null,
+          };
+        }
+
+        return el;
+      }),
+    })),
+  };
+}
+
 export const useCarouselStore = create((set, get) => ({
   document: initialCarousel,
   selectedElementId: null,
   zoom: 1, // 1 = 100% Fit to Screen
-  showSafeAreaGuides: true,
+  showSafeAreaGuides: false,
+  snapToGuides: true,
+  toggleSnapToGuides: () =>
+    set((state) => ({ snapToGuides: !state.snapToGuides })),
   historyPast: [],
   historyFuture: [],
+
+  // Registry that persists uploaded image element state (src + full geometry) independently of
+  // document state. Key: element id, Value: full image snapshot. Survives setDocument,
+  // undo/redo, applyGlobalLayout, and slide switches.
+  imageRegistry: {},
+
+  // Register a full image snapshot in the registry (exposed for external use if needed)
+  registerImage: (elementId, snapshot) =>
+    set((state) => ({
+      imageRegistry: { ...state.imageRegistry, [elementId]: snapshot },
+    })),
 
   toggleSafeAreaGuides: () =>
     set((state) => ({ showSafeAreaGuides: !state.showSafeAreaGuides })),
@@ -30,9 +100,10 @@ export const useCarouselStore = create((set, get) => ({
     const previousDoc = past[past.length - 1];
     const newPast = past.slice(0, past.length - 1);
     const currentDoc = get().document;
+    const registry = get().imageRegistry;
 
     set({
-      document: previousDoc,
+      document: restoreImagesFromRegistry(previousDoc, registry),
       historyPast: newPast,
       historyFuture: [JSON.parse(JSON.stringify(currentDoc)), ...get().historyFuture],
       selectedElementId: null,
@@ -45,9 +116,10 @@ export const useCarouselStore = create((set, get) => ({
     const nextDoc = future[0];
     const newFuture = future.slice(1);
     const currentDoc = get().document;
+    const registry = get().imageRegistry;
 
     set({
-      document: nextDoc,
+      document: restoreImagesFromRegistry(nextDoc, registry),
       historyPast: [...get().historyPast, JSON.parse(JSON.stringify(currentDoc))],
       historyFuture: newFuture,
       selectedElementId: null,
@@ -57,8 +129,9 @@ export const useCarouselStore = create((set, get) => ({
   // Document actions
   setDocument: (newDocument) => {
     get().pushHistory();
+    const registry = get().imageRegistry;
     set({
-      document: newDocument,
+      document: restoreImagesFromRegistry(newDocument, registry),
       selectedElementId: null,
     });
   },
@@ -78,17 +151,38 @@ export const useCarouselStore = create((set, get) => ({
     set({
       document: initialCarousel,
       selectedElementId: null,
+      imageRegistry: {}, // Clear uploaded image registry on full reset
     }),
 
   // Slide actions
   setActiveSlide: (slideId) =>
-    set((state) => ({
-      document: {
-        ...state.document,
-        activeSlideId: slideId,
-      },
-      selectedElementId: null,
-    })),
+    set((state) => {
+      // Before leaving the current slide, snapshot ALL image elements into the registry
+      // so their src + geometry survive any document rewrite after the switch.
+      const currentSlide = state.document.slides.find(
+        (s) => s.id === state.document.activeSlideId
+      );
+      let updatedRegistry = state.imageRegistry;
+      if (currentSlide) {
+        for (const el of currentSlide.elements) {
+          if (el.type === "image" && el.src) {
+            updatedRegistry = { ...updatedRegistry, [el.id]: pickImageSnapshot(el) };
+          }
+          // Also capture placeholder rects that have been converted to images
+          if ((el.isPlaceholder === false || el.id?.includes("placeholder")) && el.src) {
+            updatedRegistry = { ...updatedRegistry, [el.id]: pickImageSnapshot(el) };
+          }
+        }
+      }
+      return {
+        imageRegistry: updatedRegistry,
+        document: {
+          ...state.document,
+          activeSlideId: slideId,
+        },
+        selectedElementId: null,
+      };
+    }),
 
   addSlide: () =>
     set((state) => {
@@ -178,7 +272,13 @@ export const useCarouselStore = create((set, get) => ({
     get().pushHistory();
     set((state) => {
       const { activeSlideId, slides } = state.document;
+      // Persist full image snapshot (src + geometry) in registry when an image is added
+      const newRegistry =
+        element.type === "image" && element.src
+          ? { ...state.imageRegistry, [element.id]: pickImageSnapshot(element) }
+          : state.imageRegistry;
       return {
+        imageRegistry: newRegistry,
         document: {
           ...state.document,
           slides: slides.map((slide) =>
@@ -204,7 +304,26 @@ export const useCarouselStore = create((set, get) => ({
   updateElement: (id, updates) =>
     set((state) => {
       const { activeSlideId, slides } = state.document;
+
+      // Search ALL slides for the existing element so any slide's image geometry is tracked,
+      // not just the currently active one.
+      let existingEl = null;
+      for (const slide of slides) {
+        const found = slide.elements.find((el) => el.id === id);
+        if (found) { existingEl = found; break; }
+      }
+
+      const isImageEl =
+        existingEl?.type === "image" ||
+        updates.type === "image" ||
+        (existingEl?.isPlaceholder && updates.src);
+
+      const newRegistry = isImageEl
+        ? { ...state.imageRegistry, [id]: pickImageSnapshot({ ...existingEl, ...updates }) }
+        : state.imageRegistry;
+
       return {
+        imageRegistry: newRegistry,
         document: {
           ...state.document,
           slides: slides.map((slide) => {
@@ -243,6 +362,101 @@ export const useCarouselStore = create((set, get) => ({
   // Selection & Viewport
   selectElement: (id) => set({ selectedElementId: id }),
   setZoom: (zoom) => set({ zoom }),
+
+  // Clipboard & Copy / Paste Actions
+  clipboardElement: null,
+
+  copySelectedElement: () => {
+    const { selectedElementId, document: doc } = get();
+    if (!selectedElementId || !doc) return;
+    const activeSlide = doc.slides.find((s) => s.id === doc.activeSlideId);
+    if (!activeSlide) return;
+    const targetElement = activeSlide.elements.find((el) => el.id === selectedElementId);
+    if (targetElement) {
+      const copy = JSON.parse(JSON.stringify(targetElement));
+      set({ clipboardElement: copy });
+      if (copy.text && navigator.clipboard) {
+        try {
+          navigator.clipboard.writeText(copy.text);
+        } catch (e) {
+          // Ignore browser clipboard write permissions
+        }
+      }
+    }
+  },
+
+  pasteClipboardElement: (pastedImageDataUrl = null, pastedText = null) => {
+    const { clipboardElement, document: doc, addElement, updateElement } = get();
+    const activeSlide = doc.slides.find((s) => s.id === doc.activeSlideId);
+    if (!activeSlide) return;
+
+    // 1. Handle Pasted Image Data URL / Image File
+    if (pastedImageDataUrl) {
+      const existingPlaceholder = activeSlide.elements.find(
+        (el) => el.isPlaceholder || el.id?.includes("placeholder")
+      );
+      if (existingPlaceholder) {
+        updateElement(existingPlaceholder.id, {
+          type: "image",
+          src: pastedImageDataUrl,
+          isPlaceholder: false,
+          strokeDashArray: null,
+        });
+        set({ selectedElementId: existingPlaceholder.id });
+      } else {
+        const newImgId = `img_${Date.now()}`;
+        addElement({
+          id: newImgId,
+          type: "image",
+          src: pastedImageDataUrl,
+          x: 540,
+          y: 794,
+          width: 760,
+          height: 480,
+          originX: "center",
+          originY: "center",
+          rotation: 0,
+          zIndex: 10,
+        });
+        set({ selectedElementId: newImgId });
+      }
+      return;
+    }
+
+    // 2. Handle Copied Internal Element (Ctrl+C -> Ctrl+V)
+    if (clipboardElement) {
+      const newId = `${clipboardElement.type}_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
+      const pastedElement = {
+        ...clipboardElement,
+        id: newId,
+        x: (clipboardElement.x || 160) + 24,
+        y: (clipboardElement.y || 210) + 24,
+        zIndex: activeSlide.elements.length + 10,
+      };
+      addElement(pastedElement);
+      set({ selectedElementId: newId });
+      return;
+    }
+
+    // 3. Handle Plain Text from Clipboard
+    if (pastedText && typeof pastedText === "string" && pastedText.trim()) {
+      const newTextId = `text_${Date.now()}`;
+      addElement({
+        id: newTextId,
+        type: "text",
+        text: pastedText.trim(),
+        x: 160,
+        y: 350,
+        width: 760,
+        fontSize: 32,
+        fontFamily: "Inter",
+        fill: "#0f172a",
+        rotation: 0,
+        zIndex: 10,
+      });
+      set({ selectedElementId: newTextId });
+    }
+  },
 
   // Global Layout & Theme Configuration
   globalLayoutConfig: {
@@ -288,6 +502,16 @@ export const useCarouselStore = create((set, get) => ({
     followFontSize: 24,
     followColor: "#64748b",
     followText: "Follow for more →",
+    // Global Grid, Margin, Gutter & Element Padding Controls
+    showGrid: false,
+    snapToGuides: true,
+    marginTop: 80,
+    marginRight: 80,
+    marginBottom: 80,
+    marginLeft: 80,
+    gridColumns: 4,
+    gutterWidth: 16,
+    elementPadding: 14,
     // Safe Area Margins & Content Zone Clearance / Paddings
     safeAreaMarginTop: 80,
     safeAreaMarginBottom: 80,
@@ -512,8 +736,9 @@ export const useCarouselStore = create((set, get) => ({
           if (isHeadline) {
             resEl = {
               ...el,
-              x: config.textAlign === "left" ? config.headlineX : alignX,
+              x: config.textAlign === "left" ? (config.headlineX || THEME.contentZone.x) : alignX,
               y: config.headlineY,
+              width: THEME.contentZone.width,
               fontSize: config.headlineFontSize,
               fontFamily: config.headlineFont,
               fill: config.headlineColor || el.fill,
@@ -523,8 +748,9 @@ export const useCarouselStore = create((set, get) => ({
           } else if (isBody) {
             resEl = {
               ...el,
-              x: config.textAlign === "left" ? config.bodyX : alignX,
+              x: config.textAlign === "left" ? (config.bodyX || THEME.contentZone.x) : alignX,
               y: dynamicBodyY,
+              width: THEME.contentZone.width,
               fontSize: config.bodyFontSize,
               fontFamily: config.bodyFont,
               fill: config.bodyColor || el.fill,
@@ -575,6 +801,12 @@ export const useCarouselStore = create((set, get) => ({
         };
       });
 
+      const registry = state.imageRegistry;
+      const slidesWithImages = restoreImagesFromRegistry(
+        { ...state.document, slides: updatedSlides },
+        registry
+      ).slides;
+
       return {
         globalLayoutConfig: config,
         document: {
@@ -587,7 +819,7 @@ export const useCarouselStore = create((set, get) => ({
             bgPattern: config.bgPattern,
             textAlign: config.textAlign,
           },
-          slides: updatedSlides,
+          slides: slidesWithImages,
         },
       };
     }),

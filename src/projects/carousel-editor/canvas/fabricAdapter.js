@@ -1,16 +1,17 @@
 import { Rect, Circle, Textbox, FabricImage, FabricObject } from "fabric";
+import { THEME } from "../theme/theme";
 
 // High-visibility dark selection controls and resize handles
 export const SELECTION_CONTROL_CONFIG = {
   transparentCorners: false,
-  cornerColor: "#1e40af",       // Dark solid blue fill
-  cornerStrokeColor: "#ffffff", // White outline ring around handles
-  cornerSize: 13,               // Prominent size for easy grabbing & resizing
+  cornerColor: "#2563eb",       // Vibrant solid blue fill
+  cornerStrokeColor: "#ffffff", // Crisp white outline ring around handles
+  cornerSize: 16,               // Prominent size for easy grabbing & resizing
   cornerStyle: "circle",        // Sleek circular handles
   borderColor: "#2563eb",       // Crisp vibrant blue selection border line
-  borderScaleFactor: 2.5,       // Thick selection line
-  padding: 6,                   // Comfortable spacing around object
-  touchCornerSize: 24,          // Easy touch/mouse target area
+  borderScaleFactor: 2,         // Crisp selection border line
+  padding: 4,                   // Comfortable spacing around object
+  touchCornerSize: 32,          // Generous hit target area for easy drag & resize
 };
 
 // Apply default selection styling globally to FabricObject prototype
@@ -64,7 +65,7 @@ export function createFabricObject(element) {
       return new Textbox(element.text || element.content || "", {
         left: element.x,
         top: element.y,
-        width: element.width || 840,
+        width: element.width || THEME.contentZone.width,
         fontSize: element.fontSize || 32,
         fontFamily: element.fontFamily || "Inter",
         fill: element.fill || "#000000",
@@ -73,6 +74,7 @@ export function createFabricObject(element) {
         originY: element.originY || "top",
         textAlign: element.textAlign || "left",
         splitByGrapheme: false,
+        breakWords: false,
         data: { id: element.id },
         ...SELECTION_CONTROL_CONFIG,
       });
