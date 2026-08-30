@@ -53,8 +53,7 @@ export function useEditorKeyboardShortcuts() {
         duplicateSelectedElement,
       } = useCarouselStore.getState();
 
-<<<<<<< HEAD
-=======
+
       // Copy Shortcut (Ctrl+C / Cmd+C)
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c") {
         const { copySelectedElement } = useCarouselStore.getState();
@@ -63,7 +62,6 @@ export function useEditorKeyboardShortcuts() {
       }
 
       // Undo / Redo Shortcuts
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
         e.preventDefault();
         if (e.shiftKey) redo();

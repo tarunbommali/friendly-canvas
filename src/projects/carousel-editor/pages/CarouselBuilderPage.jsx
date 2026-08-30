@@ -31,29 +31,17 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
   const bgPattern = themeConfig.bgPattern || "solid";
   const textAlign = themeConfig.textAlign || "left";
 
-<<<<<<< HEAD
   let textX = THEME.contentZone.x;
-=======
-  let textX = THEME.contentZone.x; // 140px — same x as chrome badge for consistent left alignment
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
   let originX = "left";
   if (textAlign === "center") {
     textX = THEME.canvas.width / 2;
     originX = "center";
   } else if (textAlign === "right") {
-<<<<<<< HEAD
     textX = THEME.contentZone.right;
     originX = "right";
   }
 
   const contentWidth = THEME.contentZone.width;
-=======
-    textX = THEME.contentZone.right; // 940px right boundary
-    originX = "right";
-  }
-
-  const contentWidth = THEME.contentZone.width; // 800px — text wraps within this boundary
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
 
   const slides = (rawSlides.length > 0 ? rawSlides : [{ title: post.title, body: '' }]).map((slide, index) => {
     const slideNo = slide.slideNo || slide.SlideNo || index + 1;
@@ -149,7 +137,6 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       ...composed,
       imagePrompt: rawImagePrompt,
       visualDirective: rawVisual,
-<<<<<<< HEAD
       imagePrompt:
         slide.imagePrompt ||
         generateSlideImagePrompt(
@@ -174,9 +161,6 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
         : (slide.assets || [])
             .map((asset) => asset?.name || asset?.label || asset)
             .filter((name) => typeof name === "string" && name.length > 0),
-=======
-      assetName: Array.isArray(rawAssetName) ? rawAssetName : (rawAssetName ? [rawAssetName] : []),
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
       bgPattern,
     };
   });

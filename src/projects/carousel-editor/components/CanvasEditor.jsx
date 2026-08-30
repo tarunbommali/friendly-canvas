@@ -2,13 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Canvas } from "fabric";
 import { useCarouselStore } from "../store/carouselStore";
 import { renderSlide } from "../canvas/renderer";
-<<<<<<< HEAD
 import { attachSnapGuideEngine } from "../canvas/snapGuideEngine";
 import { getLayoutBounds } from "../theme/layoutBounds";
-=======
-import { initSnapGuides } from "../canvas/snapGuideEngine";
-import { THEME } from "../theme/theme";
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
 
 export function CanvasEditor() {
   const containerRef = useRef(null);
@@ -139,15 +134,7 @@ export function CanvasEditor() {
 
     fabricRef.current = canvas;
 
-<<<<<<< HEAD
     const onSelectionCreated = (event) => {
-=======
-    // Attach real-time snap guides and edge alignment listener
-    const cleanupSnapGuides = initSnapGuides(canvas);
-
-    // Selection handlers
-    canvas.on("selection:created", (event) => {
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
       if (isRenderingRef.current) return;
       const obj = event.selected?.[0];
       if (obj?.data?.isChrome) {
@@ -185,7 +172,6 @@ export function CanvasEditor() {
         rotation: Math.round(target.angle ?? 0),
       };
 
-<<<<<<< HEAD
       const type = target.type;
 
       if (type === "rect") {
@@ -212,39 +198,6 @@ export function CanvasEditor() {
         updates.scaleY = target.scaleY || 1;
         updates.originX = target.originX;
         updates.originY = target.originY;
-=======
-      if (target.type === "rect") {
-        const scaledW = Math.round(target.getScaledWidth());
-        const scaledH = Math.round(target.getScaledHeight());
-        updates.width = scaledW;
-        updates.height = scaledH;
-        target.scaleX = 1;
-        target.scaleY = 1;
-        target.width = scaledW;
-        target.height = scaledH;
-      } else if (target.type === "circle") {
-        const scaledR = Math.round((target.radius || 50) * Math.max(target.scaleX || 1, target.scaleY || 1));
-        updates.radius = scaledR;
-        target.scaleX = 1;
-        target.scaleY = 1;
-        target.radius = scaledR;
-      } else if (target.type === "textbox" || target.type === "i-text" || target.type === "text") {
-        updates.text = target.text;
-        const scaledW = Math.round(target.getScaledWidth());
-        updates.width = scaledW;
-        target.scaleX = 1;
-        target.scaleY = 1;
-        target.width = scaledW;
-      } else if (target.type === "image" || target.isType?.("image")) {
-        const scaledW = Math.round(target.getScaledWidth());
-        const scaledH = Math.round(target.getScaledHeight());
-        updates.width = scaledW;
-        updates.height = scaledH;
-        if (typeof target.scaleToWidth === "function" && typeof target.scaleToHeight === "function") {
-          target.scaleToWidth(scaledW);
-          target.scaleToHeight(scaledH);
-        }
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
       }
 
       updateElement(id, updates);
@@ -270,7 +223,6 @@ export function CanvasEditor() {
     });
 
     return () => {
-<<<<<<< HEAD
       canvas.off("selection:created", onSelectionCreated);
       canvas.off("selection:updated", onSelectionUpdated);
       canvas.off("selection:cleared", onSelectionCleared);
@@ -278,9 +230,6 @@ export function CanvasEditor() {
       canvas.off("text:changed", onTextChanged);
       snapEngineRef.current?.dispose();
       snapEngineRef.current = null;
-=======
-      cleanupSnapGuides();
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
       canvas.dispose();
       fabricRef.current = null;
     };
@@ -350,10 +299,7 @@ export function CanvasEditor() {
               </span>
             </div>
 
-<<<<<<< HEAD
-=======
             {/* Inner Content Zone Boundary with 4-Column Grid Guides */}
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
             <div
               className="absolute border border-dashed border-amber-400/60 pointer-events-none rounded-xl overflow-hidden"
               style={{
@@ -363,14 +309,9 @@ export function CanvasEditor() {
                 height: `${layoutBounds.contentZone.height}px`,
               }}
             >
-<<<<<<< HEAD
               <span className="absolute top-1 left-2 text-[9px] font-mono font-bold text-amber-300 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-500/30">
                 CONTENT ZONE (Top: {layoutBounds.contentZone.top}px, Bottom:{" "}
                 {layoutBounds.contentZone.bottom}px)
-=======
-              <span className="absolute top-1 left-2 text-[9px] font-mono font-bold text-amber-300 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-500/30 z-10">
-                CONTENT ZONE (Top: {THEME.contentZone.top}px, Bottom: {THEME.contentZone.bottom}px)
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
               </span>
 
               {/* 4 Column Grid Overlay Lines */}

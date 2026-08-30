@@ -1,13 +1,8 @@
 import { Rect, Circle, Textbox, FabricImage, FabricObject } from "fabric";
-<<<<<<< HEAD
 import { buildHeadlineStyles, buildBodyStyles } from "./textAnnotations";
-=======
-import { THEME } from "../theme/theme";
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
 
 export const SELECTION_CONTROL_CONFIG = {
   transparentCorners: false,
-<<<<<<< HEAD
   cornerColor: "#2563eb",
   cornerStrokeColor: "#ffffff",
   cornerSize: 16,
@@ -16,16 +11,6 @@ export const SELECTION_CONTROL_CONFIG = {
   borderScaleFactor: 2,
   padding: 4,
   touchCornerSize: 32,
-=======
-  cornerColor: "#2563eb",       // Vibrant solid blue fill
-  cornerStrokeColor: "#ffffff", // Crisp white outline ring around handles
-  cornerSize: 16,               // Prominent size for easy grabbing & resizing
-  cornerStyle: "circle",        // Sleek circular handles
-  borderColor: "#2563eb",       // Crisp vibrant blue selection border line
-  borderScaleFactor: 2,         // Crisp selection border line
-  padding: 4,                   // Comfortable spacing around object
-  touchCornerSize: 32,          // Generous hit target area for easy drag & resize
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
 };
 
 if (FabricObject && FabricObject.prototype) {
@@ -142,14 +127,8 @@ export function createFabricObject(element) {
         originY: element.originY || "top",
         textAlign: element.textAlign || "left",
         splitByGrapheme: false,
-<<<<<<< HEAD
         styles: annotationStyles,
         ...withMeta(element),
-=======
-        breakWords: false,
-        data: { id: element.id },
-        ...SELECTION_CONTROL_CONFIG,
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
       });
     }
 

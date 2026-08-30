@@ -12,14 +12,10 @@ import {
   Copy,
   Check,
   Upload,
-<<<<<<< HEAD
   ChevronsUp,
   ChevronsDown,
   ArrowUp,
   ArrowDown,
-=======
-  Tag,
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
 } from "lucide-react";
 import { getLayoutBounds } from "../theme/layoutBounds";
 import { isChromeElement } from "../theme/elementClassify";
@@ -189,20 +185,11 @@ export function PropertiesPanel() {
               <div className="flex items-center gap-2 pt-1">
                 <button
                   onClick={() => {
-<<<<<<< HEAD
                     navigator.clipboard.writeText(
                       activeSlide.imagePrompt || activeSlide.visualDirective
                     );
                     setCopiedPrompt(true);
                     setTimeout(() => setCopiedPrompt(false), 2000);
-=======
-                    const promptText = activeSlide.imagePrompt || activeSlide.visualDirective;
-                    if (promptText) {
-                      navigator.clipboard.writeText(promptText);
-                      setCopiedPrompt(true);
-                      setTimeout(() => setCopiedPrompt(false), 2000);
-                    }
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
                   }}
                   className="flex-1 py-1.5 px-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-medium rounded border border-amber-500/30 flex items-center justify-center gap-1.5 transition-colors text-[11px]"
                 >
@@ -267,7 +254,6 @@ export function PropertiesPanel() {
           </div>
         )}
 
-<<<<<<< HEAD
         {Array.isArray(activeSlide?.assetName) && activeSlide.assetName.length > 0 && (
           <div className="border-t border-slate-800 pt-3 space-y-2">
             <span className="font-semibold text-slate-300">Asset Names</span>
@@ -279,28 +265,6 @@ export function PropertiesPanel() {
                 >
                   {name}
                 </span>
-=======
-        {/* Asset Name Container */}
-        {activeSlide?.assetName && (Array.isArray(activeSlide.assetName) ? activeSlide.assetName.length > 0 : Boolean(activeSlide.assetName)) && (
-          <div className="border-t border-slate-800 pt-3 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="font-semibold text-slate-200 flex items-center gap-1.5">
-                <Tag className="w-3.5 h-3.5 text-emerald-400" /> Asset Name
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-1.5 p-2 rounded-lg bg-slate-950 border border-slate-800">
-              {(Array.isArray(activeSlide.assetName)
-                ? activeSlide.assetName
-                : [activeSlide.assetName]
-              ).map((name, idx) => (
-                <div
-                  key={idx}
-                  className="px-2 py-1 rounded bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 font-mono text-[10px] break-all select-all flex items-center gap-1.5"
-                >
-                  <Tag className="w-2.5 h-2.5 text-emerald-400 flex-shrink-0" />
-                  <span>{name}</span>
-                </div>
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
               ))}
             </div>
           </div>
@@ -696,19 +660,11 @@ export function PropertiesPanel() {
           <label className="block text-slate-500 mb-1">Align & Distribute</label>
           <div className="grid grid-cols-3 gap-1.5">
             <button
-<<<<<<< HEAD
               onClick={alignLeft}
               className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors flex items-center justify-center gap-1"
               title="Align Left"
             >
               <AlignLeft className="w-3 h-3" /> Left
-=======
-              onClick={() => updateElement(selectedElement.id, { x: THEME.contentZone.x })}
-              className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors"
-              title="Align to Left Margin"
-            >
-              ← Left
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
             </button>
             <button
               onClick={centerHorizontally}
@@ -718,7 +674,6 @@ export function PropertiesPanel() {
               ↔ Center H
             </button>
             <button
-<<<<<<< HEAD
               onClick={alignRight}
               className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors flex items-center justify-center gap-1"
               title="Align Right"
@@ -727,12 +682,6 @@ export function PropertiesPanel() {
             </button>
             <button
               onClick={centerVertically}
-=======
-              onClick={() => {
-                const w = selectedElement.width || 400;
-                updateElement(selectedElement.id, { x: THEME.contentZone.right - w });
-              }}
->>>>>>> f016dd846d67a9fb45224c08def64d989678295a
               className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors"
               title="Align to Right Margin"
             >
