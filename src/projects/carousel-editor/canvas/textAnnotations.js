@@ -24,13 +24,6 @@ const HIGHLIGHT_COLORS = [
   '#FFD8B1', // soft coral
 ]
 
-const UNDERLINE_COLORS = {
-  default: '#1E5FA8', // blue — logic / technical concept
-  warning: '#DC2626', // red  — problem / warning
-  solution: '#16A34A', // green — outcome / solution
-  action: '#C05621',  // orange — tool / transition
-}
-
 /**
  * Pick highlight color from track accent or fallback palette.
  * Ensures the highlight is always a flat, semi-transparent tint.
@@ -71,7 +64,7 @@ export function wrapTextToLines(text, fontSize = 64, maxWidth = 800) {
   const str = String(text)
   if (str.length === 0) return []
 
-  const avgCharWidth = fontSize * 0.52
+  const avgCharWidth = fontSize * 0.44
   const maxCharsPerLine = Math.max(1, Math.floor(maxWidth / avgCharWidth))
 
   const paragraphs = str.split(/\r?\n/)
@@ -142,38 +135,6 @@ export function buildHeadlineStyles(text, accent) {
   }
 
   return styles
-}
-
-// ─────────────────────────────────────────────────────────────
-// Important word detection heuristics for body text
-// These words will get underlined automatically.
-// ─────────────────────────────────────────────────────────────
-const SKIP_WORDS = new Set([
-  'the', 'a', 'an', 'and', 'or', 'but', 'for', 'nor', 'so', 'yet',
-  'at', 'by', 'in', 'of', 'on', 'to', 'up', 'as', 'is', 'it',
-  'be', 'do', 'go', 'we', 'he', 'she', 'they', 'you', 'i',
-  'was', 'are', 'were', 'has', 'had', 'have', 'with', 'from',
-  'that', 'this', 'its', 'our', 'not', 'just', 'into',
-])
-
-/**
- * Detect important words in body text.
- */
-function detectImportantWordRanges(text, maxUnderlines = 2) {
-  const ranges = []
-  const regex = /\b([a-zA-Z]{6,})\b/g
-  let match
-  let count = 0
-
-  while ((match = regex.exec(text)) !== null && count < maxUnderlines) {
-    const word = match[1].toLowerCase()
-    if (!SKIP_WORDS.has(word)) {
-      ranges.push({ start: match.index, end: match.index + match[1].length })
-      count++
-    }
-  }
-
-  return ranges
 }
 
 /**

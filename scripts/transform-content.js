@@ -40,18 +40,6 @@ const DOMAIN_ANALOGIES = {
   '20': 'a very fast autocomplete that read the whole internet', // Gen AI
 }
 
-// ─── Layout → Beat mapping ───────────────────────────────────────────────────
-// Maps old layout IDs to which beat of the 3-beat arc they belong to.
-const BEAT = {
-  'hook-open': 'confuse',
-  'concept-explain': 'click',
-  'process-flow': 'click',
-  'comparison': 'click',
-  'real-world': 'click',
-  'recap-close': 'keep',
-  'next-up': 'keep',
-}
-
 // ─── Vibe rules ──────────────────────────────────────────────────────────────
 // Only emit a `vibe` field when the slide genuinely needs staging direction.
 // Layouts that can stand on typography + colour alone get no vibe.
@@ -70,7 +58,7 @@ function deriveVibe(slide) {
 }
 
 // ─── Headline transformations ────────────────────────────────────────────────
-function transformHeadline(slide, post, trackId) {
+function transformHeadline(slide) {
   const h = slide.headline || ''
   const layout = slide.layout
 
@@ -83,7 +71,7 @@ function transformHeadline(slide, post, trackId) {
   // Next-up / finale — softer framing
   if (layout === 'next-up') {
     if (h === 'Series Finale') return 'you made it through the whole stack'
-    if (h === 'Next Up') return 'next in the series'
+    if (h === 'Next Up' || h === 'next in the series') return 'next in the queue'
     return h
   }
 
@@ -189,7 +177,7 @@ function buildRecapTakeaway(post, trackId) {
 }
 
 // ─── Real-world text builder ──────────────────────────────────────────────────
-function buildRealWorldText(slideHeadline, post, trackId) {
+function buildRealWorldText(slideHeadline, post) {
   const concept = slideHeadline.toLowerCase()
   // If the headline is a generic label, fall back to post title
   const genericLabels = ['real-world example', 'where you\'ll actually see this']
@@ -199,7 +187,7 @@ function buildRealWorldText(slideHeadline, post, trackId) {
 }
 
 // ─── Voice soften helpers ─────────────────────────────────────────────────────
-function softenHookText(text, trackId) {
+function softenHookText(text) {
   // Remove overly stiff academic openers
   const replacements = [
     [/^At its core, /, ''],
@@ -215,7 +203,7 @@ function softenHookText(text, trackId) {
   return result.charAt(0).toUpperCase() + result.slice(1)
 }
 
-function softenClickText(text, trackId) {
+function softenClickText(text) {
   const replacements = [
     // Passive → active voice openers
     [/^This is known as /, 'this is called '],

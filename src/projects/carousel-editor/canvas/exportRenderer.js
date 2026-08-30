@@ -1,6 +1,6 @@
 import { Canvas, Rect, Circle, Textbox, FabricImage, Pattern } from "fabric";
 import { getPatternDataUrl } from "./patterns";
-import { buildHeadlineStyles, buildBodyStyles, wrapTextToLines } from "./textAnnotations";
+import { buildHeadlineStyles, buildBodyStyles } from "./textAnnotations";
 import { THEME } from "../theme/theme";
 
 /**
@@ -152,7 +152,7 @@ export async function renderSlideToDataUrl(slide, metadata, multiplier = 2) {
           left: el.x, top: el.y,
           width: elemWidth,
           fontSize: elemFontSize,
-          fontFamily: el.fontFamily || "Inter",
+          fontFamily: el.fontFamily || "Instrument Serif",
           fontWeight: el.fontWeight || "normal",
           fill: el.fill || "#000000",
           angle: el.rotation || 0,

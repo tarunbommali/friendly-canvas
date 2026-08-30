@@ -181,5 +181,10 @@ export function attachSnapGuideEngine(fabricCanvas, options = {}) {
       fabricCanvas.off("mouse:up", onMouseUp);
       clearGuides();
     },
+    detach() {
+      fabricCanvas.off("object:moving", onMoving);
+      fabricCanvas.off("mouse:up", onMouseUp);
+      clearGuides();
+    },
   };
 }

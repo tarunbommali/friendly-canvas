@@ -9,7 +9,7 @@ import { getPatternDataUrl } from "./patterns";
  * @param {Object} slide - Slide JSON object containing elements
  * @param {Object} metadata - Carousel metadata containing width and height
  */
-export function renderSlide(fabricCanvas, slide, metadata) {
+export function renderSlide(fabricCanvas, slide, metadata, options = {}) {
   if (!fabricCanvas || !slide || !metadata) return;
 
   fabricCanvas.clear();
@@ -50,7 +50,7 @@ export function renderSlide(fabricCanvas, slide, metadata) {
   );
 
   for (const element of sortedElements) {
-    const fabricObject = createFabricObject(element);
+    const fabricObject = createFabricObject(element, options);
     if (!fabricObject) continue;
 
     fabricCanvas.add(fabricObject);

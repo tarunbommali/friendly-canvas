@@ -40,7 +40,9 @@ export function useGlobalBackgroundStyle() {
     setGlobalBgState(style)
     try {
       localStorage.setItem(GLOBAL_BG_KEY, style)
-    } catch {}
+    } catch {
+      // LocalStorage write failed (private mode/quota)
+    }
     window.dispatchEvent(new Event('storage-bg-update'))
   }, [])
 

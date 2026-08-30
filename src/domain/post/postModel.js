@@ -94,7 +94,6 @@ export function createCanonicalSlide({
   config = {},
   elements = [],
   assets = [],
-  trackPalette = { primary: '#1E5FA8', accent: '#A9D0F5' },
 } = {}) {
   const generatedId = id || `slide_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`
 

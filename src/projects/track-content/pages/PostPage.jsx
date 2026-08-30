@@ -1,4 +1,3 @@
-import React from 'react'
 import { useParams, useOutletContext } from 'react-router-dom'
 import PostCard from '../components/PostCard'
 

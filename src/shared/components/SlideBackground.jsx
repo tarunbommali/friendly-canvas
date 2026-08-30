@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 
 const GLOBAL_BG_KEY = 'swe_notebook_global_bg_style'
 
@@ -14,7 +14,9 @@ export function setStoredGlobalBackground(value) {
   try {
     localStorage.setItem(GLOBAL_BG_KEY, value)
     window.dispatchEvent(new Event('storage-bg-update'))
-  } catch {}
+  } catch {
+    // ignore
+  }
 }
 
 /**
@@ -262,7 +264,7 @@ function SeamlessLayer({ config }) {
 }
 
 const TEXTURE_SVG = {
-  grain: (color) => svgDataUri(`
+  grain: () => svgDataUri(`
     <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
     <feColorMatrix type="saturate" values="0"/></filter>
     <rect width="100%" height="100%" filter="url(#n)" opacity="0.9"/>`),
@@ -270,7 +272,7 @@ const TEXTURE_SVG = {
     <filter id="n"><feTurbulence type="turbulence" baseFrequency="0.6" numOctaves="2" stitchTiles="stitch"/>
     <feColorMatrix type="saturate" values="0"/></filter>
     <rect width="100%" height="100%" filter="url(#n)"/>`),
-  paper: (color) => svgDataUri(`
+  paper: (color = '#ffffff') => svgDataUri(`
     <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.02 0.25" numOctaves="4"/>
     <feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer></filter>
     <rect width="100%" height="100%" fill="${encodeURIComponent(color)}"/>

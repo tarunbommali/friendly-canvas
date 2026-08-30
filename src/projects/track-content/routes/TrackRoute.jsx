@@ -1,4 +1,3 @@
-import React from 'react'
 import { Outlet, useOutletContext, useParams } from 'react-router-dom'
 import NotFoundPage from '../pages/NotFoundPage'
 

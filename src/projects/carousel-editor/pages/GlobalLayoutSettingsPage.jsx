@@ -35,7 +35,7 @@ export function GlobalLayoutSettingsPage() {
   );
   const document = useCarouselStore((state) => state.document);
 
-  const [activeTab, setActiveTab] = useState("positions"); // 'positions' | 'typography' | 'margins' | 'theme'
+  const [activeTab, setActiveTab] = useState("layout"); // 'layout' | 'positions' | 'typography' | 'margins' | 'theme'
   const [appliedToast, setAppliedToast] = useState(false);
   const applyTimerRef = useRef(null);
 
@@ -180,6 +180,17 @@ export function GlobalLayoutSettingsPage() {
             Settings Sections
           </div>
           <button
+            onClick={() => setActiveTab("layout")}
+            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${
+              activeTab === "layout"
+                ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+            }`}
+          >
+            <Layout className="w-4 h-4" />
+            <span>Layout (Title, Numbering, CTA)</span>
+          </button>
+          <button
             onClick={() => setActiveTab("positions")}
             className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${
               activeTab === "positions"
@@ -238,6 +249,363 @@ export function GlobalLayoutSettingsPage() {
             
             {/* Left Column: Form Controls */}
             <div className="w-full lg:w-7/12 space-y-6">
+
+              {/* TAB 0: GLOBAL LAYOUT (TITLE, NUMBERING, SWIPE, FOLLOW CTA) */}
+              {activeTab === "layout" && (
+                <div className="space-y-6">
+                  <div className="border-b border-slate-800 pb-3">
+                    <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                      <Layout className="w-4 h-4 text-blue-400" />
+                      <span>Global Layout: Title, Numbering, Swipe & CTA</span>
+                    </h2>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Configure universal positioning rules for titles, slide numbering, swipe indicators, and closing follow CTAs across all slides in this carousel.
+                    </p>
+                  </div>
+
+                  {/* 1. TITLE / HEADLINE PLACEMENT */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
+                        <Type className="w-4 h-4 text-blue-400" />
+                        <span>1. Title & Headline Placement</span>
+                      </div>
+                      <span className="font-mono text-[11px] text-blue-400 bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 rounded-full">
+                        X: {localConfig.headlineX ?? 140}px | Y: {localConfig.headlineY ?? 210}px | {localConfig.headlineFontSize ?? 92}px
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.headlineX ?? 140}
+                          onChange={(e) => handleChange("headlineX", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.headlineY ?? 210}
+                          onChange={(e) => handleChange("headlineY", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.headlineFontSize ?? 92}
+                          onChange={(e) => handleChange("headlineFontSize", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4 pt-1">
+                      <div>
+                        <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Text Alignment</span>
+                        <div className="flex items-center gap-1.5">
+                          {["left", "center", "right"].map((align) => (
+                            <button
+                              key={align}
+                              type="button"
+                              onClick={() => handleChange("textAlign", align)}
+                              className={`px-3 py-1 text-xs rounded-lg font-medium capitalize border transition-all ${
+                                (localConfig.textAlign || "left") === align
+                                  ? "bg-blue-600 border-blue-500 text-white shadow-sm"
+                                  : "bg-slate-950 border-slate-700 text-slate-400 hover:text-slate-200"
+                              }`}
+                            >
+                              {align}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Quick Layout Presets</span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleChange("headlineX", 140);
+                              handleChange("headlineY", 210);
+                              handleChange("textAlign", "left");
+                            }}
+                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                          >
+                            Default (Top Left)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleChange("headlineX", 540);
+                              handleChange("headlineY", 210);
+                              handleChange("textAlign", "center");
+                            }}
+                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                          >
+                            Centered Title
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. SLIDE NUMBERING PLACEMENT */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
+                        <Hash className="w-4 h-4 text-cyan-400" />
+                        <span>2. Slide Numbering Placement (Page Counter)</span>
+                      </div>
+                      <span className="font-mono text-[11px] text-cyan-400 bg-cyan-500/10 border border-cyan-400/30 px-2 py-0.5 rounded-full">
+                        X: {localConfig.pageNumberX ?? 80}px | Y: {localConfig.pageNumberY ?? 1246}px
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.pageNumberX ?? 80}
+                          onChange={(e) => handleChange("pageNumberX", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-cyan-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.pageNumberY ?? 1246}
+                          onChange={(e) => handleChange("pageNumberY", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-cyan-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.pageNumberFontSize ?? 24}
+                          onChange={(e) => handleChange("pageNumberFontSize", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-cyan-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
+                        <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
+                          <input
+                            type="color"
+                            value={localConfig.pageNumberColor || "#94a3b8"}
+                            onChange={(e) => handleChange("pageNumberColor", e.target.value)}
+                            className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
+                          />
+                          <span className="font-mono text-[11px] text-slate-300">
+                            {localConfig.pageNumberColor || "#94a3b8"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Position Presets</span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange("pageNumberX", 80);
+                            handleChange("pageNumberY", 1246);
+                          }}
+                          className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                        >
+                          Bottom Left (Default)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange("pageNumberX", 540);
+                            handleChange("pageNumberY", 1246);
+                          }}
+                          className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                        >
+                          Bottom Center
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange("pageNumberX", 1000);
+                            handleChange("pageNumberY", 110);
+                          }}
+                          className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                        >
+                          Top Right
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 3. SWIPE INDICATOR (MID SLIDES) */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
+                        <ArrowRight className="w-4 h-4 text-emerald-400" />
+                        <span>3. Swipe Indicator Placement (Mid Slides CTA)</span>
+                      </div>
+                      <span className="font-mono text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-400/30 px-2 py-0.5 rounded-full">
+                        "{localConfig.swipeText || 'Swipe →'}" | X: {localConfig.swipeX ?? 1000}px | Y: {localConfig.swipeY ?? 1246}px
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Swipe CTA Label</label>
+                        <input
+                          type="text"
+                          value={localConfig.swipeText || "Swipe →"}
+                          onChange={(e) => handleChange("swipeText", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-sans focus:border-emerald-400 focus:outline-none"
+                          placeholder="e.g. Swipe →"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
+                        <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
+                          <input
+                            type="color"
+                            value={localConfig.swipeColor || "#94a3b8"}
+                            onChange={(e) => handleChange("swipeColor", e.target.value)}
+                            className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
+                          />
+                          <span className="font-mono text-[11px] text-slate-300">
+                            {localConfig.swipeColor || "#94a3b8"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.swipeX ?? 1000}
+                          onChange={(e) => handleChange("swipeX", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-emerald-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.swipeY ?? 1246}
+                          onChange={(e) => handleChange("swipeY", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-emerald-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.swipeFontSize ?? 24}
+                          onChange={(e) => handleChange("swipeFontSize", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-emerald-400 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 4. LAST SLIDE FOLLOW CTA */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
+                        <UserPlus className="w-4 h-4 text-purple-400" />
+                        <span>4. Last Slide Follow CTA Placement (Closing Slide)</span>
+                      </div>
+                      <span className="font-mono text-[11px] text-purple-400 bg-purple-500/10 border border-purple-400/30 px-2 py-0.5 rounded-full">
+                        "{localConfig.followText || 'Follow for more →'}"
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Closing Slide CTA Text</label>
+                        <input
+                          type="text"
+                          value={localConfig.followText || "Follow for more →"}
+                          onChange={(e) => handleChange("followText", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-sans focus:border-purple-400 focus:outline-none"
+                          placeholder="e.g. Follow for more →"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
+                        <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
+                          <input
+                            type="color"
+                            value={localConfig.followColor || "#94a3b8"}
+                            onChange={(e) => handleChange("followColor", e.target.value)}
+                            className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
+                          />
+                          <span className="font-mono text-[11px] text-slate-300">
+                            {localConfig.followColor || "#94a3b8"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.followX ?? 1000}
+                          onChange={(e) => handleChange("followX", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-purple-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.followY ?? 1246}
+                          onChange={(e) => handleChange("followY", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-purple-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.followFontSize ?? 24}
+                          onChange={(e) => handleChange("followFontSize", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-purple-400 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Quick CTA Presets</span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {["Follow for more →", "Save for later 🔖", "Share with friends 🚀", "Read next track →"].map((preset) => (
+                          <button
+                            key={preset}
+                            type="button"
+                            onClick={() => handleChange("followText", preset)}
+                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                          >
+                            {preset}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* TAB 1: ELEMENT POSITIONS */}
               {activeTab === "positions" && (
@@ -754,10 +1122,11 @@ export function GlobalLayoutSettingsPage() {
                       <div>
                         <label className="block text-slate-400 mb-1 font-medium">Headline Font Family</label>
                         <select
-                          value={localConfig.headlineFont || "Inter"}
+                          value={localConfig.headlineFont || "Instrument Serif"}
                           onChange={(e) => handleChange("headlineFont", e.target.value)}
                           className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 focus:border-blue-500 focus:outline-none"
                         >
+                          <option value="Instrument Serif">Instrument Serif (Editorial Serif - Default)</option>
                           <option value="Inter">Inter (Clean Sans)</option>
                           <option value="Georgia">Georgia (Classic Serif)</option>
                           <option value="Playfair Display">Playfair Display (Display Serif)</option>
@@ -807,11 +1176,14 @@ export function GlobalLayoutSettingsPage() {
                       <div>
                         <label className="block text-slate-400 mb-1 font-medium">Body Font Family</label>
                         <select
-                          value={localConfig.bodyFont || "Inter"}
+                          value={localConfig.bodyFont || "Georgia"}
                           onChange={(e) => handleChange("bodyFont", e.target.value)}
                           className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 focus:border-blue-500 focus:outline-none"
                         >
+                          <option value="Georgia">Georgia (Classic Serif - Default)</option>
+                          <option value="Instrument Serif">Instrument Serif (Editorial Serif)</option>
                           <option value="Inter">Inter (Sans)</option>
+                          <option value="Playfair Display">Playfair Display (Display Serif)</option>
                           <option value="Roboto">Roboto (Sans)</option>
                           <option value="Arial">Arial (Sans)</option>
                           <option value="Courier New">Monospace</option>
@@ -1249,7 +1621,7 @@ export function GlobalLayoutSettingsPage() {
               </div>
 
               <div className="h-[520px] rounded-xl overflow-hidden border border-slate-800 relative bg-slate-950">
-                <CanvasEditor />
+                <CanvasEditor isLayoutMode={true} />
               </div>
 
               {/* Dynamic Position Coordinates Readout Bar */}

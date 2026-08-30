@@ -1,16 +1,10 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCarouselStore } from "../store/carouselStore";
 import { CanvasEditor } from "../components/CanvasEditor";
 import { SlideThumbnails } from "../components/SlideThumbnails";
 import { Toolbar } from "../components/Toolbar";
 import { PropertiesPanel } from "../components/PropertiesPanel";
-import {
-  Sparkles,
-  Layout,
-  Edit3,
-  Settings,
-} from "lucide-react";
 import { useCollectionData } from "../../../shared/hooks/useCollectionData";
 import { useEditorKeyboardShortcuts } from "../hooks/useEditorKeyboardShortcuts";
 import { THEME } from "../theme/theme";
@@ -26,8 +20,8 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
   const badgeText = `${post.collectionName || 'Track ' + (post.trackId || 1)}`;
 
   const primaryColor = themeConfig.primaryColor || THEME.colors.accent;
-  const headlineFont = themeConfig.headlineFont || "Inter";
-  const bodyFont = themeConfig.bodyFont || "Inter";
+  const headlineFont = themeConfig.headlineFont || THEME.typography.headline.fontFamily || "Instrument Serif";
+  const bodyFont = themeConfig.bodyFont || THEME.typography.body.fontFamily || "Georgia";
   const bgColor = themeConfig.bgColor || "#ffffff";
   const bgPattern = themeConfig.bgPattern || "solid";
   const textAlign = themeConfig.textAlign || "left";
@@ -60,9 +54,9 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       y: THEME.contentZone.y,
       width: contentWidth,
       text: rawTitle,
-      fontSize: 92,
+      fontSize: themeConfig.headlineFontSize || 92,
       fontFamily: headlineFont,
-      fill: THEME.colors.textPrimary,
+      fill: themeConfig.headlineColor || THEME.colors.textPrimary,
       // Pass track accent so textAnnotations can highlight the last word
       _accent: themeConfig.accentColor || primaryColor,
       originX,
@@ -75,8 +69,9 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
     const rawBody = slide.text || slide.body || slide.Content || (typeof slide.content === 'object' ? slide.content?.body : '') || "";
     if (rawBody) {
       // Calculate dynamic headline height to place body cleanly below it without extra whitespace or overlap
-      const headlineLines = wrapTextToLines(rawTitle, 92, contentWidth).length || 1;
-      const headlineHeight = headlineLines * 92 * 1.15;
+      const hSize = themeConfig.headlineFontSize || 92;
+      const headlineLines = wrapTextToLines(rawTitle, hSize, contentWidth).length || 1;
+      const headlineHeight = headlineLines * hSize * 1.15;
       const dynamicBodyY = Math.round(THEME.contentZone.y + headlineHeight + 28);
 
       // Automatically wrap semicolons into clean newlines for description lists
@@ -91,9 +86,9 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
         y: dynamicBodyY,
         width: contentWidth,
         text: formattedBody,
-        fontSize: 64,
+        fontSize: themeConfig.bodyFontSize || 64,
         fontFamily: bodyFont,
-        fill: THEME.colors.textSecondary,
+        fill: themeConfig.bodyColor || THEME.colors.textSecondary,
         // Pass track primary so textAnnotations can underline important words
         _primary: primaryColor,
         originX,
@@ -136,32 +131,30 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       textAlign,
     });
 
-    const rawImagePrompt = slide.imagePrompt || rawVisual;
-    const rawAssetName = slide.assetName || (typeof slide.content === 'object' ? slide.content?.assetName : []) || [];
+    const rawImagePrompt =
+      slide.imagePrompt ||
+      generateSlideImagePrompt(
+        {
+          ...post,
+          Track: post.collectionName || post.Track,
+          PostTitle: post.title || post.PostTitle,
+        },
+        {
+          VisualDirective: rawVisual,
+          SlideTitle: rawTitle,
+          Content: rawBody,
+        },
+        {
+          primary: primaryColor,
+          accent: themeConfig.accentColor,
+          palette: post.collectionName,
+        }
+      );
 
     return {
       ...composed,
-      imagePrompt: rawImagePrompt,
       visualDirective: rawVisual,
-      imagePrompt:
-        slide.imagePrompt ||
-        generateSlideImagePrompt(
-          {
-            ...post,
-            Track: post.collectionName || post.Track,
-            PostTitle: post.title || post.PostTitle,
-          },
-          {
-            VisualDirective: rawVisual,
-            SlideTitle: rawTitle,
-            Content: rawBody,
-          },
-          {
-            primary: primaryColor,
-            accent: themeConfig.accentColor,
-            palette: post.collectionName,
-          }
-        ),
+      imagePrompt: rawImagePrompt,
       assetName: Array.isArray(slide.assetName)
         ? slide.assetName
         : (slide.assets || [])
@@ -193,13 +186,7 @@ export function CarouselBuilderPage() {
   const { postId, trackId, projectSlug } = useParams();
   const { designs, collectionIdMap, trackPalettes } = useCollectionData();
 
-  const document = useCarouselStore((state) => state.document);
   const setDocument = useCarouselStore((state) => state.setDocument);
-  const updateCarouselMetadata = useCarouselStore(
-    (state) => state.updateCarouselMetadata
-  );
-
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   const currentPost = useMemo(() => {
     if (!designs || designs.length === 0) return null;
@@ -260,19 +247,26 @@ export function CarouselBuilderPage() {
       currentPost.trackColor ||
       {};
 
-    const initialPalette = {
-      primaryColor: palette.primary || currentPost.trackColor?.primary || "#C84B31",
-      accentColor: palette.accent || currentPost.trackColor?.accent || "#FAD4C0",
-      bgColor: "#ffffff",
-      bgPattern: "solid",
-      headlineFont: "Inter",
-      bodyFont: "Inter",
-      textAlign: "left",
+    const globalConfig = useCarouselStore.getState().globalLayoutConfig;
+
+    const initialThemeConfig = {
+      primaryColor: palette.primary || currentPost.trackColor?.primary || globalConfig.primaryColor || "#C84B31",
+      accentColor: palette.accent || currentPost.trackColor?.accent || globalConfig.accentColor || "#FAD4C0",
+      bgColor: globalConfig.bgColor || "#ffffff",
+      bgPattern: globalConfig.bgPattern || "solid",
+      headlineFont: globalConfig.headlineFont || THEME.typography.headline.fontFamily || "Instrument Serif",
+      bodyFont: globalConfig.bodyFont || THEME.typography.body.fontFamily || "Georgia",
+      headlineFontSize: globalConfig.headlineFontSize || 92,
+      bodyFontSize: globalConfig.bodyFontSize || 64,
+      headlineColor: globalConfig.headlineColor || "#0f172a",
+      bodyColor: globalConfig.bodyColor || "#475569",
+      textAlign: globalConfig.textAlign || "left",
     };
 
-    const convertedDoc = convertPostToCarouselDoc(currentPost, initialPalette);
+    const convertedDoc = convertPostToCarouselDoc(currentPost, initialThemeConfig);
     if (convertedDoc) {
       setDocument(convertedDoc, { resetRegistry: true });
+      useCarouselStore.getState().applyGlobalLayoutConfigToAllSlides();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPost]);

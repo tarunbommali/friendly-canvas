@@ -61,7 +61,7 @@ function syncChromePagination(slides) {
 
 function estimateLineCount(text = "", fontSize = 44, maxWidth = 680) {
   if (!text) return 1;
-  const avgCharWidth = fontSize * 0.55;
+  const avgCharWidth = fontSize * 0.44;
   const charsPerLine = Math.max(1, Math.floor(maxWidth / avgCharWidth));
   const words = text.split(/\s+/).filter(Boolean);
   let lines = words.length ? 1 : 1;
@@ -126,8 +126,8 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
       return {
         ...el,
         fill: config.primaryColor || el.fill,
-        x: alignX,
-        y: safeArea.top + 24,
+        x: config.badgeX ?? alignX,
+        y: config.badgeY ?? (safeArea.top + 24),
         originX,
         textAlign,
       };
@@ -135,8 +135,8 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
     if (isPageNumberElement(el)) {
       return {
         ...el,
-        x: safeArea.left,
-        y: safeArea.bottom - 24,
+        x: config.pageNumberX ?? safeArea.left,
+        y: config.pageNumberY ?? (safeArea.bottom - 24),
         fontSize: config.pageNumberFontSize ?? THEME.typography.footer.fontSize,
         fill: config.pageNumberColor || THEME.colors.footer,
       };
@@ -147,9 +147,13 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
         (typeof el.text === "string" && el.text.includes("Follow"));
       return {
         ...el,
-        x: safeArea.right,
-        originX: "right",
-        y: safeArea.bottom - 24,
+        x: isFollow
+          ? (config.followX ?? safeArea.right)
+          : (config.swipeX ?? safeArea.right),
+        originX: isFollow ? (config.followOriginX || "right") : (config.swipeOriginX || "right"),
+        y: isFollow
+          ? (config.followY ?? (safeArea.bottom - 24))
+          : (config.swipeY ?? (safeArea.bottom - 24)),
         fontSize: isFollow
           ? (config.followFontSize ?? 24)
           : (config.swipeFontSize ?? 24),
@@ -176,9 +180,9 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
     if (isHeadlineElement(el)) {
       resEl = {
         ...el,
-        x: alignX,
-        y: headlineY,
-        width: contentZone.width,
+        x: config.headlineX ?? alignX,
+        y: config.headlineY ?? headlineY,
+        width: config.headlineWidth || contentZone.width,
         fontSize: headlineFontSize,
         fontFamily: config.headlineFont || el.fontFamily,
         fill: config.headlineColor || el.fill,
@@ -188,9 +192,9 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
     } else if (isBodyElement(el)) {
       resEl = {
         ...el,
-        x: alignX,
+        x: config.bodyX ?? alignX,
         y: dynamicBodyY,
-        width: contentZone.width,
+        width: config.bodyWidth || contentZone.width,
         fontSize: bodyFontSize,
         fontFamily: config.bodyFont || el.fontFamily,
         fill: config.bodyColor || el.fill,
@@ -251,6 +255,7 @@ export const useCarouselStore = create((set, get) => ({
   document: initialCarousel,
   selectedElementId: null,
   zoom: 1,
+  isZoomLocked: true,
   showSafeAreaGuides: false,
   snapToGuides: false,
   historyPast: [],
@@ -267,6 +272,7 @@ export const useCarouselStore = create((set, get) => ({
 
   setZoom: (zoomOrFn) =>
     set((state) => {
+      if (state.isZoomLocked) return {};
       const nextZoom =
         typeof zoomOrFn === "function" ? zoomOrFn(state.zoom) : zoomOrFn;
       return {
@@ -285,6 +291,21 @@ export const useCarouselStore = create((set, get) => ({
         globalLayoutConfig: { ...state.globalLayoutConfig, snapToGuides: next },
       };
     }),
+
+  toggleZoomLock: () =>
+    set((state) => {
+      const nextLocked = !state.isZoomLocked;
+      return {
+        isZoomLocked: nextLocked,
+        zoom: nextLocked ? 1 : state.zoom,
+      };
+    }),
+
+  setZoomLocked: (locked) =>
+    set((state) => ({
+      isZoomLocked: Boolean(locked),
+      zoom: locked ? 1 : state.zoom,
+    })),
 
   pushHistory: () => {
     const currentDoc = get().document;
@@ -380,6 +401,26 @@ export const useCarouselStore = create((set, get) => ({
         selectedElementId: null,
       };
     }),
+
+  goToPreviousSlide: () => {
+    const state = get();
+    const slides = state.document?.slides || [];
+    if (slides.length <= 1) return;
+    const currentIndex = slides.findIndex((s) => s.id === state.document.activeSlideId);
+    if (currentIndex > 0) {
+      state.setActiveSlide(slides[currentIndex - 1].id);
+    }
+  },
+
+  goToNextSlide: () => {
+    const state = get();
+    const slides = state.document?.slides || [];
+    if (slides.length <= 1) return;
+    const currentIndex = slides.findIndex((s) => s.id === state.document.activeSlideId);
+    if (currentIndex >= 0 && currentIndex < slides.length - 1) {
+      state.setActiveSlide(slides[currentIndex + 1].id);
+    }
+  },
 
   addSlide: () =>
     set((state) => {
@@ -706,14 +747,6 @@ export const useCarouselStore = create((set, get) => ({
     }));
   },
 
-  registerImage: (elementId, snapshot) =>
-    set((state) => ({
-      imageRegistry: {
-        ...state.imageRegistry,
-        [elementId]: snapshot,
-      },
-    })),
-
   copySelectedElement: () => {
     const { selectedElementId, document: doc } = get();
     if (!selectedElementId || !doc) return;
@@ -844,7 +877,6 @@ export const useCarouselStore = create((set, get) => ({
     })),
 
   selectElement: (id) => set({ selectedElementId: id }),
-  setZoom: (zoom) => set({ zoom }),
 
   setGlobalLayoutConfig: (configUpdates) =>
     set((state) => ({
@@ -880,12 +912,6 @@ export const useCarouselStore = create((set, get) => ({
         },
         slides: updatedSlides,
       };
-
-      const registry = state.imageRegistry;
-      const slidesWithImages = restoreImagesFromRegistry(
-        { ...state.document, slides: updatedSlides },
-        registry
-      ).slides;
 
       return {
         globalLayoutConfig: config,

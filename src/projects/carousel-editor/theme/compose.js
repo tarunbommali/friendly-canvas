@@ -26,7 +26,7 @@ export function getContentZoneBounds() {
   return { startX, endX, width, startY, endY, height };
 }
 
-const AVG_CHAR_WIDTH_RATIO = 0.55;
+const AVG_CHAR_WIDTH_RATIO = 0.44;
 
 function estimateLineCount(text = "", fontSize = 44, maxWidth = 680) {
   if (!text) return 1;
@@ -70,8 +70,6 @@ export function autoLayoutContent(elements = []) {
   const HEADLINE_X = THEME.contentZone.x;
   const HEADLINE_Y = THEME.contentZone.y;
   const HEADLINE_MAX_WIDTH = THEME.contentZone.width;
-  const HEADLINE_LINE_HEIGHT_RATIO = 1.2;
-  const HEADLINE_TO_BODY_GAP = 40;
 
   const BODY_X = THEME.contentZone.x;
   const BODY_MAX_WIDTH = THEME.contentZone.width;
@@ -137,7 +135,7 @@ export function autoLayoutContent(elements = []) {
       if (!updated.fontFamily && updated.font?.family) {
         updated.fontFamily = updated.font.family;
       }
-      updated.fontFamily = updated.fontFamily || "Inter";
+      updated.fontFamily = updated.fontFamily || THEME.typography.headline.fontFamily || "Instrument Serif";
       if (!updated.fill && updated.font?.color) updated.fill = updated.font.color;
       updated.fill = updated.fill || THEME.colors.textPrimary;
       updated.textAlign = updated.align || updated.textAlign || "left";
@@ -149,7 +147,7 @@ export function autoLayoutContent(elements = []) {
       if (!updated.fontFamily && updated.font?.family) {
         updated.fontFamily = updated.font.family;
       }
-      updated.fontFamily = updated.fontFamily || "Inter";
+      updated.fontFamily = updated.fontFamily || THEME.typography.body.fontFamily || "Georgia";
       if (!updated.fill && updated.font?.color) updated.fill = updated.font.color;
       updated.fill = updated.fill || THEME.colors.textSecondary;
       updated.textAlign = updated.align || updated.textAlign || "left";
@@ -161,7 +159,7 @@ export function autoLayoutContent(elements = []) {
       if (!updated.fontFamily && updated.font?.family) {
         updated.fontFamily = updated.font.family;
       }
-      updated.fontFamily = updated.fontFamily || "Inter";
+      updated.fontFamily = updated.fontFamily || "Georgia";
       if (!updated.fill && updated.font?.color) updated.fill = updated.font.color;
       updated.fill = updated.fill || "#8e5c29";
       updated.textAlign = updated.align || updated.textAlign || "left";

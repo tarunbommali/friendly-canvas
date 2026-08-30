@@ -544,7 +544,12 @@ export function PropertiesPanel() {
                 Font Family
               </label>
               <select
-                value={selectedElement.fontFamily || "Inter"}
+                value={
+                  selectedElement.fontFamily ||
+                  (selectedElement.type === "headline" || selectedElement.id?.includes("head")
+                    ? "Instrument Serif"
+                    : "Georgia")
+                }
                 onChange={(e) =>
                   updateElement(selectedElement.id, {
                     fontFamily: e.target.value,
@@ -552,10 +557,12 @@ export function PropertiesPanel() {
                 }
                 className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200"
               >
-                <option value="Inter">Inter</option>
+                <option value="Instrument Serif">Instrument Serif (Default)</option>
+                <option value="Inter">Inter (Sans)</option>
+                <option value="Georgia">Georgia (Serif)</option>
+                <option value="Playfair Display">Playfair Display</option>
                 <option value="Roboto">Roboto</option>
                 <option value="Arial">Arial</option>
-                <option value="Georgia">Georgia</option>
                 <option value="Courier New">Monospace</option>
               </select>
             </div>
@@ -870,8 +877,8 @@ export function PropertiesPanel() {
                 if (!activeSlide) return;
                 const els = activeSlide.elements.filter((e) => !e.id?.includes("bg") && !e.id?.includes("page"));
                 if (els.length < 2) return;
-                const minY = THEME.contentZone.y;
-                const maxY = THEME.contentZone.bottom - 100;
+                const minY = layoutBounds.contentZone.y;
+                const maxY = layoutBounds.contentZone.bottom - 100;
                 const step = (maxY - minY) / (els.length - 1);
                 els.forEach((el, idx) => {
                   updateElement(el.id, { y: Math.round(minY + idx * step) });

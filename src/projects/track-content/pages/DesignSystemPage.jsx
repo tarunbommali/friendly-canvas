@@ -1,26 +1,16 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useOutletContext, Link } from 'react-router-dom'
 import {
   Palette,
   Image as ImageIcon,
-  Layout,
   Sliders,
   Type,
   Settings,
   ArrowLeft,
   Copy,
-  Layers,
 } from 'lucide-react'
 import SlideBackground, { getBackgroundPreset, BACKGROUND_TYPE_OPTIONS } from '../../../shared/components/SlideBackground'
 import { useGlobalBackgroundStyle } from '../hooks/useSlideOverrides'
-
-const LAYOUT_LayoutCategoryS = [
-  { value: 'hook-open', label: 'Hook / Open', desc: 'First slide — bold headline, faded background visual. Stops the scroll.' },
-  { value: 'concept-explain', label: 'Concept / Explain', desc: 'Icon + body text. Single topic, clean margin, no overload.' },
-  { value: 'process-flow', label: 'Process / Flow', desc: 'Numbered steps or arrows. Left-to-right reading pattern.' },
-  { value: 'comparison', label: 'Comparison', desc: 'Split-screen or two-column layout. Side-by-side contrast.' },
-  { value: 'recap-close', label: 'Recap / Close', desc: 'Checklist or "next up" card. Calls to action — save, follow, swipe.' },
-]
 
 const CANVAS_SPEC = {
   'Aspect Ratio': '4:5 (1080 × 1350 px)',
@@ -38,7 +28,6 @@ export default function DesignSystemPage() {
   const { designSystem = {}, trackPalettes = {}, onCopy } = useOutletContext()
   const { globalBg, setGlobalBg } = useGlobalBackgroundStyle()
 
-  const LayoutCategorys = designSystem.LayoutCategoryLayouts || {}
   const typography = designSystem.Typography || {}
 
   const [activeTab, setActiveTab] = useState('palettes')

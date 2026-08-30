@@ -1,13 +1,34 @@
+import { useEffect, useRef } from "react";
 import { useCarouselStore } from "../store/carouselStore";
-import { Plus, Copy, Trash2, Layers, Download } from "lucide-react";
+import { Plus, Copy, Trash2, Download } from "lucide-react";
 import { renderSlideToDataUrl } from "../canvas/exportRenderer";
 
 export function SlideThumbnails() {
+  const listRef = useRef(null);
   const document = useCarouselStore((state) => state.document);
   const setActiveSlide = useCarouselStore((state) => state.setActiveSlide);
+  const goToPreviousSlide = useCarouselStore((state) => state.goToPreviousSlide);
+  const goToNextSlide = useCarouselStore((state) => state.goToNextSlide);
   const addSlide = useCarouselStore((state) => state.addSlide);
   const duplicateSlide = useCarouselStore((state) => state.duplicateSlide);
   const deleteSlide = useCarouselStore((state) => state.deleteSlide);
+
+  // Auto-scroll and focus active thumbnail
+  useEffect(() => {
+    if (!listRef.current || !document.activeSlideId) return;
+    const activeEl = listRef.current.querySelector(
+      `[data-slide-id="${document.activeSlideId}"]`
+    );
+    if (activeEl) {
+      activeEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      if (
+        window.document.activeElement &&
+        listRef.current.contains(window.document.activeElement)
+      ) {
+        activeEl.focus();
+      }
+    }
+  }, [document.activeSlideId]);
 
   const downloadSingleSlide = async (e, slide, index) => {
     e.stopPropagation();
@@ -42,15 +63,34 @@ export function SlideThumbnails() {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2 space-y-3.5">
+      <div ref={listRef} className="flex-1 overflow-y-auto p-2 space-y-3.5">
         {document.slides.map((slide, index) => {
           const isActive = slide.id === document.activeSlideId;
 
           return (
             <div
               key={slide.id}
+              data-slide-id={slide.id}
+              tabIndex={0}
+              role="button"
+              aria-selected={isActive}
               onClick={() => setActiveSlide(slide.id)}
-              className="relative group cursor-pointer"
+              onKeyDown={(e) => {
+                if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  goToPreviousSlide();
+                } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  goToNextSlide();
+                } else if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveSlide(slide.id);
+                }
+              }}
+              className="relative group cursor-pointer outline-none focus:ring-1 focus:ring-cyan-400/60 rounded-lg"
             >
               {/* Outer Thumbnail Container */}
               <div

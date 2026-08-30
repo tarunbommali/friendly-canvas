@@ -8,7 +8,6 @@ export function compileLayoutToElements({
   content = {},
   trackPalette = { primary: '#1E5FA8', accent: '#A9D0F5' },
   slideNo = 1,
-  totalSlides = 1,
   trackName = '',
 } = {}) {
   const elements = []

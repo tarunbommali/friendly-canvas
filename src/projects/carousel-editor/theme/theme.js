@@ -46,10 +46,11 @@ export const THEME = {
     accent: "#2563eb",
   },
   typography: {
-    headline: { fontSize: 92, fontFamily: "Inter" },
-    body: { fontSize: 64, fontFamily: "Inter" },
-    badge: { fontSize: 26, fontFamily: "Inter" },
-    footer: { fontSize: 24, fontFamily: "Inter" },
+    headline: { fontSize: 92, fontFamily: "Instrument Serif", color: "#0f172a" },
+    body: { fontSize: 64, fontFamily: "Georgia", color: "#475569" },
+    badge: { fontSize: 26, fontFamily: "Instrument Serif" },
+    directive: { fontSize: 24, fontFamily: "Georgia", color: "#8e5c29" },
+    footer: { fontSize: 24, fontFamily: "Georgia" },
   },
   chrome: {
     badge: { x: 540, y: 140 },

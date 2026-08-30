@@ -1,19 +1,14 @@
-import React, { useState, useMemo } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useState, useMemo } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import {
-  ChevronRight,
-  ChevronDown,
   FileText,
   Layers,
   Music,
   Image as ImageIcon,
   Palette,
-  Edit3,
-  Search,
   Plus,
   ArrowRight,
   Check,
-  Copy,
 } from 'lucide-react'
 import { useProjectData } from '../hooks/useProjectData'
 import { useTrackData } from '../../../shared/hooks/useTrackData'

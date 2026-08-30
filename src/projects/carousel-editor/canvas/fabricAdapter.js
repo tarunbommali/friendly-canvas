@@ -1,6 +1,11 @@
 import { Rect, Circle, Textbox, FabricImage, FabricObject } from "fabric";
 import { THEME } from "../theme/theme";
-import { buildHeadlineStyles, buildBodyStyles, wrapTextToLines } from "./textAnnotations";
+import { buildHeadlineStyles, buildBodyStyles } from "./textAnnotations";
+import {
+  isHeadlineElement,
+  isPageNumberElement,
+  isSwipeElement,
+} from "../theme/elementClassify";
 
 export const SELECTION_CONTROL_CONFIG = {
   transparentCorners: false,
@@ -34,11 +39,63 @@ function chromeLock(element) {
   };
 }
 
-function withMeta(element, extras = {}) {
+function withMeta(element, options = {}, extras = {}) {
+  const isLayoutMode = Boolean(options?.isLayoutMode);
+  const isHeadline = isHeadlineElement(element);
+  const isPageNum = isPageNumberElement(element);
+  const isSwipe = isSwipeElement(element);
+
+  let lockConfig = chromeLock(element);
+  let selectable = !element.isChrome;
+  let evented = !element.isChrome;
+
+  if (isLayoutMode) {
+    if (isHeadline || isPageNum || isSwipe) {
+      selectable = true;
+      evented = true;
+      lockConfig = {
+        selectable: true,
+        evented: true,
+        lockMovementX: false,
+        lockMovementY: false,
+        lockRotation: true,
+        lockScalingX: !isHeadline,
+        lockScalingY: !isHeadline,
+        hoverCursor: "move",
+        hasControls: isHeadline,
+        hasBorders: true,
+      };
+    } else {
+      selectable = false;
+      evented = false;
+      lockConfig = {
+        selectable: false,
+        evented: false,
+        lockMovementX: true,
+        lockMovementY: true,
+        lockRotation: true,
+        lockScalingX: true,
+        lockScalingY: true,
+        hoverCursor: "default",
+        hasControls: false,
+        hasBorders: false,
+      };
+    }
+  }
+
   return {
-    data: { id: element.id, isChrome: Boolean(element.isChrome) },
+    data: {
+      id: element.id,
+      type: element.type,
+      isChrome: Boolean(element.isChrome),
+      isHeadline,
+      isPageNumber: isPageNum,
+      isSwipe,
+    },
     ...SELECTION_CONTROL_CONFIG,
-    ...chromeLock(element),
+    selectable,
+    evented,
+    ...lockConfig,
     ...extras,
   };
 }
@@ -63,7 +120,7 @@ function applyImageSize(fabricImg, element, imgElement) {
 /**
  * Fabric Adapter: Transforms JSON element definitions into runtime Fabric.js Objects.
  */
-export function createFabricObject(element) {
+export function createFabricObject(element, options = {}) {
   if (!element) return null;
 
   switch (element.type) {
@@ -82,7 +139,7 @@ export function createFabricObject(element) {
         originY: element.originY || "top",
         scaleX: element.scaleX || 1,
         scaleY: element.scaleY || 1,
-        ...withMeta(element),
+        ...withMeta(element, options),
       });
 
     case "circle":
@@ -98,7 +155,7 @@ export function createFabricObject(element) {
         originY: element.originY || "top",
         scaleX: element.scaleX || 1,
         scaleY: element.scaleY || 1,
-        ...withMeta(element),
+        ...withMeta(element, options),
       });
 
     case "headline":
@@ -120,7 +177,7 @@ export function createFabricObject(element) {
         top: element.y,
         width: elemWidth,
         fontSize: elemFontSize,
-        fontFamily: element.fontFamily || "Inter",
+        fontFamily: element.fontFamily || THEME.typography.headline.fontFamily || "Instrument Serif",
         fontWeight: element.fontWeight || "normal",
         fill: element.fill || "#000000",
         angle: element.rotation || 0,
@@ -128,13 +185,13 @@ export function createFabricObject(element) {
         originY: element.originY || "top",
         textAlign: element.textAlign || "left",
         splitByGrapheme: false,
-        editable: true,
+        editable: !options?.isLayoutMode,
         cursorColor: "#2563eb",
         cursorWidth: 3,
         cursorDuration: 500,
         selectionColor: "rgba(37, 99, 235, 0.3)",
         styles: annotationStyles,
-        ...withMeta(element),
+        ...withMeta(element, options),
       });
     }
 
@@ -149,7 +206,7 @@ export function createFabricObject(element) {
         angle: element.rotation || 0,
         originX: element.originX || "left",
         originY: element.originY || "top",
-        ...withMeta(element),
+        ...withMeta(element, options),
       });
 
       applyImageSize(fabricImg, element, imgElement);

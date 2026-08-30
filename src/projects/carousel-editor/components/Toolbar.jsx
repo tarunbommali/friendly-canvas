@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCarouselStore } from "../store/carouselStore";
 import { renderSlideToDataUrl } from "../canvas/exportRenderer";
 import {
@@ -9,9 +9,6 @@ import {
   Image as ImageIcon,
   ZoomIn,
   ZoomOut,
-  RotateCcw,
-  Download,
-  Upload,
   FileImage,
   Grid,
   Undo2,
@@ -20,31 +17,19 @@ import {
   ArrowLeft,
   Settings,
   Edit3,
-  MousePointer2,
-  Palette,
+  Layout,
   Maximize2,
+  Lock,
+  Unlock,
 } from "lucide-react";
-import { carouselDocumentSchema } from "../schemas/carouselSchema";
 import { THEME } from "../theme/theme";
 import { createElementId } from "../theme/elementClassify";
 
-const DESIGN_PALETTES = [
-  { id: "editorial", name: "Warm Editorial", primary: "#8e5c29", accent: "#abccad", bg: "#ffffff" },
-  { id: "tech-blue", name: "Tech Blue", primary: "#1E5FA8", accent: "#A9D0F5", bg: "#f8fafc" },
-  { id: "emerald", name: "Emerald Mint", primary: "#059669", accent: "#6EE7B7", bg: "#f0fdf4" },
-  { id: "violet", name: "Violet Sunset", primary: "#7C3AED", accent: "#DDD6FE", bg: "#faf5ff" },
-  { id: "coral", name: "Coral Spark", primary: "#DC2626", accent: "#FCA5A5", bg: "#fff1f2" },
-  { id: "amber", name: "Amber Gold", primary: "#D97706", accent: "#FDE68A", bg: "#fffbeb" },
-  { id: "dark-studio", name: "Dark Studio", primary: "#22d3ee", accent: "#f43f5e", bg: "#0f1117" },
-];
-
 export function Toolbar({ onOpenSettings, currentPost }) {
-  const navigate = useNavigate();
   const imageInputRef = useRef(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   const addElement = useCarouselStore((state) => state.addElement);
-  const selectedElementId = useCarouselStore((state) => state.selectedElementId);
   const undo = useCarouselStore((state) => state.undo);
   const redo = useCarouselStore((state) => state.redo);
   const historyPast = useCarouselStore((state) => state.historyPast);
@@ -60,28 +45,19 @@ export function Toolbar({ onOpenSettings, currentPost }) {
   const snapToGuides = useCarouselStore((state) => state.snapToGuides);
   const toggleSnapToGuides = useCarouselStore((state) => state.toggleSnapToGuides);
   const document = useCarouselStore((state) => state.document);
-  const setDocument = useCarouselStore((state) => state.setDocument);
   const updateCarouselMetadata = useCarouselStore((state) => state.updateCarouselMetadata);
-  const resetToInitial = useCarouselStore((state) => state.resetToInitial);
-  const updateSlideBackground = useCarouselStore(
-    (state) => state.updateSlideBackground
-  );
-  const updateSlideBgPattern = useCarouselStore(
-    (state) => state.updateSlideBgPattern
-  );
   const applyBgColorToAllSlides = useCarouselStore(
     (state) => state.applyBgColorToAllSlides
   );
   const applyBgPatternToAllSlides = useCarouselStore(
     (state) => state.applyBgPatternToAllSlides
   );
-  const applyPaletteToAllSlides = useCarouselStore(
-    (state) => state.applyPaletteToAllSlides
-  );
   const updateGlobalLayoutConfig = useCarouselStore(
     (state) => state.updateGlobalLayoutConfig
   );
   const globalLayoutConfig = useCarouselStore((state) => state.globalLayoutConfig);
+  const isZoomLocked = useCarouselStore((state) => state.isZoomLocked);
+  const toggleZoomLock = useCarouselStore((state) => state.toggleZoomLock);
 
   const activeSlide = document.slides.find(
     (s) => s.id === document.activeSlideId
@@ -105,7 +81,9 @@ export function Toolbar({ onOpenSettings, currentPost }) {
       fontSize: isHeading
         ? THEME.typography.headline.fontSize
         : THEME.typography.body.fontSize,
-      fontFamily: "Inter",
+      fontFamily: isHeading
+        ? THEME.typography.headline.fontFamily
+        : THEME.typography.body.fontFamily,
       fill: isHeading ? THEME.colors.textPrimary : THEME.colors.textSecondary,
       rotation: 0,
       zIndex: 10,
@@ -213,28 +191,6 @@ export function Toolbar({ onOpenSettings, currentPost }) {
         console.error(`Failed to export slide ${i + 1}:`, err);
       }
     }
-  };
-
-  const handleImportJSON = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const rawJson = JSON.parse(event.target.result);
-        const parsed = carouselDocumentSchema.safeParse(rawJson);
-        if (parsed.success) {
-          setDocument(parsed.data, { resetRegistry: true });
-          alert("Carousel JSON imported successfully!");
-        } else {
-          alert("Invalid Carousel JSON schema: " + parsed.error.message);
-        }
-      } catch (err) {
-        alert("Failed to parse JSON file: " + err.message);
-      }
-    };
-    reader.readAsText(file);
   };
 
   return (
@@ -410,28 +366,54 @@ export function Toolbar({ onOpenSettings, currentPost }) {
 
           <div className="h-3 w-[1px] bg-white/10" />
 
-          {/* Zoom */}
+          {/* Zoom & Lock */}
           <div className="flex items-center gap-1">
             <button
               onClick={() => setZoom(Math.max(0.2, Math.round((zoom - 0.1) * 10) / 10))}
-              className="text-slate-500 hover:text-slate-200"
-              title="Zoom Out"
+              disabled={isZoomLocked}
+              className={`p-0.5 rounded transition-colors ${
+                isZoomLocked ? "text-slate-700 cursor-not-allowed" : "text-slate-500 hover:text-slate-200"
+              }`}
+              title={isZoomLocked ? "Zoom is locked at 100%" : "Zoom Out"}
             >
               <ZoomOut className="w-3 h-3" />
             </button>
-            <button
-              onClick={() => setZoom(1)}
-              className="text-[10px] font-mono font-bold text-slate-200 px-1 hover:text-cyan-400 transition-colors"
-              title="Reset Zoom to 100%"
+            <span
+              className="text-[10px] font-mono font-bold text-slate-200 px-0.5"
+              title="Canvas Zoom Level"
             >
               {Math.round(zoom * 100)}%
-            </button>
+            </span>
             <button
               onClick={() => setZoom(Math.min(2.0, Math.round((zoom + 0.1) * 10) / 10))}
-              className="text-slate-500 hover:text-slate-200"
-              title="Zoom In"
+              disabled={isZoomLocked}
+              className={`p-0.5 rounded transition-colors ${
+                isZoomLocked ? "text-slate-700 cursor-not-allowed" : "text-slate-500 hover:text-slate-200"
+              }`}
+              title={isZoomLocked ? "Zoom is locked at 100%" : "Zoom In"}
             >
               <ZoomIn className="w-3 h-3" />
+            </button>
+
+            {/* Lock symbol only */}
+            <button
+              onClick={toggleZoomLock}
+              className={`p-1 rounded transition-all cursor-pointer ${
+                isZoomLocked
+                  ? "text-amber-400 hover:text-amber-300"
+                  : "text-slate-500 hover:text-slate-300"
+              }`}
+              title={
+                isZoomLocked
+                  ? "Zoom Locked at 100% (Click to unlock zoom)"
+                  : "Zoom Unlocked (Click to lock zoom at 100%)"
+              }
+            >
+              {isZoomLocked ? (
+                <Lock className="w-3.5 h-3.5" />
+              ) : (
+                <Unlock className="w-3.5 h-3.5" />
+              )}
             </button>
           </div>
         </div>
@@ -462,11 +444,23 @@ export function Toolbar({ onOpenSettings, currentPost }) {
 
 
 
+        {/* Global Layout Settings Button */}
+        {onOpenSettings && (
+          <button
+            onClick={onOpenSettings}
+            className="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 rounded-md border border-slate-700/80 text-xs font-semibold transition-all cursor-pointer"
+            title="Configure Global Layout (Title, Numbering, Swipe & CTA)"
+          >
+            <Layout className="w-3.5 h-3.5 text-blue-400" />
+            <span>Layout</span>
+          </button>
+        )}
+
         {/* Theme Settings Button */}
         {onOpenSettings && (
           <button
             onClick={onOpenSettings}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-colors"
+            className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-colors cursor-pointer"
             title="Theme & Layout Settings"
           >
             <Settings className="w-3.5 h-3.5" />
@@ -476,7 +470,7 @@ export function Toolbar({ onOpenSettings, currentPost }) {
         {/* Export CTA */}
         <button
           onClick={downloadAllSlidesPNG}
-          className="bg-cyan-500 text-slate-950 px-3.5 py-1 rounded-md text-xs font-bold hover:bg-cyan-400 transition-all shadow-[0_0_20px_rgba(6,182,212,0.25)] flex items-center gap-1.5"
+          className="bg-cyan-500 text-slate-950 px-3.5 py-1 rounded-md text-xs font-bold hover:bg-cyan-400 transition-all shadow-[0_0_20px_rgba(6,182,212,0.25)] flex items-center gap-1.5 cursor-pointer"
           title="Export All Slides as PNG"
         >
           <span>EXPORT</span>

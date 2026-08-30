@@ -326,7 +326,7 @@
           "id": "slide_t01_p01_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "The Minds Before Computers Existed",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"why did humans even invent computers? is too hard to understand\""
         }
@@ -395,7 +395,7 @@
           "id": "slide_t01_p02_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "From Mainframes to AI Computers: The Full Evolution",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"the minds before computers existed is too hard to understand\""
         }
@@ -485,7 +485,7 @@
           "id": "slide_t01_p03_s10",
           "slideNo": 10,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "What Is a Computer, Really?",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"from mainframes to ai computers: the full evolution is too hard to understand\""
         }
@@ -555,7 +555,7 @@
           "id": "slide_t02_p04_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Von Neumann vs Harvard: Two Ways to Build a Computer",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"what is a computer, really? is too hard to understand\""
         }
@@ -616,7 +616,7 @@
           "id": "slide_t02_p05_s06",
           "slideNo": 6,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "x86 vs ARM: Instruction Set Architectures & Pipelining",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"von neumann vs harvard: two ways to build a computer is too hard to understand\""
         }
@@ -685,7 +685,7 @@
           "id": "slide_t02_p06_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Bits, Bytes & Binary: The Language of Machines",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"x86 vs arm: instruction set architectures & pipelining is too hard to understand\""
         }
@@ -761,7 +761,7 @@
           "id": "slide_t02_p07_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Logic Gates: How Computers Think",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"bits, bytes & binary: the language of machines is too hard to understand\""
         }
@@ -838,7 +838,7 @@
           "id": "slide_t02_p08_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Transistors to CPU: The Brain of the Machine",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"logic gates: how computers think is too hard to understand\""
         }
@@ -914,7 +914,7 @@
           "id": "slide_t02_p09_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Cache, RAM & Storage: Where Computers Keep Memories",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"transistors to cpu: the brain of the machine is too hard to understand\""
         }
@@ -983,7 +983,7 @@
           "id": "slide_t02_p10_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "GPU, Motherboard & I/O: Completing the Machine",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"cache, ram & storage: where computers keep memories is too hard to understand\""
         }
@@ -1053,7 +1053,7 @@
           "id": "slide_t02_p11_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "From Machine Code to Real Programming Languages",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"gpu, motherboard & i/o: completing the machine is too hard to understand\""
         }
@@ -1122,7 +1122,7 @@
           "id": "slide_t03_p12_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Compilers vs Interpreters: What Actually Runs Your Code",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"from machine code to real programming languages is too hard to understand\""
         }
@@ -1191,7 +1191,7 @@
           "id": "slide_t03_p13_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "What Really Happens Inside Your Computer When You Run a Program",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"compilers vs interpreters: what actually runs your code is too hard to understand\""
         }
@@ -1267,7 +1267,7 @@
           "id": "slide_t03_p14_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Why Does Every Computer Need an Operating System?",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"what really happens inside your computer when you run a program is too hard to understand\""
         }
@@ -1336,7 +1336,7 @@
           "id": "slide_t04_p15_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Processes, Threads & the Art of Multitasking",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"why does every computer need an operating system? is too hard to understand\""
         }
@@ -1405,7 +1405,7 @@
           "id": "slide_t04_p16_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Memory Management: How the OS Juggles Everything",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"processes, threads & the art of multitasking is too hard to understand\""
         }
@@ -1474,7 +1474,7 @@
           "id": "slide_t04_p17_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "System Calls, Drivers & the Big 3 Operating Systems",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"memory management: how the os juggles everything is too hard to understand\""
         }
@@ -1543,7 +1543,7 @@
           "id": "slide_t04_p18_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "What Actually Happens When You Open Chrome or Run a Terminal Command",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"system calls, drivers & the big 3 operating systems is too hard to understand\""
         }
@@ -1611,7 +1611,7 @@
           "id": "slide_t04_p19_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "What Is Programming, Actually?",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"what actually happens when you open chrome or run a terminal command is too hard to understand\""
         }
@@ -1680,7 +1680,7 @@
           "id": "slide_t05_p20_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Imperative vs Declarative: Two Ways to Tell a Computer What to Do",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"what is programming, actually? is too hard to understand\""
         }
@@ -1741,7 +1741,7 @@
           "id": "slide_t05_p21_s06",
           "slideNo": 6,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "The Building Blocks Every Programmer Learns First",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"imperative vs declarative: two ways to tell a computer what to do is too hard to understand\""
         }
@@ -1810,7 +1810,7 @@
           "id": "slide_t05_p22_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Functional Programming: Pure Functions & Immutability",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"the building blocks every programmer learns first is too hard to understand\""
         }
@@ -1871,7 +1871,7 @@
           "id": "slide_t05_p23_s06",
           "slideNo": 6,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Scope, Recursion & Handling Errors Like a Pro",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"functional programming: pure functions & immutability is too hard to understand\""
         }
@@ -1939,7 +1939,7 @@
           "id": "slide_t05_p24_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Modules, Libraries, Packages & APIs Explained",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"scope, recursion & handling errors like a pro is too hard to understand\""
         }
@@ -2008,7 +2008,7 @@
           "id": "slide_t05_p25_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "What Is an Algorithm? (And Why Coding Is Not Problem Solving)",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"modules, libraries, packages & apis explained is too hard to understand\""
         }
@@ -2077,7 +2077,7 @@
           "id": "slide_t06_p26_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Big O Notation: The Skill That Separates Junior From Senior",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"what is an algorithm? (and why coding is not problem solving) is too hard to understand\""
         }
@@ -2145,7 +2145,7 @@
           "id": "slide_t06_p27_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Arrays, Strings & Linked Lists: Where Everyone Starts",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"big o notation: the skill that separates junior from senior is too hard to understand\""
         }
@@ -2213,7 +2213,7 @@
           "id": "slide_t06_p28_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Stacks, Queues & Hash Tables Explained",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"arrays, strings & linked lists: where everyone starts is too hard to understand\""
         }
@@ -2281,7 +2281,7 @@
           "id": "slide_t06_p29_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Trees, Heaps & Graphs: Where DSA Gets Real",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"stacks, queues & hash tables explained is too hard to understand\""
         }
@@ -2349,7 +2349,7 @@
           "id": "slide_t06_p30_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Searching & Sorting: The Algorithms Behind Everything",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"trees, heaps & graphs: where dsa gets real is too hard to understand\""
         }
@@ -2417,7 +2417,7 @@
           "id": "slide_t06_p31_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Recursion, Backtracking, Greedy & DP: The Hard Stuff",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"searching & sorting: the algorithms behind everything is too hard to understand\""
         }
@@ -2486,7 +2486,7 @@
           "id": "slide_t06_p32_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Software Engineering vs Just Writing Code",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"recursion, backtracking, greedy & dp: the hard stuff is too hard to understand\""
         }
@@ -2556,7 +2556,7 @@
           "id": "slide_t07_p33_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "The Software Lifecycle: Build, Test, Ship, Maintain",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"software engineering vs just writing code is too hard to understand\""
         }
@@ -2625,7 +2625,7 @@
           "id": "slide_t07_p34_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Git, GitHub & How Teams Actually Collaborate on Code",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"the software lifecycle: build, test, ship, maintain is too hard to understand\""
         }
@@ -2694,7 +2694,7 @@
           "id": "slide_t07_p35_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Clean Code, SOLID & Design Patterns",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"git, github & how teams actually collaborate on code is too hard to understand\""
         }
@@ -2763,7 +2763,7 @@
           "id": "slide_t07_p36_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Network Topologies & The Devices That Move Data",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"clean code, solid & design patterns is too hard to understand\""
         }
@@ -2832,7 +2832,7 @@
           "id": "slide_t08_p37_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "OSI Model, TCP/IP & How Devices Find Each Other",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"network topologies & the devices that move data is too hard to understand\""
         }
@@ -2901,7 +2901,7 @@
           "id": "slide_t08_p38_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Why Do Networks Even Exist?",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"osi model, tcp/ip & how devices find each other is too hard to understand\""
         }
@@ -2970,7 +2970,7 @@
           "id": "slide_t09_p39_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "The Internet's Origin Story: ARPANET to Today",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"why do networks even exist? is too hard to understand\""
         }
@@ -3038,7 +3038,7 @@
           "id": "slide_t09_p40_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "IP Addresses, MAC Addresses & Ports Explained",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"the internet's origin story: arpanet to today is too hard to understand\""
         }
@@ -3106,7 +3106,7 @@
           "id": "slide_t09_p41_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "TCP vs UDP: The Protocols Behind Every Connection",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"ip addresses, mac addresses & ports explained is too hard to understand\""
         }
@@ -3174,7 +3174,7 @@
           "id": "slide_t09_p42_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "DNS & DHCP: How Devices Find Each Other",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"tcp vs udp: the protocols behind every connection is too hard to understand\""
         }
@@ -3242,7 +3242,7 @@
           "id": "slide_t09_p43_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Routers, Switches, NAT & Firewalls",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"dns & dhcp: how devices find each other is too hard to understand\""
         }
@@ -3311,7 +3311,7 @@
           "id": "slide_t09_p44_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "HTTP, HTTPS & TLS: How the Web Stays (Somewhat) Secure",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"routers, switches, nat & firewalls is too hard to understand\""
         }
@@ -3379,7 +3379,7 @@
           "id": "slide_t09_p45_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "What Really Happens When You Type google.com",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"http, https & tls: how the web stays (somewhat) secure is too hard to understand\""
         }
@@ -3447,7 +3447,7 @@
           "id": "slide_t09_p46_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "HTML: The Skeleton of Every Website",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"what really happens when you type google.com is too hard to understand\""
         }
@@ -3516,7 +3516,7 @@
           "id": "slide_t10_p47_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "CSS: Making the Web Actually Look Good",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"html: the skeleton of every website is too hard to understand\""
         }
@@ -3592,7 +3592,7 @@
           "id": "slide_t10_p48_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "JavaScript Basics: Making Pages Interactive",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"css: making the web actually look good is too hard to understand\""
         }
@@ -3661,7 +3661,7 @@
           "id": "slide_t10_p49_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Closures, Promises & Async/Await: JS Gets Real",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"javascript basics: making pages interactive is too hard to understand\""
         }
@@ -3730,7 +3730,7 @@
           "id": "slide_t10_p50_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Fetch, APIs & JS Modules",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"closures, promises & async/await: js gets real is too hard to understand\""
         }
@@ -3798,7 +3798,7 @@
           "id": "slide_t10_p51_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Library vs Framework: Why React Exists",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"fetch, apis & js modules is too hard to understand\""
         }
@@ -3867,7 +3867,7 @@
           "id": "slide_t11_p52_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "State, Routing & Server-Side Rendering",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"library vs framework: why react exists is too hard to understand\""
         }
@@ -3935,7 +3935,7 @@
           "id": "slide_t11_p53_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Node.js & Express: JavaScript on the Backend",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"state, routing & server-side rendering is too hard to understand\""
         }
@@ -4003,7 +4003,7 @@
           "id": "slide_t11_p54_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "REST APIs, Auth & Authorization Explained",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"node.js & express: javascript on the backend is too hard to understand\""
         }
@@ -4071,7 +4071,7 @@
           "id": "slide_t11_p55_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Cookies, Sessions, JWT, Middleware & WebSockets",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"rest apis, auth & authorization explained is too hard to understand\""
         }
@@ -4140,7 +4140,7 @@
           "id": "slide_t11_p56_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Why Do We Even Need Databases?",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"cookies, sessions, jwt, middleware & websockets is too hard to understand\""
         }
@@ -4210,7 +4210,7 @@
           "id": "slide_t12_p57_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Tables, Keys & Relationships: The Relational Model",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"why do we even need databases? is too hard to understand\""
         }
@@ -4279,7 +4279,7 @@
           "id": "slide_t12_p58_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "SQL, JOINs & Indexes Explained",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"tables, keys & relationships: the relational model is too hard to understand\""
         }
@@ -4347,7 +4347,7 @@
           "id": "slide_t12_p59_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Transactions, ACID & Concurrency",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"sql, joins & indexes explained is too hard to understand\""
         }
@@ -4416,7 +4416,7 @@
           "id": "slide_t12_p60_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "SQL vs NoSQL: Postgres, MongoDB & Redis",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"transactions, acid & concurrency is too hard to understand\""
         }
@@ -4486,7 +4486,7 @@
           "id": "slide_t12_p61_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Why Security Isn't Optional",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"sql vs nosql: postgres, mongodb & redis is too hard to understand\""
         }
@@ -4555,7 +4555,7 @@
           "id": "slide_t13_p62_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Encryption Explained: Symmetric vs Asymmetric",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"why security isn't optional is too hard to understand\""
         }
@@ -4624,7 +4624,7 @@
           "id": "slide_t13_p63_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Password Security & the Attacks Every Dev Should Know",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"encryption explained: symmetric vs asymmetric is too hard to understand\""
         }
@@ -4693,7 +4693,7 @@
           "id": "slide_t13_p64_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Rate Limiting, Secrets & OAuth",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"password security & the attacks every dev should know is too hard to understand\""
         }
@@ -4761,7 +4761,7 @@
           "id": "slide_t13_p65_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Back to Linux: Command Line, Processes & Services",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"rate limiting, secrets & oauth is too hard to understand\""
         }
@@ -4831,7 +4831,7 @@
           "id": "slide_t14_p66_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "What Is DevOps? CALMS & The Three Ways",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"back to linux: command line, processes & services is too hard to understand\""
         }
@@ -4892,7 +4892,7 @@
           "id": "slide_t14_p67_s06",
           "slideNo": 6,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Logs, SSH & Shell Scripting",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"what is devops? calms & the three ways is too hard to understand\""
         }
@@ -4961,7 +4961,7 @@
           "id": "slide_t14_p68_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Nginx & What Deployment Actually Means",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"logs, ssh & shell scripting is too hard to understand\""
         }
@@ -5029,7 +5029,7 @@
           "id": "slide_t14_p69_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Docker: Containers, Images & Your First Dockerfile",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"nginx & what deployment actually means is too hard to understand\""
         }
@@ -5098,7 +5098,7 @@
           "id": "slide_t14_p70_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Docker Volumes, Networking & Compose",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"docker: containers, images & your first dockerfile is too hard to understand\""
         }
@@ -5166,7 +5166,7 @@
           "id": "slide_t14_p71_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Container Registries & CI/CD",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"docker volumes, networking & compose is too hard to understand\""
         }
@@ -5234,7 +5234,7 @@
           "id": "slide_t14_p72_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Monitoring, Alerting & Distributed Tracing: Prometheus, Grafana & Jaeger",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"container registries & ci/cd is too hard to understand\""
         }
@@ -5303,7 +5303,7 @@
           "id": "slide_t14_p73_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Infrastructure as Code & Config Management: Terraform & Ansible",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"monitoring, alerting & distributed tracing: prometheus, grafana & jaeger is too hard to understand\""
         }
@@ -5372,7 +5372,7 @@
           "id": "slide_t14_p74_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Service Mesh: Istio & Service-to-Service Communication",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"infrastructure as code & config management: terraform & ansible is too hard to understand\""
         }
@@ -5433,7 +5433,7 @@
           "id": "slide_t14_p75_s06",
           "slideNo": 6,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Why Cloud Computing Exists",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"service mesh: istio & service-to-service communication is too hard to understand\""
         }
@@ -5503,7 +5503,7 @@
           "id": "slide_t15_p76_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Regions, Availability Zones & Data Centers",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"why cloud computing exists is too hard to understand\""
         }
@@ -5571,7 +5571,7 @@
           "id": "slide_t15_p77_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "AWS Basics: EC2, S3 & IAM",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"regions, availability zones & data centers is too hard to understand\""
         }
@@ -5640,7 +5640,7 @@
           "id": "slide_t15_p78_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "VPC, Load Balancers & Auto Scaling",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"aws basics: ec2, s3 & iam is too hard to understand\""
         }
@@ -5708,7 +5708,7 @@
           "id": "slide_t15_p79_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "RDS, Lambda & CloudWatch",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"vpc, load balancers & auto scaling is too hard to understand\""
         }
@@ -5776,7 +5776,7 @@
           "id": "slide_t15_p80_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "CDN, Infrastructure as Code & Production Architecture",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"rds, lambda & cloudwatch is too hard to understand\""
         }
@@ -5843,7 +5843,7 @@
           "id": "slide_t15_p81_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "What Is System Design & Why It's Different From Coding",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"cdn, infrastructure as code & production architecture is too hard to understand\""
         }
@@ -5919,7 +5919,7 @@
           "id": "slide_t16_p82_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Scaling: Vertical vs Horizontal, Load Balancing & Caching",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"what is system design & why it's different from coding is too hard to understand\""
         }
@@ -5988,7 +5988,7 @@
           "id": "slide_t16_p83_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Database Replication & Sharding at Scale",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"scaling: vertical vs horizontal, load balancing & caching is too hard to understand\""
         }
@@ -6056,7 +6056,7 @@
           "id": "slide_t16_p84_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Message Queues, Kafka & Event-Driven Architecture",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"database replication & sharding at scale is too hard to understand\""
         }
@@ -6124,7 +6124,7 @@
           "id": "slide_t16_p85_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Microservices vs Monolith & the CAP Theorem",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"message queues, kafka & event-driven architecture is too hard to understand\""
         }
@@ -6194,7 +6194,7 @@
           "id": "slide_t16_p86_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Fault Tolerance, Distributed Systems, Rate Limiting & Idempotency",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"microservices vs monolith & the cap theorem is too hard to understand\""
         }
@@ -6263,7 +6263,7 @@
           "id": "slide_t16_p87_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Designing a URL Shortener From Scratch",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"fault tolerance, distributed systems, rate limiting & idempotency is too hard to understand\""
         }
@@ -6340,7 +6340,7 @@
           "id": "slide_t16_p88_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Designing Instagram: A System Design Breakdown",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"designing a url shortener from scratch is too hard to understand\""
         }
@@ -6416,7 +6416,7 @@
           "id": "slide_t16_p89_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Designing WhatsApp: How Real-Time Messaging Scales",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"designing instagram: a system design breakdown is too hard to understand\""
         }
@@ -6492,7 +6492,7 @@
           "id": "slide_t16_p90_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Designing YouTube: Video at Massive Scale",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"designing whatsapp: how real-time messaging scales is too hard to understand\""
         }
@@ -6568,7 +6568,7 @@
           "id": "slide_t16_p91_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Designing Uber: Real-Time Location & Matching",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"designing youtube: video at massive scale is too hard to understand\""
         }
@@ -6644,7 +6644,7 @@
           "id": "slide_t16_p92_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Designing Netflix: Streaming at Global Scale",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"designing uber: real-time location & matching is too hard to understand\""
         }
@@ -6720,7 +6720,7 @@
           "id": "slide_t16_p93_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Designing a Payment System: Handling Money Safely",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"designing netflix: streaming at global scale is too hard to understand\""
         }
@@ -6796,7 +6796,7 @@
           "id": "slide_t16_p94_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Why Python? (And the Fundamentals)",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"designing a payment system: handling money safely is too hard to understand\""
         }
@@ -6865,7 +6865,7 @@
           "id": "slide_t17_p95_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "OOP, Modules & File Handling in Python",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"why python? (and the fundamentals) is too hard to understand\""
         }
@@ -6934,7 +6934,7 @@
           "id": "slide_t17_p96_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Python for Automation: os, subprocess & APIs",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"oop, modules & file handling in python is too hard to understand\""
         }
@@ -7003,7 +7003,7 @@
           "id": "slide_t17_p97_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Pandas, NumPy & Matplotlib: Python for Data",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"python for automation: os, subprocess & apis is too hard to understand\""
         }
@@ -7071,7 +7071,7 @@
           "id": "slide_t17_p98_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "OLTP vs OLAP: Transactional vs Analytical Systems",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"pandas, numpy & matplotlib: python for data is too hard to understand\""
         }
@@ -7132,7 +7132,7 @@
           "id": "slide_t17_p99_s06",
           "slideNo": 6,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Data Warehouses, Data Lakes & Big Data Pipelines",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"oltp vs olap: transactional vs analytical systems is too hard to understand\""
         }
@@ -7201,7 +7201,7 @@
           "id": "slide_t17_p100_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Data Cleaning & Visualization With Python",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"data warehouses, data lakes & big data pipelines is too hard to understand\""
         }
@@ -7269,7 +7269,7 @@
           "id": "slide_t17_p101_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Why Machine Learning? (AI vs ML vs Traditional Programming)",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"data cleaning & visualization with python is too hard to understand\""
         }
@@ -7338,7 +7338,7 @@
           "id": "slide_t18_p102_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Datasets, Features, Labels & the Training Process",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"why machine learning? (ai vs ml vs traditional programming) is too hard to understand\""
         }
@@ -7414,7 +7414,7 @@
           "id": "slide_t18_p103_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Supervised vs Unsupervised: Regression, Classification & Clustering",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"datasets, features, labels & the training process is too hard to understand\""
         }
@@ -7483,7 +7483,7 @@
           "id": "slide_t18_p104_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Overfitting, Underfitting & Feature Engineering",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"supervised vs unsupervised: regression, classification & clustering is too hard to understand\""
         }
@@ -7551,7 +7551,7 @@
           "id": "slide_t18_p105_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Evaluation Metrics: Precision, Recall, F1 & ROC-AUC",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"overfitting, underfitting & feature engineering is too hard to understand\""
         }
@@ -7620,7 +7620,7 @@
           "id": "slide_t18_p106_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "From ML to Neural Networks & Deep Learning",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"evaluation metrics: precision, recall, f1 & roc-auc is too hard to understand\""
         }
@@ -7688,7 +7688,7 @@
           "id": "slide_t18_p107_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Neural Networks Explained: Neurons, Weights & Bias",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"from ml to neural networks & deep learning is too hard to understand\""
         }
@@ -7757,7 +7757,7 @@
           "id": "slide_t19_p108_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Forward Propagation, Loss & Backpropagation",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"neural networks explained: neurons, weights & bias is too hard to understand\""
         }
@@ -7826,7 +7826,7 @@
           "id": "slide_t19_p109_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "CNNs, RNNs & the Rise of Transformers",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"forward propagation, loss & backpropagation is too hard to understand\""
         }
@@ -7894,7 +7894,7 @@
           "id": "slide_t19_p110_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "What Is Generative AI & What Is an LLM?",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"cnns, rnns & the rise of transformers is too hard to understand\""
         }
@@ -7963,7 +7963,7 @@
           "id": "slide_t20_p111_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Embeddings, Attention & Transformers Demystified",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"what is generative ai & what is an llm? is too hard to understand\""
         }
@@ -8032,7 +8032,7 @@
           "id": "slide_t20_p112_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Prompting, System Prompts & Structured Outputs",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"embeddings, attention & transformers demystified is too hard to understand\""
         }
@@ -8101,7 +8101,7 @@
           "id": "slide_t20_p113_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Fine-Tuning, RAG & Vector Databases",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"prompting, system prompts & structured outputs is too hard to understand\""
         }
@@ -8170,7 +8170,7 @@
           "id": "slide_t20_p114_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Why Chatbots Aren't Agents (And What Actually Makes an Agent)",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"fine-tuning, rag & vector databases is too hard to understand\""
         }
@@ -8238,7 +8238,7 @@
           "id": "slide_t21_p115_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Tool Calling, Memory & Planning: How Agents Think",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"why chatbots aren't agents (and what actually makes an agent) is too hard to understand\""
         }
@@ -8314,7 +8314,7 @@
           "id": "slide_t21_p116_s08",
           "slideNo": 8,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Agent Loops, Multi-Step Tasks & Real-World Agents",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"tool calling, memory & planning: how agents think is too hard to understand\""
         }
@@ -8384,7 +8384,7 @@
           "id": "slide_t21_p117_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "AI Workflows, Multi-Agent Systems & MCP",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"agent loops, multi-step tasks & real-world agents is too hard to understand\""
         }
@@ -8453,7 +8453,7 @@
           "id": "slide_t21_p118_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Evaluating & Securing Production AI Agents",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"ai workflows, multi-agent systems & mcp is too hard to understand\""
         }
@@ -8520,7 +8520,7 @@
           "id": "slide_t21_p119_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "Building Your First AI Agent (Then a Multi-Agent System)",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"evaluating & securing production ai agents is too hard to understand\""
         }
@@ -8588,7 +8588,7 @@
           "id": "slide_t21_p120_s07",
           "slideNo": 7,
           "layout": "next-up",
-          "headline": "next in the series",
+          "headline": "next in the queue",
           "text": "The Entire Journey: From Computer to AI Agent",
           "cta": "save this before you forget it, and send it to whoever keeps saying \"building your first ai agent (then a multi-agent system) is too hard to understand\""
         }

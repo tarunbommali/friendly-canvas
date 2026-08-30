@@ -5,7 +5,7 @@ import { renderSlide } from "../canvas/renderer";
 import { attachSnapGuideEngine } from "../canvas/snapGuideEngine";
 import { getLayoutBounds } from "../theme/layoutBounds";
 
-export function CanvasEditor() {
+export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const fabricRef = useRef(null);
@@ -24,6 +24,7 @@ export function CanvasEditor() {
   const showSafeAreaGuides = useCarouselStore(
     (state) => state.showSafeAreaGuides
   );
+  const isZoomLocked = useCarouselStore((state) => state.isZoomLocked);
   const globalLayoutConfig = useCarouselStore(
     (state) => state.globalLayoutConfig
   );
@@ -35,6 +36,14 @@ export function CanvasEditor() {
   const layoutBounds = getLayoutBounds(globalLayoutConfig, document.metadata);
   const canvasWidth = layoutBounds.canvas.width;
   const canvasHeight = layoutBounds.canvas.height;
+
+  const isLayoutModeRef = useRef(isLayoutMode);
+  const onLayoutChangeRef = useRef(onLayoutChange);
+
+  useEffect(() => {
+    isLayoutModeRef.current = isLayoutMode;
+    onLayoutChangeRef.current = onLayoutChange;
+  }, [isLayoutMode, onLayoutChange]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -50,26 +59,23 @@ export function CanvasEditor() {
     return () => observer.disconnect();
   }, []);
 
-  // ── Mouse Wheel: prevent window scroll & smoothly adjust canvas zoom ───────
+  // ── Mouse Wheel: prevent window scroll & adjust canvas zoom if unlocked ────
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     const handleWheel = (e) => {
       e.preventDefault();
+      if (isZoomLocked) return;
       const delta = e.deltaY;
-      const zoomFactor = delta > 0 ? 0.94 : 1.06;
-      if (setZoom) {
-        setZoom((prevZoom) => {
-          const next = prevZoom * zoomFactor;
-          return Math.min(3, Math.max(0.2, parseFloat(next.toFixed(2))));
-        });
-      }
+      const factor = delta > 0 ? 0.9 : 1.1;
+      const nextZoom = Math.min(Math.max(zoom * factor, 0.2), 3);
+      setZoom(Number(nextZoom.toFixed(2)));
     };
 
     el.addEventListener("wheel", handleWheel, { passive: false });
     return () => el.removeEventListener("wheel", handleWheel);
-  }, [setZoom]);
+  }, [zoom, setZoom, isZoomLocked]);
 
   // ── Window Scroll Lock: Ensure window never scrolls out of viewport bounds ──
   useEffect(() => {
@@ -85,54 +91,25 @@ export function CanvasEditor() {
   // ── Keyboard: arrow-key nudge + Delete/Backspace + Enter to edit ─────────
   useEffect(() => {
     const handleKeyDown = (e) => {
-      const activeObj = fabricRef.current?.getActiveObject();
-      // If user is actively typing inside the text element on canvas, do not intercept keys
-      if (activeObj?.isEditing || isEditingTextRef.current) {
-        return;
-      }
-
+      if (isEditingTextRef.current) return;
+      
       // Don't intercept when typing in an input / textarea / contenteditable
-      const tag = e.target?.tagName?.toLowerCase();
       if (
-        tag === "input" ||
-        tag === "textarea" ||
-        e.target?.isContentEditable
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
       ) {
         return;
       }
 
-      const { selectedElementId, document: doc } = useCarouselStore.getState();
+      const selectedElementId = useCarouselStore.getState().selectedElementId;
       if (!selectedElementId) return;
 
-      // Pressing Enter on a selected text element starts inline canvas editing
-      if (e.key === "Enter") {
-        if (
-          activeObj &&
-          (activeObj.type === "textbox" ||
-            activeObj.type === "i-text" ||
-            activeObj.type === "text")
-        ) {
-          e.preventDefault();
-          activeObj.enterEditing();
-          if (activeObj.hiddenTextarea) {
-            activeObj.hiddenTextarea.focus({ preventScroll: true });
-            activeObj.hiddenTextarea.style.position = "fixed";
-            activeObj.hiddenTextarea.style.top = "0px";
-            activeObj.hiddenTextarea.style.left = "0px";
-          }
-          window.scrollTo(0, 0);
-          fabricRef.current?.requestRenderAll();
-          return;
-        }
-      }
-
-      // Find active element
-      const activeSlideNow = doc.slides.find(
-        (s) => s.id === doc.activeSlideId
-      );
-      const el = activeSlideNow?.elements.find(
-        (el) => el.id === selectedElementId
-      );
+      const currentSlide = useCarouselStore
+        .getState()
+        .document.slides.find(
+          (s) => s.id === useCarouselStore.getState().document.activeSlideId
+        );
+      const el = currentSlide?.elements.find((el) => el.id === selectedElementId);
       if (!el) return;
 
       const step = e.shiftKey ? 10 : 1;
@@ -154,8 +131,10 @@ export function CanvasEditor() {
         updateElement(selectedElementId, { y: (el.y ?? 0) + step });
         syncFabricPosition(selectedElementId, el.x ?? 0, (el.y ?? 0) + step);
       } else if (e.key === "Delete" || e.key === "Backspace") {
-        e.preventDefault();
-        deleteElement(selectedElementId);
+        if (!isLayoutMode) {
+          e.preventDefault();
+          deleteElement(selectedElementId);
+        }
       }
     };
 
@@ -172,7 +151,7 @@ export function CanvasEditor() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [updateElement, deleteElement]);
+  }, [updateElement, deleteElement, isLayoutMode]);
 
   const padding = 48;
   const availableWidth = Math.max(100, containerSize.width - padding);
@@ -188,6 +167,15 @@ export function CanvasEditor() {
   useEffect(() => {
     if (!canvasRef.current) return;
 
+    if (fabricRef.current) {
+      try {
+        fabricRef.current.dispose();
+      } catch {
+        // ignore
+      }
+      fabricRef.current = null;
+    }
+
     const canvas = new Canvas(canvasRef.current, {
       width: canvasWidth,
       height: canvasHeight,
@@ -199,10 +187,18 @@ export function CanvasEditor() {
     const onSelectionCreated = (event) => {
       if (isRenderingRef.current) return;
       const obj = event.selected?.[0];
-      if (obj?.data?.isChrome) {
-        canvas.discardActiveObject();
-        canvas.requestRenderAll();
-        return;
+      if (isLayoutModeRef.current) {
+        if (!obj?.data?.isHeadline && !obj?.data?.isPageNumber && !obj?.data?.isSwipe) {
+          canvas.discardActiveObject();
+          canvas.requestRenderAll();
+          return;
+        }
+      } else {
+        if (obj?.data?.isChrome) {
+          canvas.discardActiveObject();
+          canvas.requestRenderAll();
+          return;
+        }
       }
       const id = obj?.get?.("data")?.id || obj?.data?.id;
       if (id) selectElement(id);
@@ -211,7 +207,15 @@ export function CanvasEditor() {
     const onSelectionUpdated = (event) => {
       if (isRenderingRef.current) return;
       const obj = event.selected?.[0];
-      if (obj?.data?.isChrome) return;
+      if (isLayoutModeRef.current) {
+        if (!obj?.data?.isHeadline && !obj?.data?.isPageNumber && !obj?.data?.isSwipe) {
+          canvas.discardActiveObject();
+          canvas.requestRenderAll();
+          return;
+        }
+      } else {
+        if (obj?.data?.isChrome) return;
+      }
       const id = obj?.get?.("data")?.id || obj?.data?.id;
       if (id) selectElement(id);
     };
@@ -224,7 +228,37 @@ export function CanvasEditor() {
     const onObjectModified = (event) => {
       if (isRenderingRef.current) return;
       const target = event.target;
-      if (!target || target.data?.isGuide || target.data?.isChrome) return;
+      if (!target || target.data?.isGuide) return;
+
+      if (isLayoutModeRef.current) {
+        const posX = Math.round(target.left ?? 0);
+        const posY = Math.round(target.top ?? 0);
+        const layoutUpdates = {};
+
+        if (target.data?.isHeadline) {
+          layoutUpdates.headlineX = posX;
+          layoutUpdates.headlineY = posY;
+          if (target.width && target.scaleX) {
+            layoutUpdates.headlineWidth = Math.round(target.width * target.scaleX);
+          }
+        } else if (target.data?.isPageNumber) {
+          layoutUpdates.pageNumberX = posX;
+          layoutUpdates.pageNumberY = posY;
+        } else if (target.data?.isSwipe) {
+          layoutUpdates.swipeX = posX;
+          layoutUpdates.swipeY = posY;
+          layoutUpdates.followX = posX;
+          layoutUpdates.followY = posY;
+        }
+
+        if (Object.keys(layoutUpdates).length > 0) {
+          useCarouselStore.getState().setGlobalLayoutConfig(layoutUpdates);
+          useCarouselStore.getState().applyGlobalLayoutConfigToAllSlides();
+          onLayoutChangeRef.current?.(layoutUpdates);
+        }
+        return;
+      }
+
       const id = target?.get?.("data")?.id || target?.data?.id;
       if (!id) return;
 
@@ -276,7 +310,7 @@ export function CanvasEditor() {
 
     const onDoubleClick = (event) => {
       const target = event.target;
-      if (!target || target.data?.isChrome) return;
+      if (!target) return;
       if (
         target.type === "textbox" ||
         target.type === "i-text" ||
@@ -332,13 +366,26 @@ export function CanvasEditor() {
       canvas.off("selection:updated", onSelectionUpdated);
       canvas.off("selection:cleared", onSelectionCleared);
       canvas.off("object:modified", onObjectModified);
-      canvas.off("text:changed", onTextChanged);
-      snapEngineRef.current?.dispose();
-      snapEngineRef.current = null;
-      canvas.dispose();
+      if (snapEngineRef.current) {
+        try {
+          if (typeof snapEngineRef.current.detach === "function") {
+            snapEngineRef.current.detach();
+          } else if (typeof snapEngineRef.current.dispose === "function") {
+            snapEngineRef.current.dispose();
+          }
+        } catch {
+          // ignore
+        }
+        snapEngineRef.current = null;
+      }
+      try {
+        canvas.dispose();
+      } catch {
+        // ignore
+      }
       fabricRef.current = null;
     };
-    // Fabric canvas must be constructed once; dimensions sync in the render effect.
+    // Fabric canvas is mounted once on component attachment
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -357,6 +404,8 @@ export function CanvasEditor() {
       ...document.metadata,
       width: canvasWidth,
       height: canvasHeight,
+    }, {
+      isLayoutMode,
     });
 
     const selectedId = useCarouselStore.getState().selectedElementId;
@@ -364,7 +413,7 @@ export function CanvasEditor() {
       const obj = fabricRef.current
         .getObjects()
         .find((o) => (o.get?.("data")?.id || o.data?.id) === selectedId);
-      if (obj && !obj.data?.isChrome) {
+      if (obj) {
         fabricRef.current.setActiveObject(obj);
         fabricRef.current.renderAll();
       }
@@ -375,7 +424,7 @@ export function CanvasEditor() {
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [activeSlide, document.metadata, canvasWidth, canvasHeight, globalLayoutConfig]);
+  }, [activeSlide, document.metadata, canvasWidth, canvasHeight, globalLayoutConfig, isLayoutMode]);
 
   return (
     <div

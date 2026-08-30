@@ -38,7 +38,9 @@ function toLegacyColor(value) {
     if (/^(#000|#000000|black|rgba?\(0,\s*0,\s*0)/i.test(trimmed)) {
       return '#000000'
     }
-  } catch {}
+  } catch {
+    // Parse error fallback
+  }
 
   if (trimmed.includes('transparent') || trimmed.includes('0%')) {
     return 'rgba(0, 0, 0, 0)'

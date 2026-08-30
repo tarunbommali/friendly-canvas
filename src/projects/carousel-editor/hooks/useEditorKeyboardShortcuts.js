@@ -33,6 +33,8 @@ export function useEditorKeyboardShortcuts() {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (e.defaultPrevented) return;
+
       const activeEl = document.activeElement;
       const isInput =
         activeEl &&
@@ -97,7 +99,18 @@ export function useEditorKeyboardShortcuts() {
       }
 
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-        if (!selectedElementId || !doc || !doc.slides) return;
+        if (!selectedElementId) {
+          if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+            e.preventDefault();
+            useCarouselStore.getState().goToPreviousSlide();
+          } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+            e.preventDefault();
+            useCarouselStore.getState().goToNextSlide();
+          }
+          return;
+        }
+
+        if (!doc || !doc.slides) return;
 
         const activeSlide = doc.slides.find((s) => s.id === doc.activeSlideId);
         if (!activeSlide) return;

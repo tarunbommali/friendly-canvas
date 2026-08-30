@@ -1,21 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate, useOutletContext, Link } from 'react-router-dom'
 import {
   Folder,
   Plus,
   ArrowRight,
-  BookOpen,
-  Layout,
   Palette,
   Layers,
   Sparkles,
   Zap,
   Trash2,
   X,
-  FileText,
-  Camera,
-  SlidersHorizontal,
-  ExternalLink,
 } from 'lucide-react'
 import CarouselLogoBadge from '../../../workspace/CarouselLogoBadge'
 import { customPostsRepo } from '../../../infrastructure/persistence/localStorageRepository'
@@ -24,7 +18,7 @@ const PROJECTS_STORAGE_KEY = 'carousel-workspace-projects'
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const { tracks = [], trackPalettes = {}, posts = [], postsByTrack = {} } = useOutletContext()
+  const { tracks = [], posts = [] } = useOutletContext()
   const customPosts = (customPostsRepo.get && customPostsRepo.get()) || []
 
   const [customProjects, setCustomProjects] = useState(() => {
