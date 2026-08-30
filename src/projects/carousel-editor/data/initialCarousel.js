@@ -4,8 +4,8 @@ import { composeSlide } from "../theme/compose";
 const slide1 = composeSlide(
   [
     {
-      id: "text_01",
-      type: "text",
+      id: "el_head_slide_1",
+      type: "headline",
       x: THEME.contentZone.x,
       y: THEME.contentZone.y,
       text: "5 Principles of Great Code",
@@ -16,7 +16,7 @@ const slide1 = composeSlide(
       zIndex: 2,
     },
     {
-      id: "text_02",
+      id: "text_slide_1_body",
       type: "text",
       x: THEME.contentZone.x,
       y: THEME.contentZone.y + 180,
@@ -39,8 +39,8 @@ const slide1 = composeSlide(
 const slide2 = composeSlide(
   [
     {
-      id: "text_03",
-      type: "text",
+      id: "el_head_slide_2",
+      type: "headline",
       x: THEME.contentZone.x,
       y: THEME.contentZone.y,
       text: "1. Single Responsibility",
@@ -51,7 +51,7 @@ const slide2 = composeSlide(
       zIndex: 2,
     },
     {
-      id: "text_04",
+      id: "text_slide_2_body",
       type: "text",
       x: THEME.contentZone.x,
       y: THEME.contentZone.y + 130,
@@ -90,7 +90,19 @@ export const initialCarousel = {
     width: THEME.canvas.width,
     height: THEME.canvas.height,
     aspectRatio: "4:5",
+    bgPattern: "solid",
+    textAlign: "left",
   },
   activeSlideId: "slide_1",
-  slides: [slide1, slide2],
+  slides: [
+    {
+      ...slide1,
+      visualDirective:
+        "Visual: Abstract architecture diagram showing modular components",
+      imagePrompt:
+        "A clean minimal poster with a circuit board pattern, editorial engineering style",
+      assetName: ["architecture-diagram"],
+    },
+    slide2,
+  ],
 };

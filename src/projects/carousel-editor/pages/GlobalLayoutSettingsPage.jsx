@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCarouselStore } from "../store/carouselStore";
 import { CanvasEditor } from "../components/CanvasEditor";
+import { DEFAULT_GLOBAL_LAYOUT_CONFIG } from "../theme/defaultGlobalLayout";
+import { useEditorKeyboardShortcuts } from "../hooks/useEditorKeyboardShortcuts";
 import {
   ArrowLeft,
   Sliders,
@@ -20,6 +22,7 @@ import {
 } from "lucide-react";
 
 export function GlobalLayoutSettingsPage() {
+  useEditorKeyboardShortcuts();
   const navigate = useNavigate();
   const { trackId, postId, projectSlug } = useParams();
 
@@ -27,10 +30,20 @@ export function GlobalLayoutSettingsPage() {
   const applyGlobalLayoutConfigToAllSlides = useCarouselStore(
     (state) => state.applyGlobalLayoutConfigToAllSlides
   );
+  const setGlobalLayoutConfig = useCarouselStore(
+    (state) => state.setGlobalLayoutConfig
+  );
   const document = useCarouselStore((state) => state.document);
 
   const [activeTab, setActiveTab] = useState("positions"); // 'positions' | 'typography' | 'margins' | 'theme'
   const [appliedToast, setAppliedToast] = useState(false);
+  const applyTimerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (applyTimerRef.current) clearTimeout(applyTimerRef.current);
+    };
+  }, []);
 
   const localConfig = globalLayoutConfig;
 
@@ -70,10 +83,12 @@ export function GlobalLayoutSettingsPage() {
     ];
 
     const parsedValue = numericFields.includes(field) ? Number(value) : value;
-    const updated = { ...globalLayoutConfig, [field]: parsedValue };
+    setGlobalLayoutConfig({ [field]: parsedValue });
 
-    // Apply live to Zustand store so original CanvasEditor re-renders immediately!
-    applyGlobalLayoutConfigToAllSlides(updated);
+    if (applyTimerRef.current) clearTimeout(applyTimerRef.current);
+    applyTimerRef.current = setTimeout(() => {
+      applyGlobalLayoutConfigToAllSlides();
+    }, 200);
   };
 
   const handleApplyAll = () => {
@@ -83,58 +98,7 @@ export function GlobalLayoutSettingsPage() {
   };
 
   const handleResetDefaults = () => {
-    const defaultConfig = {
-      aspectRatio: "4:5",
-      primaryColor: "#C84B31",
-      accentColor: "#FAD4C0",
-      bgColor: "#ffffff",
-      bgPattern: "solid",
-      headlineFont: "Inter",
-      bodyFont: "Inter",
-      textAlign: "left",
-      headlineX: 187,
-      headlineY: 273,
-      headlineFontSize: 44,
-      headlineColor: "#0f172a",
-      bodyX: 179,
-      bodyY: 409,
-      bodyFontSize: 30,
-      bodyColor: "#475569",
-      dirRectX: 544,
-      dirRectY: 865,
-      dirRectWidth: 760,
-      dirRectHeight: 340,
-      dirRectFill: "#eff6ff",
-      dirRectStroke: "#8e5c29",
-      dirRectStrokeWidth: 2,
-      dirTextX: 200,
-      dirTextY: 770,
-      dirTextFontSize: 24,
-      dirTextColor: "#8e5c29",
-      pageNumberX: 140,
-      pageNumberY: 1210,
-      pageNumberFontSize: 24,
-      pageNumberColor: "#64748b",
-      swipeX: 940,
-      swipeY: 1210,
-      swipeFontSize: 24,
-      swipeColor: "#64748b",
-      swipeText: "Swipe →",
-      followX: 940,
-      followY: 1210,
-      followFontSize: 24,
-      followColor: "#64748b",
-      followText: "Follow for more →",
-      safeAreaMarginTop: 80,
-      safeAreaMarginBottom: 80,
-      safeAreaMarginLeft: 80,
-      safeAreaMarginRight: 80,
-      contentTopClearance: 210,
-      contentBottomClearance: 1180,
-      contentPaddingLeft: 60,
-      contentPaddingRight: 60,
-    };
-    applyGlobalLayoutConfigToAllSlides(defaultConfig);
+    applyGlobalLayoutConfigToAllSlides({ ...DEFAULT_GLOBAL_LAYOUT_CONFIG });
   };
 
   const handleBackToEditor = () => {
@@ -1189,6 +1153,21 @@ export function GlobalLayoutSettingsPage() {
                           ))}
                         </div>
                       </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <span className="text-xs text-slate-400">Snap to guides while dragging</span>
+                      <button
+                        type="button"
+                        onClick={() => handleChange("snapToGuides", !localConfig.snapToGuides)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                          localConfig.snapToGuides
+                            ? "bg-blue-600 text-white border-blue-500"
+                            : "bg-slate-950 text-slate-400 border-slate-800"
+                        }`}
+                      >
+                        {localConfig.snapToGuides ? "Snap ON" : "Snap OFF"}
+                      </button>
                     </div>
                   </div>
                 </div>

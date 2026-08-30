@@ -52,20 +52,25 @@ export function useCollectionData() {
 
       const normalizedSlides = slides.map((s, sIdx) => {
         const slideNo = s.slideNo || sIdx + 1
-        const slideTitle = s.content?.title || `Slide ${sIdx + 1}`
-        const body = s.content?.body || ''
-        const visualDirective = s.content?.visualDirective || ''
-        const layoutId = s.layout?.id || 'concept-explain'
+        // Support both flat schema (headline/text) and nested schema (content.title/body)
+        const slideTitle = s.headline || s.title || s.content?.title || `Slide ${sIdx + 1}`
+        const body = s.text || s.body || s.content?.body || ''
+        const visualDirective = s.descriptionVisual || s.visualDirective || s.content?.visualDirective || ''
+        // layout can be a string (flat schema) or an object with .id (nested schema)
+        const layoutId = typeof s.layout === 'string' ? s.layout : (s.layout?.id || 'concept-explain')
         return {
           ...s,
           slideNo,
           SlideNo: slideNo,
+          headline: slideTitle,
           title: slideTitle,
           SlideTitle: slideTitle,
+          text: body,
           body,
           Content: body,
           visualDirective,
           VisualDirective: visualDirective,
+          layout: layoutId,
           archetypeKey: layoutId,
           Layout: layoutId,
         }

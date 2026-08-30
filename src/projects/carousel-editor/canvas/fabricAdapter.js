@@ -1,28 +1,66 @@
 import { Rect, Circle, Textbox, FabricImage, FabricObject } from "fabric";
+import { buildHeadlineStyles, buildBodyStyles } from "./textAnnotations";
 
-// High-visibility dark selection controls and resize handles
 export const SELECTION_CONTROL_CONFIG = {
   transparentCorners: false,
-  cornerColor: "#1e40af",       // Dark solid blue fill
-  cornerStrokeColor: "#ffffff", // White outline ring around handles
-  cornerSize: 13,               // Prominent size for easy grabbing & resizing
-  cornerStyle: "circle",        // Sleek circular handles
-  borderColor: "#2563eb",       // Crisp vibrant blue selection border line
-  borderScaleFactor: 2.5,       // Thick selection line
-  padding: 6,                   // Comfortable spacing around object
-  touchCornerSize: 24,          // Easy touch/mouse target area
+  cornerColor: "#2563eb",
+  cornerStrokeColor: "#ffffff",
+  cornerSize: 16,
+  cornerStyle: "circle",
+  borderColor: "#2563eb",
+  borderScaleFactor: 2,
+  padding: 4,
+  touchCornerSize: 32,
 };
 
-// Apply default selection styling globally to FabricObject prototype
 if (FabricObject && FabricObject.prototype) {
   Object.assign(FabricObject.prototype, SELECTION_CONTROL_CONFIG);
 }
 
+function chromeLock(element) {
+  if (!element?.isChrome) return {};
+  return {
+    selectable: false,
+    evented: false,
+    lockMovementX: true,
+    lockMovementY: true,
+    lockRotation: true,
+    lockScalingX: true,
+    lockScalingY: true,
+    hoverCursor: "default",
+    hasControls: false,
+    hasBorders: false,
+  };
+}
+
+function withMeta(element, extras = {}) {
+  return {
+    data: { id: element.id, isChrome: Boolean(element.isChrome) },
+    ...SELECTION_CONTROL_CONFIG,
+    ...chromeLock(element),
+    ...extras,
+  };
+}
+
+function applyImageSize(fabricImg, element, imgElement) {
+  const natW = imgElement.naturalWidth || fabricImg.width;
+  const natH = imgElement.naturalHeight || fabricImg.height;
+  if (element.width && element.height && natW && natH) {
+    fabricImg.set({
+      scaleX: element.width / natW,
+      scaleY: element.height / natH,
+    });
+    return;
+  }
+  if (element.width) {
+    fabricImg.scaleToWidth(element.width);
+  } else if (element.height) {
+    fabricImg.scaleToHeight(element.height);
+  }
+}
+
 /**
  * Fabric Adapter: Transforms JSON element definitions into runtime Fabric.js Objects.
- *
- * @param {Object} element - JSON element definition from carousel store
- * @returns {import("fabric").FabricObject | null}
  */
 export function createFabricObject(element) {
   if (!element) return null;
@@ -41,8 +79,9 @@ export function createFabricObject(element) {
         angle: element.rotation || 0,
         originX: element.originX || "left",
         originY: element.originY || "top",
-        data: { id: element.id },
-        ...SELECTION_CONTROL_CONFIG,
+        scaleX: element.scaleX || 1,
+        scaleY: element.scaleY || 1,
+        ...withMeta(element),
       });
 
     case "circle":
@@ -54,28 +93,44 @@ export function createFabricObject(element) {
         stroke: element.stroke || "#000000",
         strokeWidth: element.strokeWidth || 0,
         angle: element.rotation || 0,
-        data: { id: element.id },
-        ...SELECTION_CONTROL_CONFIG,
+        originX: element.originX || "left",
+        originY: element.originY || "top",
+        scaleX: element.scaleX || 1,
+        scaleY: element.scaleY || 1,
+        ...withMeta(element),
       });
 
     case "headline":
     case "badge":
-    case "text":
-      return new Textbox(element.text || element.content || "", {
+    case "text": {
+      const rawText = element.text || element.content || "";
+      // Build editorial annotation styles:
+      // • headline → last word highlighted with accent background
+      // • body/text → first 2 important words underlined in primary color
+      const annotationStyles =
+        element.type === "headline"
+          ? buildHeadlineStyles(rawText, element.accentColor || element._accent)
+          : element.type === "text"
+          ? buildBodyStyles(rawText, element.fill || element._primary)
+          : {};
+
+      return new Textbox(rawText, {
         left: element.x,
         top: element.y,
         width: element.width || 840,
         fontSize: element.fontSize || 32,
         fontFamily: element.fontFamily || "Inter",
+        fontWeight: element.fontWeight || "normal",
         fill: element.fill || "#000000",
         angle: element.rotation || 0,
         originX: element.originX || "left",
         originY: element.originY || "top",
         textAlign: element.textAlign || "left",
         splitByGrapheme: false,
-        data: { id: element.id },
-        ...SELECTION_CONTROL_CONFIG,
+        styles: annotationStyles,
+        ...withMeta(element),
       });
+    }
 
     case "image": {
       const imgElement = document.createElement("img");
@@ -86,20 +141,15 @@ export function createFabricObject(element) {
         left: element.x,
         top: element.y,
         angle: element.rotation || 0,
-        data: { id: element.id },
-        ...SELECTION_CONTROL_CONFIG,
+        originX: element.originX || "left",
+        originY: element.originY || "top",
+        ...withMeta(element),
       });
 
-      if (element.width && element.height) {
-        fabricImg.scaleToWidth(element.width);
-        fabricImg.scaleToHeight(element.height);
-      }
+      applyImageSize(fabricImg, element, imgElement);
 
       imgElement.onload = () => {
-        if (element.width && element.height) {
-          fabricImg.scaleToWidth(element.width);
-          fabricImg.scaleToHeight(element.height);
-        }
+        applyImageSize(fabricImg, element, imgElement);
         if (fabricImg.canvas) {
           fabricImg.canvas.renderAll();
         }

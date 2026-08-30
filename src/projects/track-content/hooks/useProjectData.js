@@ -76,7 +76,13 @@ export function useProjectData(projectSlug = 'swe-notebook') {
             s.id || `slide_t${trackId}_p${String(postNo).padStart(2, '0')}_s${String(slideNo).padStart(2, '0')}`
           const legacyKey = `${trackName}|${postNo}|${slideNo}`
           const slideOverride = overrides[slideId] || overrides[legacyKey] || {}
-          const layoutId = slideOverride.Layout || slideOverride.layout || s.layout?.id || 'concept-explain'
+          // layout can be a flat string ("hook-open") or an object with .id
+          const layoutId = slideOverride.Layout || slideOverride.layout
+            || (typeof s.layout === 'string' ? s.layout : s.layout?.id)
+            || 'concept-explain'
+          // slideType is the semantic type label (hook, problem, explanation…)
+          // fall back to layoutId only if slideType is absent
+          const slideType = s.slideType || layoutId
           const audio = p.metadata?.suggestedAudio || {}
           const audioTitle = typeof audio === 'string' ? audio : audio.mood || 'Lo-fi Tech Beats / Deep Focus Ambient'
 
@@ -85,12 +91,18 @@ export function useProjectData(projectSlug = 'swe-notebook') {
             postId,
             order: slideNo,
             slideNo,
-            archetypeKey: layoutId,
-            layout: s.layout || { id: layoutId, version: '1.0.0' },
+            slideType,
+            // archetypeKey now shows the semantic slideType (hook, problem, etc.)
+            archetypeKey: slideType,
+            layout: layoutId,
+            // flat fields forwarded so downstream components can read them directly
+            headline: slideOverride.title ?? slideOverride.SlideTitle ?? s.headline ?? s.title ?? `Slide ${slideNo}`,
+            text: slideOverride.body ?? slideOverride.Content ?? s.text ?? s.body ?? '',
+            visualDirective: slideOverride.visualDirective ?? slideOverride.VisualDirective ?? s.visualDirective ?? s.descriptionVisual ?? '',
             content: {
-              title: slideOverride.title ?? slideOverride.SlideTitle ?? (s.content?.title || `Slide ${slideNo}`),
-              body: slideOverride.body ?? slideOverride.Content ?? (s.content?.body || ''),
-              visualDirective: slideOverride.visualDirective ?? slideOverride.VisualDirective ?? (s.content?.visualDirective || ''),
+              title: slideOverride.title ?? slideOverride.SlideTitle ?? s.headline ?? s.title ?? s.content?.title ?? `Slide ${slideNo}`,
+              body: slideOverride.body ?? slideOverride.Content ?? s.text ?? s.body ?? s.content?.body ?? '',
+              visualDirective: slideOverride.visualDirective ?? slideOverride.VisualDirective ?? s.visualDirective ?? s.descriptionVisual ?? s.content?.visualDirective ?? '',
             },
             elements: s.elements || [],
             slideConfig: s.config || { width: 1080, height: 1350, background: '#F8F7F4' },

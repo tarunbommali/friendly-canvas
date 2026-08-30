@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCarouselStore } from "../store/carouselStore";
 import { CanvasEditor } from "../components/CanvasEditor";
@@ -15,6 +15,7 @@ import { useCollectionData } from "../../../shared/hooks/useCollectionData";
 import { useEditorKeyboardShortcuts } from "../hooks/useEditorKeyboardShortcuts";
 import { THEME } from "../theme/theme";
 import { composeSlide } from "../theme/compose";
+import { generateSlideImagePrompt } from "../../../shared/utils/promptGenerators";
 
 function convertPostToCarouselDoc(post, themeConfig = {}) {
   if (!post) return null;
@@ -30,17 +31,17 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
   const bgPattern = themeConfig.bgPattern || "solid";
   const textAlign = themeConfig.textAlign || "left";
 
-  let textX = 120; // 120 for left-aligned block inside 920px card (x: 80 to 1000)
+  let textX = THEME.contentZone.x;
   let originX = "left";
   if (textAlign === "center") {
-    textX = 540;
+    textX = THEME.canvas.width / 2;
     originX = "center";
   } else if (textAlign === "right") {
-    textX = 960; // 960 for right-aligned block
+    textX = THEME.contentZone.right;
     originX = "right";
   }
 
-  const contentWidth = 840; // Full 840px width inside safeArea card (leaving 40px padding on left/right)
+  const contentWidth = THEME.contentZone.width;
 
   const slides = (rawSlides.length > 0 ? rawSlides : [{ title: post.title, body: '' }]).map((slide, index) => {
     const slideNo = slide.slideNo || slide.SlideNo || index + 1;
@@ -61,6 +62,8 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       fontSize: 44,
       fontFamily: headlineFont,
       fill: THEME.colors.textPrimary,
+      // Pass track accent so textAnnotations can highlight the last word
+      _accent: themeConfig.accentColor || primaryColor,
       originX,
       textAlign,
       rotation: 0,
@@ -85,6 +88,8 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
         fontSize: 30,
         fontFamily: bodyFont,
         fill: THEME.colors.textSecondary,
+        // Pass track primary so textAnnotations can underline important words
+        _primary: primaryColor,
         originX,
         textAlign,
         rotation: 0,
@@ -98,7 +103,7 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       contentElements.push({
         id: `rect_${slideId}_visual_placeholder`,
         type: "rect",
-        x: 540,
+        x: THEME.canvas.width / 2,
         y: 794,
         width: 760,
         height: 480,
@@ -128,6 +133,30 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
     return {
       ...composed,
       visualDirective: rawVisual,
+      imagePrompt:
+        slide.imagePrompt ||
+        generateSlideImagePrompt(
+          {
+            ...post,
+            Track: post.collectionName || post.Track,
+            PostTitle: post.title || post.PostTitle,
+          },
+          {
+            VisualDirective: rawVisual,
+            SlideTitle: rawTitle,
+            Content: rawBody,
+          },
+          {
+            primary: primaryColor,
+            accent: themeConfig.accentColor,
+            palette: post.collectionName,
+          }
+        ),
+      assetName: Array.isArray(slide.assetName)
+        ? slide.assetName
+        : (slide.assets || [])
+            .map((asset) => asset?.name || asset?.label || asset)
+            .filter((name) => typeof name === "string" && name.length > 0),
       bgPattern,
     };
   });
@@ -201,9 +230,18 @@ export function CarouselBuilderPage() {
     }
   };
 
+  // Track last loaded post id to avoid re-loading the same post on every render.
+  // Zustand actions (setDocument) are stable — never put them in dep arrays.
+  const loadedPostIdRef = useRef(null);
+
   // Dynamically load post slides when opening a specific design/post
   useEffect(() => {
     if (!currentPost) return;
+    // Bail out early if we already loaded this exact post to prevent
+    // the "Maximum update depth exceeded" infinite-loop.
+    const postKey = currentPost.id || currentPost.postId || currentPost.postNo;
+    if (loadedPostIdRef.current === postKey) return;
+    loadedPostIdRef.current = postKey;
 
     // Fetch Track Color Palette from collectionIdMap or trackPalettes
     const palette =
@@ -224,9 +262,10 @@ export function CarouselBuilderPage() {
 
     const convertedDoc = convertPostToCarouselDoc(currentPost, initialPalette);
     if (convertedDoc) {
-      setDocument(convertedDoc);
+      setDocument(convertedDoc, { resetRegistry: true });
     }
-  }, [currentPost, collectionIdMap, trackPalettes, setDocument]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPost]);
 
   return (
     <div className="flex flex-col h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
@@ -288,7 +327,8 @@ export function CarouselBuilderPage() {
             <Layout className="w-3.5 h-3.5" /> Ratio:
           </span>
           <span className="px-2.5 py-1 rounded font-mono bg-blue-600 text-white font-semibold">
-            4:5 (1080x1350)
+            {document.metadata.aspectRatio || "4:5"} ({document.metadata.width}x
+            {document.metadata.height})
           </span>
         </div>
       </header>

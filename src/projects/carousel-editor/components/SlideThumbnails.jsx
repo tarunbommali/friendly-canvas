@@ -1,5 +1,6 @@
 import { useCarouselStore } from "../store/carouselStore";
-import { Plus, Copy, Trash2, Layers } from "lucide-react";
+import { Plus, Copy, Trash2, Layers, Download } from "lucide-react";
+import { renderSlideToDataUrl } from "../canvas/exportRenderer";
 
 export function SlideThumbnails() {
   const document = useCarouselStore((state) => state.document);
@@ -7,6 +8,24 @@ export function SlideThumbnails() {
   const addSlide = useCarouselStore((state) => state.addSlide);
   const duplicateSlide = useCarouselStore((state) => state.duplicateSlide);
   const deleteSlide = useCarouselStore((state) => state.deleteSlide);
+
+  const downloadSingleSlide = async (e, slide, index) => {
+    e.stopPropagation();
+    try {
+      const safeTitle = (document.metadata.title || "carousel")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "-");
+
+      const dataUrl = await renderSlideToDataUrl(slide, document.metadata, 2);
+      const link = window.document.createElement("a");
+      link.href = dataUrl;
+      link.download = `${safeTitle}-slide-${index + 1}.png`;
+      link.click();
+    } catch (err) {
+      console.error("Failed to export slide as PNG:", err);
+      alert("Error exporting slide: " + err.message);
+    }
+  };
 
   return (
     <div className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-full">
@@ -65,7 +84,7 @@ export function SlideThumbnails() {
                      ""}
                   </div>
                 </div>
-                {slide.visualDirective && (
+                {(slide.visualDirective || slide.imagePrompt) && (
                   <div className="text-[6.5px] text-amber-700 bg-amber-50 border border-amber-200/60 p-0.5 rounded line-clamp-1 font-mono">
                     💡 AI Image Prompt Available
                   </div>
@@ -74,6 +93,14 @@ export function SlideThumbnails() {
 
               {/* Quick Hover Actions */}
               <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-slate-900/90 backdrop-blur-sm p-1 rounded-md border border-slate-700">
+                {/* Download this slide */}
+                <button
+                  onClick={(e) => downloadSingleSlide(e, slide, index)}
+                  className="p-1 hover:bg-emerald-900/60 text-emerald-400 rounded"
+                  title={`Download Slide ${index + 1} as PNG`}
+                >
+                  <Download className="w-3 h-3" />
+                </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();

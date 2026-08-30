@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 
 /**
  * useClipboard — Dedicated hook for clipboard and download operations.
@@ -62,4 +62,52 @@ export function useClipboard() {
   const resetStatus = useCallback(() => setStatus({ type: null, message: '', title: '' }), [])
 
   return { copyText, copyImage, isLoading, status, resetStatus }
+}
+
+/**
+ * Listen for browser paste events (images + plain text) while not typing in an input.
+ * Used by the carousel editor to drop assets onto the canvas.
+ */
+export function useEditorPaste(onPayload) {
+  const onPayloadRef = useRef(onPayload)
+
+  useEffect(() => {
+    onPayloadRef.current = onPayload
+  }, [onPayload])
+
+  useEffect(() => {
+    const handlePaste = (e) => {
+      const activeEl = document.activeElement
+      const isInput =
+        activeEl &&
+        (activeEl.tagName === 'INPUT' ||
+          activeEl.tagName === 'TEXTAREA' ||
+          activeEl.isContentEditable)
+      if (isInput) return
+
+      const items = Array.from(e.clipboardData?.items || [])
+      const imageItem = items.find((item) => item.type.startsWith('image/'))
+      const emit = onPayloadRef.current
+      if (typeof emit !== 'function') return
+
+      if (imageItem) {
+        e.preventDefault()
+        const file = imageItem.getAsFile()
+        if (!file) return
+        const reader = new FileReader()
+        reader.onload = () => {
+          emit({ imageDataUrl: reader.result, text: null })
+        }
+        reader.readAsDataURL(file)
+        return
+      }
+
+      const text = e.clipboardData?.getData('text/plain') || ''
+      e.preventDefault()
+      emit({ imageDataUrl: null, text: text || null })
+    }
+
+    window.addEventListener('paste', handlePaste)
+    return () => window.removeEventListener('paste', handlePaste)
+  }, [])
 }

@@ -27,9 +27,9 @@ export function getPatternDataUrl(patternType, color = "#e2e8f0", scale = 1) {
       }
 
       case "lines": {
-        const size = 40 * scale;
+        const size = 20 * scale;
         return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-          <line x1="0" y1="${size}" x2="${size}" y2="${size}" stroke="${color}" stroke-width="1" opacity="0.5"/>
+          <path d="M0 ${size} L${size} 0" stroke="${color}" stroke-width="1" opacity="0.5"/>
         </svg>`;
       }
 

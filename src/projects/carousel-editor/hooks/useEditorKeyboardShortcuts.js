@@ -1,17 +1,38 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useCarouselStore } from "../store/carouselStore";
+import { useEditorPaste } from "../../../shared/hooks/useClipboard";
+import { isChromeElement } from "../theme/elementClassify";
 
 /**
- * Custom hook to handle global keyboard shortcuts for the Carousel Editor:
- * - Arrow Keys (Up, Down, Left, Right): Nudges selected element by 1px (or 10px with Shift)
- * - Delete / Backspace: Deletes selected element
- * - Ctrl+Z / Cmd+Z: Undo last action
- * - Ctrl+Y / Cmd+Y or Ctrl+Shift+Z: Redo last action
+ * Keyboard + clipboard shortcuts for the carousel editor.
  */
 export function useEditorKeyboardShortcuts() {
+  const lastPasteAtRef = useRef(0);
+
+  const runPaste = (imageDataUrl, text) => {
+    const now = Date.now();
+    if (now - lastPasteAtRef.current < 80) return;
+    lastPasteAtRef.current = now;
+    useCarouselStore.getState().pasteClipboardElement(imageDataUrl, text);
+  };
+
+  useEditorPaste(({ imageDataUrl, text }) => {
+    const { clipboardElement } = useCarouselStore.getState();
+    if (imageDataUrl) {
+      runPaste(imageDataUrl, null);
+      return;
+    }
+    if (clipboardElement) {
+      runPaste(null, null);
+      return;
+    }
+    if (text) {
+      runPaste(null, text);
+    }
+  });
+
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Ignore shortcut triggers if the user is typing inside an input/textarea
       const activeEl = document.activeElement;
       const isInput =
         activeEl &&
@@ -28,16 +49,14 @@ export function useEditorKeyboardShortcuts() {
         deleteElement,
         undo,
         redo,
+        copySelectedElement,
+        duplicateSelectedElement,
       } = useCarouselStore.getState();
 
-      // Undo / Redo Shortcuts
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
         e.preventDefault();
-        if (e.shiftKey) {
-          redo();
-        } else {
-          undo();
-        }
+        if (e.shiftKey) redo();
+        else undo();
         return;
       }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
@@ -46,16 +65,28 @@ export function useEditorKeyboardShortcuts() {
         return;
       }
 
-      // Delete Shortcut
-      if (e.key === "Delete" || e.key === "Backspace") {
-        if (selectedElementId) {
-          e.preventDefault();
-          deleteElement(selectedElementId);
-        }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c") {
+        e.preventDefault();
+        copySelectedElement();
         return;
       }
 
-      // Arrow Keys Nudge Navigation (Up, Down, Left, Right)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "d") {
+        e.preventDefault();
+        duplicateSelectedElement();
+        return;
+      }
+
+      if (e.key === "Delete" || e.key === "Backspace") {
+        if (!selectedElementId || !doc) return;
+        const activeSlide = doc.slides.find((s) => s.id === doc.activeSlideId);
+        const target = activeSlide?.elements.find((el) => el.id === selectedElementId);
+        if (target && isChromeElement(target)) return;
+        e.preventDefault();
+        deleteElement(selectedElementId);
+        return;
+      }
+
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
         if (!selectedElementId || !doc || !doc.slides) return;
 
@@ -65,11 +96,10 @@ export function useEditorKeyboardShortcuts() {
         const targetElement = activeSlide.elements.find(
           (el) => el.id === selectedElementId
         );
-        if (!targetElement) return;
+        if (!targetElement || isChromeElement(targetElement)) return;
 
         e.preventDefault();
 
-        // 10px step when holding Shift, 1px otherwise
         const step = e.shiftKey ? 10 : 1;
         let newX = targetElement.x ?? 0;
         let newY = targetElement.y ?? 0;

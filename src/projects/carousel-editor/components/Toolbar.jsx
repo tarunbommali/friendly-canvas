@@ -1,7 +1,6 @@
 import { useRef } from "react";
-import { Canvas } from "fabric";
 import { useCarouselStore } from "../store/carouselStore";
-import { renderSlide } from "../canvas/renderer";
+import { renderSlideToDataUrl } from "../canvas/exportRenderer";
 import {
   Type,
   Square,
@@ -17,8 +16,11 @@ import {
   Undo2,
   Redo2,
   Trash2,
+  Magnet,
 } from "lucide-react";
 import { carouselDocumentSchema } from "../schemas/carouselSchema";
+import { THEME } from "../theme/theme";
+import { createElementId } from "../theme/elementClassify";
 
 export function Toolbar() {
   const imageInputRef = useRef(null);
@@ -37,6 +39,8 @@ export function Toolbar() {
   const toggleSafeAreaGuides = useCarouselStore(
     (state) => state.toggleSafeAreaGuides
   );
+  const snapToGuides = useCarouselStore((state) => state.snapToGuides);
+  const toggleSnapToGuides = useCarouselStore((state) => state.toggleSnapToGuides);
   const document = useCarouselStore((state) => state.document);
   const setDocument = useCarouselStore((state) => state.setDocument);
   const resetToInitial = useCarouselStore((state) => state.resetToInitial);
@@ -46,20 +50,21 @@ export function Toolbar() {
 
   const addText = (preset = "heading") => {
     const isHeading = preset === "heading";
-    const textX = 160;
-    const textY = isHeading
-      ? Math.round(canvasHeight * 0.22)
-      : Math.round(canvasHeight * 0.42);
+    const textX = THEME.contentZone.x;
+    const textY = isHeading ? THEME.contentZone.y : THEME.contentZone.y + 200;
 
     addElement({
-      id: `text_${Date.now()}`,
-      type: "text",
+      id: createElementId(isHeading ? "headline" : "text"),
+      type: isHeading ? "headline" : "text",
       x: textX,
       y: textY,
+      width: THEME.contentZone.width,
       text: isHeading ? "Headline Text" : "Body text paragraph goes here...",
-      fontSize: isHeading ? 56 : 32,
+      fontSize: isHeading
+        ? THEME.typography.headline.fontSize
+        : THEME.typography.body.fontSize,
       fontFamily: "Inter",
-      fill: "#1e293b",
+      fill: isHeading ? THEME.colors.textPrimary : THEME.colors.textSecondary,
       rotation: 0,
       zIndex: 10,
     });
@@ -72,7 +77,7 @@ export function Toolbar() {
     const y = Math.round((canvasHeight - height) / 2);
 
     addElement({
-      id: `rect_${Date.now()}`,
+      id: createElementId("rect"),
       type: "rect",
       x,
       y,
@@ -93,7 +98,7 @@ export function Toolbar() {
     const y = Math.round((canvasHeight - diameter) / 2);
 
     addElement({
-      id: `circle_${Date.now()}`,
+      id: createElementId("circle"),
       type: "circle",
       x,
       y,
@@ -119,7 +124,7 @@ export function Toolbar() {
       const y = Math.round((canvasHeight - height) / 2);
 
       addElement({
-        id: `image_${Date.now()}`,
+        id: createElementId("image"),
         type: "image",
         src: dataUrl,
         x,
@@ -149,38 +154,22 @@ export function Toolbar() {
     const slides = document.slides;
     if (!slides || slides.length === 0) return;
 
-    try {
-      const offscreenCanvasEl = window.document.createElement("canvas");
-      const offscreenFabric = new Canvas(offscreenCanvasEl, {
-        width: document.metadata.width,
-        height: document.metadata.height,
-      });
+    const safeTitle = (document.metadata.title || "carousel")
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "-");
 
-      const safeTitle = (document.metadata.title || "carousel")
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "-");
-
-      for (let i = 0; i < slides.length; i++) {
-        const slide = slides[i];
-        renderSlide(offscreenFabric, slide, document.metadata);
-
-        await new Promise((resolve) => setTimeout(resolve, 150));
-
-        const dataUrl = offscreenFabric.toDataURL({
-          format: "png",
-          multiplier: 2,
-        });
-
+    for (let i = 0; i < slides.length; i++) {
+      try {
+        const dataUrl = await renderSlideToDataUrl(slides[i], document.metadata, 2);
         const link = window.document.createElement("a");
         link.href = dataUrl;
         link.download = `${safeTitle}-slide-${i + 1}.png`;
         link.click();
+        // Small gap between downloads so the browser doesn't block them
+        await new Promise((r) => setTimeout(r, 100));
+      } catch (err) {
+        console.error(`Failed to export slide ${i + 1}:`, err);
       }
-
-      offscreenFabric.dispose();
-    } catch (err) {
-      console.error("Failed to export slides as PNG:", err);
-      alert("Error exporting slides: " + err.message);
     }
   };
 
@@ -194,7 +183,7 @@ export function Toolbar() {
         const rawJson = JSON.parse(event.target.result);
         const parsed = carouselDocumentSchema.safeParse(rawJson);
         if (parsed.success) {
-          setDocument(parsed.data);
+          setDocument(parsed.data, { resetRegistry: true });
           alert("Carousel JSON imported successfully!");
         } else {
           alert("Invalid Carousel JSON schema: " + parsed.error.message);
@@ -292,6 +281,19 @@ export function Toolbar() {
         >
           <Grid className="w-3.5 h-3.5" />
           <span>Guides</span>
+        </button>
+
+        <button
+          onClick={toggleSnapToGuides}
+          className={`px-2.5 py-1 rounded-lg text-xs font-mono font-medium border transition-colors flex items-center gap-1.5 ${
+            snapToGuides
+              ? "bg-blue-950/80 text-blue-300 border-blue-500/50"
+              : "bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200"
+          }`}
+          title="Toggle Snap to Guides"
+        >
+          <Magnet className="w-3.5 h-3.5" />
+          <span>Snap</span>
         </button>
 
         <div className="h-4 w-[1px] bg-slate-800 mx-1" />

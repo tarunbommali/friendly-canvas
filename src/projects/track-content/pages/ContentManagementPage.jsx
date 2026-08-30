@@ -305,7 +305,7 @@ function StoryboardView({ post, onOpenEditor }) {
 
             <div className="flex flex-col gap-1">
               <span className="text-xs font-serif font-bold text-white line-clamp-3 leading-snug">
-                {slide.content?.title || `Slide ${idx + 1}`}
+                {slide.headline || slide.content?.title || `Slide ${idx + 1}`}
               </span>
               <span className="text-[9px] font-mono uppercase text-slate-400">
                 {slide.archetypeKey}
