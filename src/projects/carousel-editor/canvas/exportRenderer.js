@@ -1,6 +1,7 @@
 import { Canvas, Rect, Circle, Textbox, FabricImage, Pattern } from "fabric";
 import { getPatternDataUrl } from "./patterns";
-import { buildHeadlineStyles, buildBodyStyles } from "./textAnnotations";
+import { buildHeadlineStyles, buildBodyStyles, wrapTextToLines } from "./textAnnotations";
+import { THEME } from "../theme/theme";
 
 /**
  * Renders a slide onto an offscreen Fabric canvas and waits for all images
@@ -137,6 +138,9 @@ export async function renderSlideToDataUrl(slide, metadata, multiplier = 2) {
         el.type === "badge"
       ) {
         const rawText = el.text || el.content || "";
+        const elemWidth = el.width || THEME.contentZone.width;
+        const elemFontSize = el.fontSize || (el.type === "headline" ? 92 : 64);
+
         const annotationStyles =
           el.type === "headline"
             ? buildHeadlineStyles(rawText, el.accentColor || el._accent)
@@ -146,8 +150,8 @@ export async function renderSlideToDataUrl(slide, metadata, multiplier = 2) {
 
         fabricObj = new Textbox(rawText, {
           left: el.x, top: el.y,
-          width: el.width || 840,
-          fontSize: el.fontSize || 32,
+          width: elemWidth,
+          fontSize: elemFontSize,
           fontFamily: el.fontFamily || "Inter",
           fontWeight: el.fontWeight || "normal",
           fill: el.fill || "#000000",

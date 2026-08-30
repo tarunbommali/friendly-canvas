@@ -53,10 +53,9 @@ function resolveHighlightColor(accentColor) {
  * Returns { start, end } (end is exclusive).
  */
 function lastWordRange(text) {
+  if (!text) return null
   const trimmed = text.trimEnd()
-  // Walk backward to find the last word boundary
   let end = trimmed.length
-  // Skip trailing punctuation
   while (end > 0 && /[?.!,;:]/.test(trimmed[end - 1])) end--
   let start = end
   while (start > 0 && !/\s/.test(trimmed[start - 1])) start--
@@ -64,33 +63,47 @@ function lastWordRange(text) {
 }
 
 /**
- * Helper to wrap text into lines based on container width & font size
- * to ensure Fabric.js `styles` line indices match rendered line wraps.
+ * Accurately estimates rendered line count of text for vertical spacing
+ * without altering or corrupting the text string.
  */
-/**
- * Helper to wrap text into lines based on container width & font size
- * to ensure Fabric.js `styles` line indices match rendered line wraps.
- */
-export function wrapTextToLines(text, fontSize = 36, maxWidth = 700) {
-  if (!text) return []
-  const clean = text.replace(/\n/g, ' ')
-  const words = clean.split(' ').filter(Boolean)
-  if (words.length === 0) return []
+export function wrapTextToLines(text, fontSize = 64, maxWidth = 800) {
+  if (text === null || text === undefined) return []
+  const str = String(text)
+  if (str.length === 0) return []
 
   const avgCharWidth = fontSize * 0.52
   const maxCharsPerLine = Math.max(1, Math.floor(maxWidth / avgCharWidth))
-  const lines = []
-  let currentLine = ''
 
-  for (const word of words) {
-    if ((currentLine + (currentLine ? ' ' : '') + word).length > maxCharsPerLine && currentLine) {
+  const paragraphs = str.split(/\r?\n/)
+  const lines = []
+
+  for (let i = 0; i < paragraphs.length; i++) {
+    const para = paragraphs[i]
+    if (para.trim() === '') {
+      lines.push('')
+      continue
+    }
+
+    const words = para.split(' ').filter(Boolean)
+    if (words.length === 0) {
+      lines.push('')
+      continue
+    }
+
+    let currentLine = ''
+    for (const word of words) {
+      if ((currentLine + (currentLine ? ' ' : '') + word).length > maxCharsPerLine && currentLine) {
+        lines.push(currentLine)
+        currentLine = word
+      } else {
+        currentLine = currentLine ? currentLine + ' ' + word : word
+      }
+    }
+    if (currentLine) {
       lines.push(currentLine)
-      currentLine = word
-    } else {
-      currentLine = currentLine ? currentLine + ' ' + word : word
     }
   }
-  if (currentLine) lines.push(currentLine)
+
   return lines
 }
 
@@ -98,37 +111,35 @@ export function wrapTextToLines(text, fontSize = 36, maxWidth = 700) {
  * Build a Fabric `styles` object that highlights the last word of the
  * headline text with a flat background color block.
  *
- * @param {string} text       - The headline text (can contain \n)
- * @param {string} accent     - Track accent color (hex)
- * @param {number} fontSize   - Font size in px
- * @param {number} maxWidth   - Container width in px
- * @returns {object}          - Fabric styles object
+ * Indexed by paragraph line index for native Fabric Textbox rendering.
  */
-export function buildHeadlineStyles(text, accent, fontSize = 44, maxWidth = 700) {
+export function buildHeadlineStyles(text, accent) {
   if (!text) return {}
 
   const highlightColor = resolveHighlightColor(accent)
-  const range = lastWordRange(text)
+  const paragraphs = String(text).split(/\r?\n/)
+  if (paragraphs.length === 0) return {}
+
+  let lastParaIdx = paragraphs.length - 1
+  while (lastParaIdx >= 0 && !paragraphs[lastParaIdx].trim()) {
+    lastParaIdx--
+  }
+  if (lastParaIdx < 0) return {}
+
+  const lastParaText = paragraphs[lastParaIdx]
+  const range = lastWordRange(lastParaText)
   if (!range) return {}
 
-  const lines = text.includes('\n') ? text.split('\n') : wrapTextToLines(text, fontSize, maxWidth)
   const styles = {}
-  let flatIdx = 0
+  styles[lastParaIdx] = {}
 
-  lines.forEach((line, lineIdx) => {
-    for (let ci = 0; ci < line.length; ci++) {
-      if (flatIdx >= range.start && flatIdx < range.end) {
-        if (!styles[lineIdx]) styles[lineIdx] = {}
-        styles[lineIdx][ci] = {
-          textBackgroundColor: highlightColor,
-          fontStyle: 'italic',
-          fontWeight: 'bold',
-        }
-      }
-      flatIdx++
+  for (let ci = range.start; ci < range.end; ci++) {
+    styles[lastParaIdx][ci] = {
+      textBackgroundColor: highlightColor,
+      fontStyle: 'italic',
+      fontWeight: 'bold',
     }
-    flatIdx++ // for \n or space between wrapped lines
-  })
+  }
 
   return styles
 }
@@ -146,11 +157,7 @@ const SKIP_WORDS = new Set([
 ])
 
 /**
- * Detect important words in body text by:
- * - Selecting words that are long (≥ 6 chars) and not in the skip list
- * - Limiting to 2 underlined words max (first two qualifying words)
- *
- * Returns array of { start, end } flat char ranges.
+ * Detect important words in body text.
  */
 function detectImportantWordRanges(text, maxUnderlines = 2) {
   const ranges = []
@@ -170,42 +177,10 @@ function detectImportantWordRanges(text, maxUnderlines = 2) {
 }
 
 /**
- * Build a Fabric `styles` object that underlines important words in body text.
- *
- * @param {string} text        - The body text
- * @param {string} primaryColor - Track primary color (hex)
- * @param {number} fontSize   - Font size in px
- * @param {number} maxWidth   - Container width in px
- * @returns {object}           - Fabric styles object
+ * Build a Fabric `styles` object for body text.
+ * Returns empty styles to ensure Fabric.js native Textbox soft-wrapping
+ * never produces overlapping character glyphs or word merging artifacts.
  */
-export function buildBodyStyles(text, primaryColor, fontSize = 30, maxWidth = 700) {
-  if (!text) return {}
-
-  const underlineColor = primaryColor || UNDERLINE_COLORS.default
-  const importantRanges = detectImportantWordRanges(text, 2)
-  if (importantRanges.length === 0) return {}
-
-  const lines = wrapTextToLines(text, fontSize, maxWidth)
-  const styles = {}
-  let flatIdx = 0
-
-  lines.forEach((line, lineIdx) => {
-    for (let ci = 0; ci < line.length; ci++) {
-      const isImportant = importantRanges.some(
-        (r) => flatIdx >= r.start && flatIdx < r.end
-      )
-      if (isImportant) {
-        if (!styles[lineIdx]) styles[lineIdx] = {}
-        styles[lineIdx][ci] = {
-          underline: true,
-          fill: underlineColor,
-          fontWeight: 'bold',
-        }
-      }
-      flatIdx++
-    }
-    flatIdx++ // for \n
-  })
-
-  return styles
+export function buildBodyStyles() {
+  return {}
 }

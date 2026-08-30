@@ -15,6 +15,7 @@ import { useCollectionData } from "../../../shared/hooks/useCollectionData";
 import { useEditorKeyboardShortcuts } from "../hooks/useEditorKeyboardShortcuts";
 import { THEME } from "../theme/theme";
 import { composeSlide } from "../theme/compose";
+import { wrapTextToLines } from "../canvas/textAnnotations";
 import { generateSlideImagePrompt } from "../../../shared/utils/promptGenerators";
 
 function convertPostToCarouselDoc(post, themeConfig = {}) {
@@ -59,7 +60,7 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       y: THEME.contentZone.y,
       width: contentWidth,
       text: rawTitle,
-      fontSize: 44,
+      fontSize: 92,
       fontFamily: headlineFont,
       fill: THEME.colors.textPrimary,
       // Pass track accent so textAnnotations can highlight the last word
@@ -70,9 +71,14 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       zIndex: 3,
     });
 
-    // Body Content below Title filling full safeArea contentZone width (840px)
+    // Body Content below Title filling full safeArea contentZone width (800px)
     const rawBody = slide.text || slide.body || slide.Content || (typeof slide.content === 'object' ? slide.content?.body : '') || "";
     if (rawBody) {
+      // Calculate dynamic headline height to place body cleanly below it without extra whitespace or overlap
+      const headlineLines = wrapTextToLines(rawTitle, 92, contentWidth).length || 1;
+      const headlineHeight = headlineLines * 92 * 1.15;
+      const dynamicBodyY = Math.round(THEME.contentZone.y + headlineHeight + 28);
+
       // Automatically wrap semicolons into clean newlines for description lists
       const formattedBody = rawBody.includes(";")
         ? rawBody.replace(/;\s*/g, ";\n")
@@ -82,10 +88,10 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
         id: `text_${slideId}_body`,
         type: "text",
         x: textX,
-        y: THEME.contentZone.y + 140,
+        y: dynamicBodyY,
         width: contentWidth,
         text: formattedBody,
-        fontSize: 30,
+        fontSize: 64,
         fontFamily: bodyFont,
         fill: THEME.colors.textSecondary,
         // Pass track primary so textAnnotations can underline important words
@@ -272,11 +278,11 @@ export function CarouselBuilderPage() {
   }, [currentPost]);
 
   return (
-    <div className="flex flex-col h-screen bg-[#0f1117] text-slate-100 overflow-hidden font-sans select-none">
+    <div className="flex flex-col h-full w-full bg-[#0f1117] text-slate-100 overflow-hidden font-sans select-none min-h-0">
       <Toolbar onOpenSettings={handleOpenSettingsPage} currentPost={currentPost} />
-      <div className="flex-1 flex min-h-0 overflow-hidden">
+      <div className="flex-1 flex min-h-0 min-w-0 overflow-hidden">
         <SlideThumbnails />
-        <main className="flex-1 canvas-checkerboard p-4 flex items-center justify-center overflow-hidden relative">
+        <main className="flex-1 min-w-0 min-h-0 canvas-checkerboard p-4 flex items-center justify-center overflow-hidden relative">
           <CanvasEditor />
         </main>
         <PropertiesPanel />

@@ -112,10 +112,13 @@ export default function WorkspaceLayout() {
     location.pathname.match(/^\/layout-builder\/collection\/[^/]+\/(new|edit\/[^/]+)$/)
   )
   const isContentManagementPage = location.pathname.includes('/content')
-  const hideNavbar = isCreatePostPage || isCanvasEditorPage
+  const isImmersiveStudio = isBuilderPage || isCreatePostPage || isCanvasEditorPage
+  const hideNavbar = isImmersiveStudio
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0f1117] text-slate-100 font-sans">
+    <div
+      className="h-screen flex flex-col bg-[#0f1117] text-slate-100 font-sans overflow-hidden"
+    >
       {!hideNavbar && (
         <Navbar
           searchTerm={searchTerm}
@@ -124,7 +127,7 @@ export default function WorkspaceLayout() {
         />
       )}
 
-      <div className="flex flex-1 relative">
+      <div className="flex flex-1 min-h-0 relative overflow-hidden">
         {shouldShowSidebar && (
           <TrackSidebar
             tracks={tracks}
@@ -140,14 +143,17 @@ export default function WorkspaceLayout() {
         )}
 
         <main
-          className={`flex-1 min-w-0 w-full ${isBuilderPage || isCreatePostPage || isCanvasEditorPage || isContentManagementPage
-            ? 'p-0 max-w-none'
-            : shouldShowSidebar
-              ? 'p-4 md:p-8 max-w-7xl mx-auto'
-              : 'p-4 md:p-8 max-w-6xl mx-auto'
-            }`}
+          className={`flex-1 min-w-0 min-h-0 w-full ${
+            isImmersiveStudio
+              ? 'h-full overflow-hidden p-0 max-w-none'
+              : isContentManagementPage
+                ? 'h-full overflow-y-auto p-0 max-w-none'
+                : shouldShowSidebar
+                  ? 'h-full overflow-y-auto p-4 md:p-8 max-w-7xl mx-auto'
+                  : 'h-full overflow-y-auto p-4 md:p-8 max-w-6xl mx-auto'
+          }`}
         >
-          {!isBuilderPage && !isContentManagementPage && !isCreatePostPage && (
+          {!isImmersiveStudio && !isContentManagementPage && (
             <BreadcrumbNav
               tracks={tracks}
               trackPalettes={trackPalettes}

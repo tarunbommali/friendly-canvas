@@ -10,12 +10,14 @@ export function CanvasEditor() {
   const canvasRef = useRef(null);
   const fabricRef = useRef(null);
   const isRenderingRef = useRef(false);
+  const isEditingTextRef = useRef(false);
   const snapEngineRef = useRef(null);
 
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   const document = useCarouselStore((state) => state.document);
   const zoom = useCarouselStore((state) => state.zoom);
+  const setZoom = useCarouselStore((state) => state.setZoom);
   const selectElement = useCarouselStore((state) => state.selectElement);
   const updateElement = useCarouselStore((state) => state.updateElement);
   const deleteElement = useCarouselStore((state) => state.deleteElement);
@@ -48,9 +50,47 @@ export function CanvasEditor() {
     return () => observer.disconnect();
   }, []);
 
-  // ── Keyboard: arrow-key nudge + Delete/Backspace ─────────────────────────
+  // ── Mouse Wheel: prevent window scroll & smoothly adjust canvas zoom ───────
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      const delta = e.deltaY;
+      const zoomFactor = delta > 0 ? 0.94 : 1.06;
+      if (setZoom) {
+        setZoom((prevZoom) => {
+          const next = prevZoom * zoomFactor;
+          return Math.min(3, Math.max(0.2, parseFloat(next.toFixed(2))));
+        });
+      }
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [setZoom]);
+
+  // ── Window Scroll Lock: Ensure window never scrolls out of viewport bounds ──
+  useEffect(() => {
+    const handleWindowScroll = () => {
+      if (window.scrollY !== 0 || window.scrollX !== 0) {
+        window.scrollTo(0, 0);
+      }
+    };
+    window.addEventListener("scroll", handleWindowScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleWindowScroll);
+  }, []);
+
+  // ── Keyboard: arrow-key nudge + Delete/Backspace + Enter to edit ─────────
   useEffect(() => {
     const handleKeyDown = (e) => {
+      const activeObj = fabricRef.current?.getActiveObject();
+      // If user is actively typing inside the text element on canvas, do not intercept keys
+      if (activeObj?.isEditing || isEditingTextRef.current) {
+        return;
+      }
+
       // Don't intercept when typing in an input / textarea / contenteditable
       const tag = e.target?.tagName?.toLowerCase();
       if (
@@ -63,6 +103,28 @@ export function CanvasEditor() {
 
       const { selectedElementId, document: doc } = useCarouselStore.getState();
       if (!selectedElementId) return;
+
+      // Pressing Enter on a selected text element starts inline canvas editing
+      if (e.key === "Enter") {
+        if (
+          activeObj &&
+          (activeObj.type === "textbox" ||
+            activeObj.type === "i-text" ||
+            activeObj.type === "text")
+        ) {
+          e.preventDefault();
+          activeObj.enterEditing();
+          if (activeObj.hiddenTextarea) {
+            activeObj.hiddenTextarea.focus({ preventScroll: true });
+            activeObj.hiddenTextarea.style.position = "fixed";
+            activeObj.hiddenTextarea.style.top = "0px";
+            activeObj.hiddenTextarea.style.left = "0px";
+          }
+          window.scrollTo(0, 0);
+          fabricRef.current?.requestRenderAll();
+          return;
+        }
+      }
 
       // Find active element
       const activeSlideNow = doc.slides.find(
@@ -212,6 +274,46 @@ export function CanvasEditor() {
       }
     };
 
+    const onDoubleClick = (event) => {
+      const target = event.target;
+      if (!target || target.data?.isChrome) return;
+      if (
+        target.type === "textbox" ||
+        target.type === "i-text" ||
+        target.type === "text"
+      ) {
+        target.enterEditing();
+        if (target.hiddenTextarea) {
+          target.hiddenTextarea.focus({ preventScroll: true });
+          target.hiddenTextarea.style.position = "fixed";
+          target.hiddenTextarea.style.top = "0px";
+          target.hiddenTextarea.style.left = "0px";
+        }
+        window.scrollTo(0, 0);
+        canvas.requestRenderAll();
+      }
+    };
+
+    const onEditingEntered = () => {
+      isEditingTextRef.current = true;
+    };
+
+    const onEditingExited = (event) => {
+      isEditingTextRef.current = false;
+      const target = event.target;
+      const id = target?.get?.("data")?.id || target?.data?.id;
+      if (id && target.text !== undefined) {
+        updateElement(id, {
+          text: target.text,
+          width: Math.round(target.width * (target.scaleX || 1)),
+          fontSize: Math.round(target.fontSize * (target.scaleY || 1)),
+        });
+      }
+    };
+
+    canvas.on("mouse:dblclick", onDoubleClick);
+    canvas.on("text:editing:entered", onEditingEntered);
+    canvas.on("text:editing:exited", onEditingExited);
     canvas.on("selection:created", onSelectionCreated);
     canvas.on("selection:updated", onSelectionUpdated);
     canvas.on("selection:cleared", onSelectionCleared);
@@ -223,6 +325,9 @@ export function CanvasEditor() {
     });
 
     return () => {
+      canvas.off("mouse:dblclick", onDoubleClick);
+      canvas.off("text:editing:entered", onEditingEntered);
+      canvas.off("text:editing:exited", onEditingExited);
       canvas.off("selection:created", onSelectionCreated);
       canvas.off("selection:updated", onSelectionUpdated);
       canvas.off("selection:cleared", onSelectionCleared);
@@ -239,6 +344,12 @@ export function CanvasEditor() {
 
   useEffect(() => {
     if (!fabricRef.current || !activeSlide) return;
+
+    // Do not rebuild/clear canvas while the user is actively typing directly inside a text element
+    const activeObj = fabricRef.current.getActiveObject();
+    if (activeObj?.isEditing || isEditingTextRef.current) {
+      return;
+    }
 
     isRenderingRef.current = true;
 

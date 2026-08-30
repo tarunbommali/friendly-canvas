@@ -46,8 +46,8 @@ export const THEME = {
     accent: "#2563eb",
   },
   typography: {
-    headline: { fontSize: 50, fontFamily: "Inter" },
-    body: { fontSize: 32, fontFamily: "Inter" },
+    headline: { fontSize: 92, fontFamily: "Inter" },
+    body: { fontSize: 64, fontFamily: "Inter" },
     badge: { fontSize: 26, fontFamily: "Inter" },
     footer: { fontSize: 24, fontFamily: "Inter" },
   },

@@ -57,12 +57,19 @@
   --color-yellow-950: #422006;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: var(--font-sans);
   background-color: #0f1117;
   color: #f3f4f6;
-  min-height: 100vh;
-  margin: 0;
   -webkit-font-smoothing: antialiased;
 }
 

@@ -8,6 +8,7 @@ import {
   isDirectiveTextElement,
   isDirectiveRectElement,
 } from "./elementClassify";
+import { wrapTextToLines } from "../canvas/textAnnotations";
 
 /**
  * Calculates safe content bounds respecting THEME.contentZone + paddings
@@ -85,21 +86,16 @@ export function autoLayoutContent(elements = []) {
     headlineEl?.fontSize ||
     headlineEl?.font?.size ||
     THEME.typography?.headline?.fontSize ||
-    44;
+    92;
   const headlineText = headlineEl?.text || headlineEl?.content || "";
 
-  const headlineHeight = estimateTextBlockHeight(
-    headlineText,
-    headlineFontSize,
-    HEADLINE_LINE_HEIGHT_RATIO,
-    HEADLINE_MAX_WIDTH
-  );
-
-  const bodyY = HEADLINE_Y + headlineHeight + HEADLINE_TO_BODY_GAP;
+  const headlineLines = wrapTextToLines(headlineText, headlineFontSize, HEADLINE_MAX_WIDTH).length || 1;
+  const headlineHeight = headlineLines * headlineFontSize * 1.15;
+  const bodyY = Math.round(HEADLINE_Y + headlineHeight + 28);
 
   const bodyEl = elements.find(isBodyElement);
   const bodyFontSize =
-    bodyEl?.fontSize || bodyEl?.font?.size || THEME.typography?.body?.fontSize || 30;
+    bodyEl?.fontSize || bodyEl?.font?.size || THEME.typography?.body?.fontSize || 64;
   const bodyText = bodyEl?.text || bodyEl?.content || "";
 
   const bodyHeight = estimateTextBlockHeight(
@@ -137,7 +133,7 @@ export function autoLayoutContent(elements = []) {
       updated.y = HEADLINE_Y;
       updated.width = HEADLINE_MAX_WIDTH; // Enforce 800px Content Zone wrap boundary
       if (!updated.fontSize && updated.font?.size) updated.fontSize = updated.font.size;
-      updated.fontSize = updated.fontSize || 44;
+      updated.fontSize = updated.fontSize || 92;
       if (!updated.fontFamily && updated.font?.family) {
         updated.fontFamily = updated.font.family;
       }
@@ -149,7 +145,7 @@ export function autoLayoutContent(elements = []) {
       updated.x = BODY_X;
       updated.y = bodyY;
       if (!updated.fontSize && updated.font?.size) updated.fontSize = updated.font.size;
-      updated.fontSize = updated.fontSize || 30;
+      updated.fontSize = updated.fontSize || 64;
       if (!updated.fontFamily && updated.font?.family) {
         updated.fontFamily = updated.font.family;
       }

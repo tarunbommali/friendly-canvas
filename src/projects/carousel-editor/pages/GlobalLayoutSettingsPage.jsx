@@ -121,7 +121,7 @@ export function GlobalLayoutSettingsPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
+    <div className="flex flex-col h-full w-full bg-slate-950 text-slate-100 overflow-hidden font-sans min-h-0">
       {/* Top Header Navigation Bar */}
       <header className="h-14 border-b border-slate-800 bg-slate-900/90 backdrop-blur px-6 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-4">

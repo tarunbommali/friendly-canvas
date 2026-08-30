@@ -106,19 +106,16 @@ export function createFabricObject(element) {
     case "text": {
       const rawText = element.text || element.content || "";
       const elemWidth = element.width || THEME.contentZone.width;
-      const elemFontSize = element.fontSize || (element.type === "headline" ? 44 : 30);
-
-      const lines = wrapTextToLines(rawText, elemFontSize, elemWidth);
-      const displayText = lines.length > 0 ? lines.join("\n") : rawText;
+      const elemFontSize = element.fontSize || (element.type === "headline" ? 92 : 64);
 
       const annotationStyles =
         element.type === "headline"
-          ? buildHeadlineStyles(displayText, element.accentColor || element._accent, elemFontSize, elemWidth)
+          ? buildHeadlineStyles(rawText, element.accentColor || element._accent)
           : element.type === "text"
-          ? buildBodyStyles(displayText, element.fill || element._primary, elemFontSize, elemWidth)
+          ? buildBodyStyles(rawText, element.fill || element._primary)
           : {};
 
-      return new Textbox(displayText, {
+      return new Textbox(rawText, {
         left: element.x,
         top: element.y,
         width: elemWidth,
@@ -131,6 +128,11 @@ export function createFabricObject(element) {
         originY: element.originY || "top",
         textAlign: element.textAlign || "left",
         splitByGrapheme: false,
+        editable: true,
+        cursorColor: "#2563eb",
+        cursorWidth: 3,
+        cursorDuration: 500,
+        selectionColor: "rgba(37, 99, 235, 0.3)",
         styles: annotationStyles,
         ...withMeta(element),
       });

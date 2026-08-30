@@ -18,6 +18,7 @@ import {
   formatPageLabel,
   createElementId,
 } from "../theme/elementClassify";
+import { wrapTextToLines } from "../canvas/textAnnotations";
 import {
   pickImageSnapshot,
   restoreImagesFromRegistry,
@@ -82,21 +83,16 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
 
   const headlineEl = slide.elements.find(isHeadlineElement);
   const headlineText = headlineEl?.text || headlineEl?.content || "";
-  const headlineFontSize = config.headlineFontSize || headlineEl?.fontSize || 44;
+  const headlineFontSize = config.headlineFontSize || headlineEl?.fontSize || 92;
   const headlineY = config.headlineY ?? contentZone.top;
-  const headlineHeight =
-    Math.max(1, estimateLineCount(headlineText, headlineFontSize, contentZone.width)) *
-    headlineFontSize *
-    1.2;
+  const headlineLines = wrapTextToLines(headlineText, headlineFontSize, contentZone.width).length || 1;
+  const headlineHeight = headlineLines * headlineFontSize * 1.15;
 
-  const dynamicBodyY = Math.max(
-    config.bodyY ?? (headlineY + headlineHeight + 36),
-    headlineY + headlineHeight + 36
-  );
+  const dynamicBodyY = Math.round(headlineY + headlineHeight + 28);
 
   const bodyEl = slide.elements.find(isBodyElement);
   const bodyText = bodyEl?.text || bodyEl?.content || "";
-  const bodyFontSize = config.bodyFontSize || bodyEl?.fontSize || 30;
+  const bodyFontSize = config.bodyFontSize || bodyEl?.fontSize || 64;
   const bodyHeight =
     Math.max(1, estimateLineCount(bodyText, bodyFontSize, contentZone.width)) *
     bodyFontSize *
@@ -268,6 +264,15 @@ export const useCarouselStore = create((set, get) => ({
     set((state) => ({
       imageRegistry: { ...state.imageRegistry, [elementId]: snapshot },
     })),
+
+  setZoom: (zoomOrFn) =>
+    set((state) => {
+      const nextZoom =
+        typeof zoomOrFn === "function" ? zoomOrFn(state.zoom) : zoomOrFn;
+      return {
+        zoom: Math.min(3, Math.max(0.2, Number(nextZoom) || 1)),
+      };
+    }),
 
   toggleSafeAreaGuides: () =>
     set((state) => ({ showSafeAreaGuides: !state.showSafeAreaGuides })),

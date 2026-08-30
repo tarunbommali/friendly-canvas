@@ -513,12 +513,13 @@ export function PropertiesPanel() {
               Text Content
             </label>
             <textarea
-              rows={3}
+              rows={4}
               value={selectedElement.text || ""}
               onChange={(e) =>
                 updateElement(selectedElement.id, { text: e.target.value })
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded p-2 text-slate-200 focus:border-blue-500 focus:outline-none"
+              placeholder="Enter text (press Enter for new line)..."
+              className="w-full bg-slate-950 border border-slate-800 rounded p-2 text-slate-200 focus:border-blue-500 focus:outline-none font-sans text-xs"
             />
           </div>
 

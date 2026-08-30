@@ -93,7 +93,7 @@ export function Toolbar({ onOpenSettings, currentPost }) {
   const addText = (preset = "heading") => {
     const isHeading = preset === "heading";
     const textX = THEME.contentZone.x;
-    const textY = isHeading ? THEME.contentZone.y : THEME.contentZone.y + 200;
+    const textY = isHeading ? THEME.contentZone.y : 459;
 
     addElement({
       id: createElementId(isHeading ? "headline" : "text"),
