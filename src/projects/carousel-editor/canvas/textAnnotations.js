@@ -64,27 +64,54 @@ function lastWordRange(text) {
 }
 
 /**
+ * Helper to wrap text into lines based on container width & font size
+ * to ensure Fabric.js `styles` line indices match rendered line wraps.
+ */
+/**
+ * Helper to wrap text into lines based on container width & font size
+ * to ensure Fabric.js `styles` line indices match rendered line wraps.
+ */
+export function wrapTextToLines(text, fontSize = 36, maxWidth = 700) {
+  if (!text) return []
+  const clean = text.replace(/\n/g, ' ')
+  const words = clean.split(' ').filter(Boolean)
+  if (words.length === 0) return []
+
+  const avgCharWidth = fontSize * 0.52
+  const maxCharsPerLine = Math.max(1, Math.floor(maxWidth / avgCharWidth))
+  const lines = []
+  let currentLine = ''
+
+  for (const word of words) {
+    if ((currentLine + (currentLine ? ' ' : '') + word).length > maxCharsPerLine && currentLine) {
+      lines.push(currentLine)
+      currentLine = word
+    } else {
+      currentLine = currentLine ? currentLine + ' ' + word : word
+    }
+  }
+  if (currentLine) lines.push(currentLine)
+  return lines
+}
+
+/**
  * Build a Fabric `styles` object that highlights the last word of the
  * headline text with a flat background color block.
  *
- * @param {string} text       - The headline text
+ * @param {string} text       - The headline text (can contain \n)
  * @param {string} accent     - Track accent color (hex)
+ * @param {number} fontSize   - Font size in px
+ * @param {number} maxWidth   - Container width in px
  * @returns {object}          - Fabric styles object
  */
-export function buildHeadlineStyles(text, accent) {
+export function buildHeadlineStyles(text, accent, fontSize = 44, maxWidth = 700) {
   if (!text) return {}
 
   const highlightColor = resolveHighlightColor(accent)
   const range = lastWordRange(text)
   if (!range) return {}
 
-  // Fabric styles are per-line. We need to map character indices to lines
-  // based on actual newlines in the text (not wrapping, which is runtime).
-  // For soft-wrap safety, we apply to a whole-string char index and let
-  // Fabric distribute across lines automatically using flat index approach.
-  // Fabric styles: { lineIndex: { charIndex: style } }
-  // We convert flat char range → line-based positions.
-  const lines = text.split('\n')
+  const lines = text.includes('\n') ? text.split('\n') : wrapTextToLines(text, fontSize, maxWidth)
   const styles = {}
   let flatIdx = 0
 
@@ -100,7 +127,7 @@ export function buildHeadlineStyles(text, accent) {
       }
       flatIdx++
     }
-    flatIdx++ // for the \n character between lines
+    flatIdx++ // for \n or space between wrapped lines
   })
 
   return styles
@@ -127,7 +154,6 @@ const SKIP_WORDS = new Set([
  */
 function detectImportantWordRanges(text, maxUnderlines = 2) {
   const ranges = []
-  // Match word boundaries
   const regex = /\b([a-zA-Z]{6,})\b/g
   let match
   let count = 0
@@ -148,16 +174,18 @@ function detectImportantWordRanges(text, maxUnderlines = 2) {
  *
  * @param {string} text        - The body text
  * @param {string} primaryColor - Track primary color (hex)
+ * @param {number} fontSize   - Font size in px
+ * @param {number} maxWidth   - Container width in px
  * @returns {object}           - Fabric styles object
  */
-export function buildBodyStyles(text, primaryColor) {
+export function buildBodyStyles(text, primaryColor, fontSize = 30, maxWidth = 700) {
   if (!text) return {}
 
   const underlineColor = primaryColor || UNDERLINE_COLORS.default
   const importantRanges = detectImportantWordRanges(text, 2)
   if (importantRanges.length === 0) return {}
 
-  const lines = text.split('\n')
+  const lines = wrapTextToLines(text, fontSize, maxWidth)
   const styles = {}
   let flatIdx = 0
 

@@ -39,8 +39,17 @@ export function getLayoutBounds(config = {}, metadata = {}) {
   const contentTop = config.contentTopClearance ?? THEME.contentZone.top;
   const contentBottom = config.contentBottomClearance ?? THEME.contentZone.bottom;
 
-  const safeWidth = canvasWidth - saLeft - saRight;
-  const safeHeight = canvasHeight - saTop - saBottom;
+  const safeLeft = saLeft;
+  const safeRight = canvasWidth - saRight;
+  const safeTop = saTop;
+  const safeBottom = canvasHeight - saBottom;
+  const safeWidth = Math.max(0, safeRight - safeLeft);
+  const safeHeight = Math.max(0, safeBottom - safeTop);
+
+  const contentLeft = safeLeft + padLeft;
+  const contentRight = safeRight - padRight;
+  const contentWidth = Math.max(1, contentRight - contentLeft);
+  const contentHeight = Math.max(1, contentBottom - contentTop);
 
   return {
     canvas: {
@@ -49,28 +58,32 @@ export function getLayoutBounds(config = {}, metadata = {}) {
       aspectRatio,
     },
     safeArea: {
-      x: saLeft,
-      y: saTop,
-      top: saTop,
-      bottom: saBottom,
-      left: saLeft,
-      right: saRight,
+      x: safeLeft,
+      y: safeTop,
+      top: safeTop,
+      bottom: safeBottom,
+      left: safeLeft,
+      right: safeRight,
       width: safeWidth,
       height: safeHeight,
+      marginTop: saTop,
+      marginBottom: saBottom,
+      marginLeft: saLeft,
+      marginRight: saRight,
     },
     contentZone: {
-      x: saLeft + padLeft,
+      x: contentLeft,
       y: contentTop,
       top: contentTop,
       bottom: contentBottom,
-      left: saLeft + padLeft,
-      right: canvasWidth - saRight - padRight,
+      left: contentLeft,
+      right: contentRight,
       paddingTop: THEME.contentZone.paddingTop,
       paddingBottom: THEME.contentZone.paddingBottom,
       paddingLeft: padLeft,
       paddingRight: padRight,
-      width: Math.max(0, canvasWidth - saLeft * 2 - padLeft * 2),
-      height: Math.max(0, contentBottom - contentTop),
+      width: contentWidth,
+      height: contentHeight,
     },
   };
 }

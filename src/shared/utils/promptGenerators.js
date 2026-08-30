@@ -1,451 +1,543 @@
 /**
  * promptGenerators.js
  * ─────────────────────────────────────────────────────────────
- * Instagram Image Creator — Minimal Editorial 2D Edition
+ * SWE Notebook — Data-Driven Prompt Generator
  *
  * PURPOSE
  * -------
- * Generate consistent 4:5 Instagram carousel visual prompts using
- * a restrained editorial / technical-infographic language.
+ * Generate prompts from the ACTUAL SWE Notebook data.json contract.
  *
- * CORE VISUAL RULE
- * ----------------
- * FLAT 2D ONLY.
+ * Two families of output:
  *
- * The output must NOT look:
- * - 3D
- * - isometric
- * - claymorphic
- * - glossy
- * - holographic
- * - photorealistic
- * - sticker-like
- * - toy-like
- * - cinematic
+ * 1. PER-SLIDE ASSETS (existing) — flat 2D editorial rubber-stamp
+ *    field-note assets, one isolated transparent PNG per slide.
  *
- * Instead:
- * - flat vector illustration
- * - editorial line art
- * - simple geometric shapes
- * - thin strokes
- * - warm paper / faint grid
- * - fluorescent highlighter
- * - hand-drawn pen underline
- * - generous whitespace
+ * 2. REAL-PHOTO HERO IMAGE(S) (new) — one or two full-frame,
+ *    photoreal Gen Z-style PNG images representing the whole post's
+ *    context, meant to look like an actual phone photo, not AI art.
  *
- * FORMAT
- * ------
- * 4:5 vertical — 1080 x 1350 px
+ * data.json is the source of truth for both. This file supports the
+ * REAL schema shipped in data.json (trackId, headline/text/vibe,
+ * trackPalettes keyed by id, lowercase chapterCovers) while staying
+ * backward-compatible with the earlier PascalCase field names.
  */
 
 // ─────────────────────────────────────────────────────────────
-// STYLE LOCK
+// DATA.JSON ADAPTER
 // ─────────────────────────────────────────────────────────────
 
-const STYLE_LOCK = {
-  minimal: `MINIMAL EDITORIAL 2D STYLE LOCK — APPLY IDENTICALLY TO EVERY SLIDE:
-
-1. FORMAT
-   - Strict 4:5 vertical portrait.
-   - 1080x1350px composition.
-   - Generous outer margins.
-   - Preserve at least 35% clean breathing space.
-
-2. CANVAS
-   - Warm off-white paper background #F8F7F4.
-   - Optional extremely faint engineering/notebook grid #E5E7EB.
-   - Subtle natural paper grain only.
-   - Background must remain quiet and secondary.
-
-3. TYPOGRAPHY
-   - Headlines: elegant high-contrast Editorial Serif.
-   - Use italic serif selectively for emphasis.
-   - Body/subtitles: clean geometric Sans-Serif.
-   - Code/prompts: restrained monospace.
-   - Never use chunky bubble typography.
-   - Never use cartoon typography.
-   - Never use decorative display fonts.
-
-4. HIGHLIGHTER DNA
-   - Fluorescent marker rectangle behind ONE important word or phrase.
-   - Preferred colors:
-     Yellow #FFE600
-     Lime #A6FF00
-     Lavender #D8B4F8
-     Cyan #38BDF8
-     Coral #FDA4AF
-   - Highlighter should look slightly hand-marked, imperfect and tactile.
-
-5. PEN UNDERLINES
-   - Use thin hand-drawn underline strokes.
-   - Red = warning / problem.
-   - Green = solution / outcome.
-   - Blue = logic / technical concept.
-   - Orange = action / tool / transition.
-   - Underlines must remain subtle.
-
-6. ILLUSTRATION TECHNIQUE
-   - Pure flat 2D vector illustration.
-   - Editorial technical drawing.
-   - Consistent thin-to-medium line weight.
-   - Flat fills only.
-   - Simple geometric construction.
-   - Minimal internal detail.
-   - Use silhouette, outline, icon and diagram language.
-
-7. DEPTH
-   - NO artificial 3D depth.
-   - NO perspective rendering.
-   - NO extrusion.
-   - NO bevels.
-   - NO glossy surfaces.
-   - NO realistic lighting.
-   - NO dramatic shadows.
-   - If grounding is required, use a single thin baseline or tiny flat contact mark.
-
-8. VISUAL LANGUAGE
-   - Think premium editorial magazine + engineering notebook.
-   - Visuals should feel designed, not rendered.
-   - Every object should look intentionally drawn in 2D.
-   - Prefer one strong visual metaphor over decorative illustration.
-
-9. COLOR
-   - Warm neutral base.
-   - Ink #111827.
-   - One primary accent + optional restrained highlighter accent.
-   - Avoid rainbow palettes.
-   - Avoid saturated backgrounds.
-   - Avoid gradients.
-
-10. COMPOSITION
-   - One focal point per slide.
-   - Typography and visual hierarchy come first.
-   - Do not fill empty space just because it exists.
-   - Empty space is part of the design.`,
-
-  // Kept as an alias so existing callers do not break.
-  classic: `MINIMAL EDITORIAL 2D STYLE LOCK — APPLY IDENTICALLY TO EVERY SLIDE:
-
-Flat 2D vector illustration, editorial technical drawing, warm off-white paper,
-faint engineering grid, elegant Editorial Serif headlines, clean Sans-Serif body,
-fluorescent marker highlights, hand-drawn colored pen underlines, thin consistent
-linework, flat fills, generous whitespace, restrained palette.
-
-ABSOLUTELY NO:
-3D, isometric perspective, claymorphism, glossy rendering, holographic effects,
-extrusion, bevels, realistic lighting, photorealism, sticker effects, toy-like
-objects, cinematic rendering, heavy shadows, gradients, busy backgrounds.`,
-
-  // Legacy alias.
-  genz: `MINIMAL EDITORIAL 2D STYLE LOCK.
-
-Use the exact same visual language as the Minimal Editorial 2D style.
-Do not use Gen-Z sticker, glossy, 3D, holographic, gradient, or clay styling.
-
-Flat 2D editorial vector illustration only.
-Warm paper background.
-Editorial Serif typography.
-Clean Sans-Serif body.
-Fluorescent highlighter blocks.
-Hand-drawn pen underlines.
-Thin linework.
-Simple geometric forms.
-Large whitespace.
-
-NO 3D. NO ISOMETRIC. NO GLOSS. NO STICKERS. NO GRADIENTS.`
+const DEFAULT_CANVAS = {
+  width: 1080,
+  height: 1350,
+  aspectRatio: '4:5',
 };
 
-// ─────────────────────────────────────────────────────────────
-// SLIDE-TYPE COMPOSITION
-// ─────────────────────────────────────────────────────────────
+const DEFAULT_INK = '#111827';
+const DEFAULT_PRIMARY = '#1E5FA8';
+const DEFAULT_ACCENT = '#A9D0F5';
 
-const SLIDE_TYPE_COMPOSITION = {
-
-  hook: {
-    role: 'HOOK',
-    weight: 'typography-led — headline carries approximately 70% of the visual attention',
-    illustration: 'ONE tiny flat 2D anchor icon or symbolic line illustration; no scene-building',
+const DEFAULT_LAYOUT_DEFINITIONS = {
+  'hook-open': {
+    id: 'hook-open',
+    role: 'HOOK / OPEN',
+    description: 'Hook / Open — high-impact, text-first visual.',
+    visualModel: 'anchor-icon',
+    weight: 'typography-led',
     maxLabels: 0,
-    focalPoint: 'the headline itself',
+    focalPoint: 'the central idea of the hook',
+    assetRule: 'Use one tiny symbolic anchor only. Do not build a scene.',
   },
 
-  problem: {
-    role: 'PROBLEM',
-    weight: 'balanced — a simple flat illustration communicates the friction',
-    illustration: 'ONE minimalist flat 2D character or object showing the problem; at most one supporting icon',
-    maxLabels: 1,
-    focalPoint: 'the moment of friction',
-  },
-
-  example: {
-    role: 'EXAMPLE',
-    weight: 'illustration-led — one isolated flat 2D hero object',
-    illustration: 'ONE simple editorial vector object, large and isolated, using outline + flat color',
+  'concept-explain': {
+    id: 'concept-explain',
+    role: 'CONCEPT / EXPLAIN',
+    description: 'Concept / Explain — icon or diagram with concise teaching copy.',
+    visualModel: 'icon-or-diagram',
+    weight: 'balanced',
     maxLabels: 2,
-    focalPoint: 'the object itself',
+    focalPoint: 'the concept being explained',
+    assetRule: 'Use one coherent icon or compact diagram.',
+  },
+
+  'process-flow': {
+    id: 'process-flow',
+    role: 'PROCESS / FLOW',
+    description: 'Process / Flow — step-by-step visual with directional relationships.',
+    visualModel: 'process-diagram',
+    weight: 'diagram-led',
+    maxLabels: 4,
+    focalPoint: 'the sequence or transformation',
+    assetRule: 'Show 3–4 essential stages connected by restrained directional marks.',
   },
 
   comparison: {
+    id: 'comparison',
     role: 'COMPARISON',
-    weight: 'diagram-led — clean symmetrical two-column composition',
-    illustration: 'one simple flat 2D icon per column with one thin center divider',
+    description: 'Comparison — two contrasting states or approaches.',
+    visualModel: 'comparison',
+    weight: 'diagram-led',
     maxLabels: 2,
-    focalPoint: 'the contrast between both halves',
+    focalPoint: 'the contrast',
+    assetRule: 'Show two clearly related halves with one differentiator per side.',
   },
 
-  explanation: {
-    role: 'EXPLANATION',
-    weight: 'diagram-led — simple linear sequence',
-    illustration: '3–4 flat 2D nodes connected by thin directional arrows',
-    maxLabels: 4,
-    focalPoint: 'the sequence as a whole',
-  },
-
-  'modern-connection': {
-    role: 'MODERN CONNECTION',
-    weight: 'typography + short flat icon chain',
-    illustration: 'up to 4 minimalist 2D icons connected by thin arrows',
-    maxLabels: 4,
-    focalPoint: 'the connection between the icons',
-  },
-
-  surprise: {
-    role: 'SURPRISE / REVEAL',
-    weight: 'typography-led with one strong flat visual',
-    illustration: 'ONE simple symbolic 2D reveal visual or callout number',
+  'real-world': {
+    id: 'real-world',
+    role: 'REAL-WORLD',
+    description: 'Real-world application / scenario.',
+    visualModel: 'real-world-scene',
+    weight: 'illustration-led',
     maxLabels: 1,
-    focalPoint: 'the reveal',
+    focalPoint: 'the practical situation',
+    assetRule:
+      'Translate the requested scenario into one compact recognizable scene. Keep it isolated so it can be composited.',
   },
 
-  journey: {
-    role: 'JOURNEY',
-    weight: 'diagram-led — numbered flat 2D path',
-    illustration: 'up to 4 flat 2D waypoints connected by one continuous line',
-    maxLabels: 4,
-    focalPoint: 'the path',
-  },
-
-  'big-idea': {
-    role: 'BIG IDEA',
-    weight: 'typography-led — the statement is the visual',
-    illustration: 'optional single tiny 2D icon',
-    maxLabels: 0,
-    focalPoint: 'the statement itself',
-  },
-
-  recap: {
-    role: 'RECAP',
-    weight: 'typography-led summary with a restrained visual thread',
-    illustration: 'short strip of up to 5 tiny flat 2D icons',
+  'recap-close': {
+    id: 'recap-close',
+    role: 'RECAP / CLOSE',
+    description: 'Recap / Close — summary checklist or takeaway.',
+    visualModel: 'checklist',
+    weight: 'summary-led',
     maxLabels: 5,
-    focalPoint: 'the visual summary strip',
+    focalPoint: 'the summary thread',
+    assetRule: 'Use a compact checklist or short sequence of summary marks.',
   },
 
   'next-up': {
-    role: 'NEXT UP / TEASER',
-    weight: 'typography-led teaser',
-    illustration: 'ONE simple flat 2D silhouette or outline icon',
+    id: 'next-up',
+    role: 'NEXT UP',
+    description: 'Continuation / CTA teaser.',
+    visualModel: 'teaser-symbol',
+    weight: 'typography-led',
     maxLabels: 0,
-    focalPoint: 'curiosity',
-  },
-
-  payoff: {
-    role: 'PAYOFF',
-    weight: 'typography-led closing statement',
-    illustration: 'ONE restrained flat 2D closing symbol',
-    maxLabels: 1,
-    focalPoint: 'the closing statement',
+    focalPoint: 'curiosity about what comes next',
+    assetRule: 'Use one restrained teaser silhouette or symbol.',
   },
 };
 
-// ─────────────────────────────────────────────────────────────
-// LAYOUT FALLBACK
-// ─────────────────────────────────────────────────────────────
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
 
-const LAYOUT_TO_SLIDE_TYPE_FALLBACK = {
-  'hook-open': 'hook',
-  'process-flow': 'explanation',
-  'concept-explain': 'explanation',
-  comparison: 'comparison',
-  'real-world': 'example',
-  'recap-close': 'big-idea',
-  'next-up': 'next-up',
-};
+function getPosts(dataJson) {
+  return asArray(dataJson?.Posts || dataJson?.posts);
+}
 
-function getComposition(slide) {
-  const byType = SLIDE_TYPE_COMPOSITION[slide.slideType];
+function getChapterCovers(dataJson) {
+  return asArray(dataJson?.ChapterCovers || dataJson?.chapterCovers);
+}
 
-  if (byType) {
-    return byType;
+function getVisualGlossary(dataJson) {
+  return dataJson?.VisualGlossary || dataJson?.visualGlossary || {};
+}
+
+function getDesignSystem(dataJson) {
+  return dataJson?.DesignSystem || {};
+}
+
+function getLayoutRegistry(dataJson) {
+  const registry = getDesignSystem(dataJson).LayoutCategorys;
+  return registry && typeof registry === 'object' ? registry : {};
+}
+
+// data.json ships trackPalettes keyed by trackId (e.g. "01"). Older
+// contract used DesignSystem.TrackColorPalettes keyed by track name.
+// Support both.
+function getTrackPalettes(dataJson) {
+  return dataJson?.trackPalettes || getDesignSystem(dataJson).TrackColorPalettes || {};
+}
+
+function getPostSlides(post) {
+  return asArray(post?.Slides || post?.slides);
+}
+
+function getSlideTitle(slide, fallback = 'Untitled') {
+  return slide?.SlideTitle || slide?.headline || slide?.title || fallback;
+}
+
+function getSlideContent(slide) {
+  return slide?.Content || slide?.text || slide?.content || '';
+}
+
+function getSlideLayout(slide) {
+  const raw =
+    slide?.Layout ||
+    slide?.layoutId ||
+    (typeof slide?.layout === 'string' ? slide.layout : slide?.layout?.id) ||
+    '';
+  return String(raw || '');
+}
+
+function getVisualDirective(slide) {
+  return (
+    slide?.VisualDirective ||
+    slide?.visualDirective ||
+    slide?.visual?.directive ||
+    slide?.visual ||
+    slide?.vibe || // real data.json field: per-slide art direction hint
+    ''
+  );
+}
+
+function getSlideNumber(slide, index = 0) {
+  return slide?.SlideNo || slide?.slideNo || index + 1;
+}
+
+function getSlideByLayout(post, layoutId) {
+  return getPostSlides(post).find((s) => getSlideLayout(s) === layoutId);
+}
+
+// real data.json identifies a post's track only by id ("01", "10", ...).
+function getTrackId(post) {
+  return post?.trackId ?? post?.TrackId ?? post?.track?.id ?? null;
+}
+
+function getTrackName(post, dataJson) {
+  const explicit = post?.Track || post?.track?.name || post?.trackName;
+  if (explicit) return explicit;
+
+  const trackId = getTrackId(post);
+  if (trackId == null) return '';
+
+  const entry = getTrackPalettes(dataJson)[trackId];
+  return entry?.name || `Track ${trackId}`;
+}
+
+function getPostTitle(post) {
+  return post?.PostTitle || post?.title || post?.Post?.title || 'SWE Notebook';
+}
+
+function resolveTrackPalette(post, explicitTrackColor, dataJson) {
+  if (explicitTrackColor?.primary || explicitTrackColor?.accent || explicitTrackColor?.palette) {
+    return {
+      palette: explicitTrackColor.palette || explicitTrackColor.name || 'Editorial',
+      primary: explicitTrackColor.primary || DEFAULT_PRIMARY,
+      accent: explicitTrackColor.accent || DEFAULT_ACCENT,
+    };
   }
 
-  const fallbackType = LAYOUT_TO_SLIDE_TYPE_FALLBACK[slide.layout];
+  const direct = post?.TrackColorPalette;
+  if (direct?.primary || direct?.accent || direct?.palette) {
+    return {
+      palette: direct.palette || 'Editorial',
+      primary: direct.primary || DEFAULT_PRIMARY,
+      accent: direct.accent || DEFAULT_ACCENT,
+    };
+  }
+
+  const palettes = getTrackPalettes(dataJson);
+
+  // Real schema: lookup by trackId ("01", "10", ...).
+  const trackId = getTrackId(post);
+  const byId = trackId != null ? palettes[trackId] : null;
+  if (byId) {
+    return {
+      palette: byId.palette || 'Editorial',
+      primary: byId.primary || DEFAULT_PRIMARY,
+      accent: byId.accent || DEFAULT_ACCENT,
+    };
+  }
+
+  // Legacy schema: lookup by track name.
+  const trackName = getTrackName(post, dataJson);
+  const byName = palettes[trackName];
+  if (byName) {
+    return {
+      palette: byName.palette || 'Editorial',
+      primary: byName.primary || DEFAULT_PRIMARY,
+      accent: byName.accent || DEFAULT_ACCENT,
+    };
+  }
+
+  return { palette: 'Editorial', primary: DEFAULT_PRIMARY, accent: DEFAULT_ACCENT };
+}
+
+function resolveLayoutDefinition(slide, dataJson) {
+  const layoutId = getSlideLayout(slide);
+  const registry = getLayoutRegistry(dataJson);
+  const fallback = DEFAULT_LAYOUT_DEFINITIONS[layoutId];
+
+  return {
+    id: layoutId || fallback?.id || 'concept-explain',
+    description:
+      registry[layoutId] ||
+      fallback?.description ||
+      'Concept / Explain — icon or diagram with concise teaching copy.',
+    role: fallback?.role || 'CONCEPT / EXPLAIN',
+    visualModel: fallback?.visualModel || 'icon-or-diagram',
+    weight: fallback?.weight || 'balanced',
+    maxLabels: fallback?.maxLabels ?? 2,
+    focalPoint: fallback?.focalPoint || 'the core concept',
+    assetRule: fallback?.assetRule || 'Use one coherent visual metaphor.',
+  };
+}
+
+function inferGlossaryRefs(slide, dataJson) {
+  const glossary = getVisualGlossary(dataJson);
+  const searchable = [getSlideTitle(slide), getSlideContent(slide), getVisualDirective(slide)]
+    .join(' ')
+    .toLowerCase();
+
+  return Object.keys(glossary).filter((key) => {
+    const keyLower = key.toLowerCase();
+    if (searchable.includes(keyLower)) return true;
+
+    const aliases = {
+      'memory/ram': ['memory', 'ram', 'cache'],
+      'client/server': ['client', 'server', 'backend', 'frontend'],
+      database: ['database', 'databases', 'db', 'sql', 'nosql'],
+      'model (ai)': ['model', 'machine learning', 'ml', 'neural'],
+      agent: ['agent', 'agents', 'tool loop', 'tool use'],
+      cpu: ['cpu', 'processor', 'chip'],
+    };
+
+    return (aliases[keyLower] || []).some((alias) => searchable.includes(alias));
+  });
+}
+
+function resolveAssetMode(slide) {
+  const layout = getSlideLayout(slide).toLowerCase();
+  const directive = getVisualDirective(slide).toLowerCase();
 
   if (
-    fallbackType &&
-    SLIDE_TYPE_COMPOSITION[fallbackType]
+    layout === 'real-world' ||
+    directive.includes('real-world scenario') ||
+    directive.includes('real world scenario') ||
+    directive.includes('photo')
   ) {
-    return SLIDE_TYPE_COMPOSITION[fallbackType];
+    return 'real-world-scene';
   }
 
-  return SLIDE_TYPE_COMPOSITION.explanation;
+  if (layout === 'hook-open') return 'anchor';
+  if (layout === 'process-flow') return 'diagram';
+  if (layout === 'comparison') return 'comparison';
+  if (layout === 'recap-close') return 'checklist';
+  if (layout === 'next-up') return 'teaser';
+
+  return 'icon-or-diagram';
 }
 
 // ─────────────────────────────────────────────────────────────
-// BACKGROUND SYSTEM
+// STYLE LOCK — PER-SLIDE STAMP ASSETS (existing)
+// ─────────────────────────────────────────────────────────────
+
+const STYLE_LOCK = {
+  minimal: `SWE NOTEBOOK — MINIMAL EDITORIAL 2D STYLE LOCK
+
+FORMAT:
+- 4:5 vertical Instagram system.
+- 1080x1350px slide composition.
+- The image-generation function below creates ONLY the visual asset.
+- Never generate the complete Instagram slide.
+
+GLOBAL VISUAL DNA:
+- Premium independent editorial publication.
+- Engineering notebook sensibility.
+- Quiet, intelligent, specific, tactile.
+- Designed, not rendered.
+- One clear conceptual focal point.
+- Generous negative space.
+
+ILLUSTRATION:
+- Flat 2D.
+- Editorial technical drawing.
+- Thin-to-medium controlled linework.
+- Simple geometric construction.
+- Strong silhouette.
+- Minimal internal detail.
+- Restrained visual hierarchy.
+
+RUBBER-STAMP FIELD-NOTE TREATMENT:
+- Genuine carved rubber-stamp character.
+- Limited 2–4 spot inks.
+- Hand-cut irregular linework.
+- Broken contour sections.
+- Dry-ink starvation.
+- Grainy ink edges.
+- Uneven pressure.
+- Slight ghosting.
+- Slight registration drift between ink layers.
+- Imperfection must feel physical, not like a digital filter.
+
+COLOR:
+- Ink: #111827.
+- One track primary ink.
+- One track accent ink.
+- Optional neutral only when required.
+- No rainbow palette.
+- No gradients.
+- No glow.
+
+DEPTH:
+- Absolutely flat.
+- No perspective.
+- No isometric view.
+- No extrusion.
+- No bevel.
+- No dimensional shading.
+- No realistic lighting.
+- No cinematic lighting.
+- No glossy surfaces.
+- No heavy shadows.
+
+COMPOSITION:
+- One coherent asset.
+- No unrelated icon collection.
+- No decorative filler.
+- No collage.
+- Keep the visual compact.
+- Preserve transparent space around the artwork.
+
+TEXT:
+- Prefer no text.
+- Never reproduce the slide headline/body.
+- Only use a tiny technical label when the concept genuinely requires it.`,
+
+  classic: `SWE NOTEBOOK — MINIMAL EDITORIAL 2D STYLE LOCK.
+Flat 2D editorial technical illustration, restrained spot color, clean linework,
+generous negative space, no 3D, no isometric, no gradients, no gloss,
+no photorealism, no stickers.`,
+
+  genz: `SWE NOTEBOOK — MINIMAL EDITORIAL 2D STYLE LOCK.
+Use the same restrained editorial 2D language.
+No sticker, glossy, holographic, gradient, clay, or 3D styling.`,
+};
+
+// ─────────────────────────────────────────────────────────────
+// STYLE LOCK — REAL PHOTO / GEN Z HERO IMAGE (new)
+// ─────────────────────────────────────────────────────────────
+
+const REAL_PHOTO_STYLE_LOCK = `SWE NOTEBOOK — REAL PHOTO / GEN Z HERO IMAGE STYLE LOCK
+
+FORMAT:
+- Full-frame photographic image, NOT an isolated asset.
+- 4:5 vertical, 1080x1350px.
+- This is the post's hero/cover visual — background and environment are part of the shot.
+
+GLOBAL LOOK:
+- Looks like an actual photo taken on a modern phone camera — not an illustration, not a CGI render, not "AI art."
+- Candid, slightly imperfect framing, like a real person captured this moment rather than staged it.
+- Natural available light only: window light, desk lamp, screen glow. No artificial three-point studio lighting.
+- Realistic material textures: skin, fabric, matte laptop finish, paper, wood grain, ceramic.
+- Shallow depth of field is fine. Slight softness at the edges reads as authentic, not as a flaw.
+- Fine natural photographic grain / mild sensor noise, like an unedited or lightly-edited phone photo.
+- Gen Z visual language: cozy desk setup, dorm room, cafe table, night coding session, sticky notes,
+  a phone propped against a laptop, hoodie sleeve, warm/cool mixed ambient lighting — grounded and
+  relatable, never corporate stock photography.
+
+SUBJECT HANDLING (avoids the "AI look"):
+- Prefer hands, screens, objects, and environments over full faces.
+- If a person appears, keep them partial: hands on keyboard, over-the-shoulder, silhouette against a
+  screen. Avoid a clear frontal face — that is where AI-image artifacts are most visible.
+- No unnatural symmetry, no glossy plastic skin, no extra/fused fingers, no warped text on real objects.
+
+COLOR:
+- Natural, believable color grading.
+- The track's primary/accent color may appear ONLY as a real object in the scene (sticky note, mug,
+  phone case, notebook cover, monitor bezel light) — never as a graphic overlay, filter, or background wash.
+- No neon glow, no gradient overlay, no artificial color-grade filter.
+
+STRICTLY AVOID:
+- 3D render, CGI, isometric view, flat illustration, icon, clipart, vector art, cartoon, anime.
+- The rubber-stamp / editorial-linework look used elsewhere in this system — do not mix styles.
+- Studio product photography, glossy stock-photo staging, plastic/AI-generated skin, uncanny faces.
+- On-image text, captions, logos, UI chrome, watermarks. Real screen content may be visible but should
+  read as ordinary code/UI, not as a rendered headline.
+- Over-sharpened HDR, oversaturated colors, lens flare, bokeh hearts, glitter, sparkle effects.
+
+GOAL:
+A photo someone could believably have taken on their phone while actually building or learning this
+concept — not a generated illustration of it.`;
+
+// ─────────────────────────────────────────────────────────────
+// DATA-DRIVEN BACKGROUND (per-slide asset mode)
 // ─────────────────────────────────────────────────────────────
 
 const MINIMAL_BACKGROUND_DESCRIPTIONS = {
-
-  paper:
-    'Warm off-white editorial paper canvas #F8F7F4 with extremely subtle natural paper grain.',
-
-  texture:
-    'Warm eggshell paper #F8F7F4 with barely visible tactile grain; clean and quiet.',
-
-  grid:
-    'Warm off-white #F8F7F4 with an extremely faint engineering notebook grid in #E5E7EB.',
-
-  dots:
-    'Warm off-white paper with tiny sparse technical dots in very low-opacity gray; never decorative or busy.',
-
-  solid:
-    'Clean warm off-white solid canvas #F8F7F4.',
-
-  seamless:
-    'Continuous warm paper canvas with an extremely subtle shared grid motif for carousel continuity.',
-
-  grain:
-    'Fine natural paper grain on a warm off-white editorial canvas.',
-
-  watermark:
-    'Very subtle oversized editorial text watermark at extremely low opacity.',
-
-  // Legacy background types are intentionally flattened.
-  blobs:
-    'Flat off-white paper canvas with one or two simple organic 2D accent shapes; no gradient.',
-
-  gradient:
-    'Flat off-white paper canvas with a single solid accent shape; absolutely no gradient.',
-
-  'gradient-radial':
-    'Flat off-white paper canvas with one solid circular accent shape; absolutely no glow.',
-
-  glass:
-    'Flat editorial paper canvas with a simple outlined rectangular information panel; no glass effect.',
-
-  blurPhoto:
-    'Flat warm off-white editorial canvas; photographic blur removed and replaced with clean negative space.',
+  paper: 'Warm off-white editorial paper canvas #F8F7F4 with extremely subtle natural grain.',
+  texture: 'Warm eggshell paper #F8F7F4 with barely visible tactile grain.',
+  grid: 'Warm off-white #F8F7F4 with an extremely faint engineering notebook grid #E5E7EB.',
+  dots: 'Warm off-white paper with sparse low-opacity technical dots.',
+  solid: 'Clean warm off-white solid canvas #F8F7F4.',
+  seamless: 'Continuous warm paper canvas with a subtle shared grid motif.',
+  grain: 'Fine natural paper grain on warm off-white editorial canvas.',
+  watermark: 'Very subtle oversized editorial text watermark at extremely low opacity.',
 };
 
-export function getBackgroundDescription(
-  bgType,
-  primary,
-  accent,
-  styleMode = 'minimal'
-) {
-  return MINIMAL_BACKGROUND_DESCRIPTIONS[bgType]
-    || MINIMAL_BACKGROUND_DESCRIPTIONS.paper;
+export function getBackgroundDescription(bgType = 'paper') {
+  return MINIMAL_BACKGROUND_DESCRIPTIONS[bgType] || MINIMAL_BACKGROUND_DESCRIPTIONS.paper;
 }
 
 // ─────────────────────────────────────────────────────────────
-// FLAT 2D ASSET STYLE RESOLVER
+// ASSET STYLE RESOLVER (per-slide asset mode)
 // ─────────────────────────────────────────────────────────────
 
-function resolveMinimalAssetStyle(combinedLower) {
+function resolveAssetStyle(assetMode, visualDirective, glossaryRefs) {
+  const glossaryNote = glossaryRefs.length
+    ? `Canonical visual vocabulary: ${glossaryRefs.join(', ')}.`
+    : 'No canonical glossary term is required; infer the simplest visual metaphor.';
 
-  if (
-    combinedLower.includes('terminal') ||
-    combinedLower.includes('laptop') ||
-    combinedLower.includes('code') ||
-    combinedLower.includes('cli')
-  ) {
-    return `
-Flat 2D developer interface illustration.
-Simple rectangular terminal window.
-Thin black outline.
-Flat dark charcoal fill.
-Minimal syntax-color accents.
-No perspective.
-No screen reflections.
-No 3D depth.
-No glossy UI.
-`;
-  }
+  const modeStyles = {
+    anchor: `
+ASSET MODEL:
+- One tiny symbolic anchor.
+- Favor a recognizable silhouette or technical mark.
+- Do not build a scene.`,
 
-  if (combinedLower.includes('icon')) {
-    return `
-Minimal geometric 2D line-art icon.
-Uniform thin stroke.
-Flat single-color fill where needed.
-Simple silhouette.
-Editorial technical illustration.
-`;
-  }
+    'icon-or-diagram': `
+ASSET MODEL:
+- One coherent icon OR compact explanatory diagram.
+- Favor a recognizable silhouette and one meaningful relationship.`,
 
-  if (
-    combinedLower.includes('diagram') ||
-    combinedLower.includes('flow') ||
-    combinedLower.includes('pipeline') ||
-    combinedLower.includes('architecture') ||
-    combinedLower.includes('step-by-step')
-  ) {
-    return `
-Flat 2D technical diagram.
-Thin outlined nodes.
-Simple rectangular or rounded blocks.
-Straight arrows.
-Flat fills only.
-No perspective.
-No depth.
-No decorative elements.
-`;
-  }
+    diagram: `
+ASSET MODEL:
+- Compact process diagram.
+- 3–4 essential nodes/stages.
+- Thin directional marks.
+- Preserve the actual sequence implied by the content.`,
 
-  if (
-    combinedLower.includes('checklist') ||
-    combinedLower.includes('recap')
-  ) {
-    return `
-Minimal editorial checklist illustration.
-Thin outlined check circles.
-Simple flat marker accents.
-Clean horizontal rhythm.
-No cards stacked in depth.
-`;
-  }
+    comparison: `
+ASSET MODEL:
+- Two related visual states.
+- One differentiator per side.
+- Clear center relationship.
+- Do not create a decorative split-screen background.`,
 
-  if (
-    combinedLower.includes('two-column') ||
-    combinedLower.includes('comparison') ||
-    combinedLower.includes('contrasting')
-  ) {
-    return `
-Flat 2D split-panel editorial illustration.
-One simple icon per side.
-Thin vertical divider.
-Mirrored visual weight.
-Flat colors.
-`;
-  }
+    'real-world-scene': `
+ASSET MODEL:
+- One compact real-world application scene derived from the source directive.
+- Show only the people/objects/environment required to communicate the practical situation.
+- Keep the scene isolated and cutout-friendly.
+- Do not generate a photographic background.
+- Preserve the editorial 2D field-note treatment.`,
 
-  return `
-Minimal editorial 2D vector illustration.
-Thin precise linework.
-Flat geometric forms.
-Simple symbolic visual metaphor.
-No realistic rendering.
-No dimensional effects.
-`;
+    checklist: `
+ASSET MODEL:
+- Compact checklist or summary strip.
+- Use only the essential summary marks.
+- Avoid a full card or page layout.`,
+
+    teaser: `
+ASSET MODEL:
+- One restrained teaser silhouette or symbol.
+- Communicate curiosity, not the entire next topic.`,
+  };
+
+  return `${modeStyles[assetMode] || modeStyles['icon-or-diagram']}
+
+${glossaryNote}
+
+SOURCE VISUAL DIRECTIVE:
+${visualDirective || 'Infer the strongest visual metaphor directly from the concept.'}`;
 }
 
 // ─────────────────────────────────────────────────────────────
-// NEGATIVE PROMPT
+// NEGATIVE PROMPT — PER-SLIDE ASSET MODE
 // ─────────────────────────────────────────────────────────────
 
-function buildNegativePrompt(composition) {
-
-  return `NEGATIVE PROMPT — STRICT STYLE ENFORCEMENT:
+function buildNegativePrompt(layout, maxLabels) {
+  return `STRICT NEGATIVE PROMPT:
 
 3D
 3D render
@@ -461,7 +553,6 @@ clay render
 plastic
 toy-like
 glossy
-gloss
 chrome
 holographic
 glassmorphism
@@ -479,251 +570,14 @@ realistic product render
 sticker style
 die-cut sticker
 bubble graphics
+emoji graphics
 cartoon clipart
+childlike illustration
 corporate stock illustration
 AI-generated stock art
-gradient
-gradient background
-neon glow
-lens flare
-bokeh
-busy background
-photographic background
-textured 3D surface
-
-STYLE REQUIREMENTS:
-
-- Pure flat 2D.
-- Editorial vector language.
-- Thin controlled linework.
-- Flat fills.
-- No artificial depth.
-- No perspective.
-- No dimensional shading.
-- Warm off-white paper canvas.
-- At least 35% visual breathing room.
-- One focal concept.
-- No decorative clutter.
-- No more than ${composition.maxLabels} visual labels.
-- Typography must remain editorial and restrained.
-- Highlighter blocks must remain flat marker strokes.
-- Underlines must look hand-drawn and 2D.
-`;
-}
-
-// ─────────────────────────────────────────────────────────────
-// SINGLE SLIDE IMAGE PROMPT
-// ─────────────────────────────────────────────────────────────
-
-export function generateSlideImagePrompt(
-  post,
-  slide,
-  trackColor,
-  styleMode = 'minimal'
-) {
-  const primary =
-    trackColor?.primary || '#295c8e';
-
-  const accent =
-    trackColor?.accent || '#adcceb';
-
-  const headline =
-    slide.headline ||
-    slide.SlideTitle ||
-    post.title ||
-    post.PostTitle ||
-    'Untitled';
-
-  const bodyText =
-    slide.text ||
-    slide.Content ||
-    '';
-
-  const vibe =
-    slide.vibe ||
-    'quiet, intelligent, editorial';
-
-  const composition =
-    getComposition(slide);
-
-  const combinedLower =
-    `${headline} ${bodyText} ${vibe} ${slide.layout || ''} ${slide.visualDirective || ''}`
-      .toLowerCase();
-
-  const assetStyle =
-    resolveMinimalAssetStyle(combinedLower);
-
-  /*
-   * IMPORTANT:
-   * This prompt is intentionally ASSET-ONLY.
-   * The image generator must return an isolated transparent PNG
-   * that can be placed inside the slide editor.
-   *
-   * Do NOT generate:
-   * - the complete Instagram slide
-   * - background
-   * - headline/body/footer
-   * - page numbers
-   * - highlighter blocks
-   * - decorative layout elements
-   */
-  return `TRANSPARENT PNG ASSET GENERATOR — MINIMAL EDITORIAL 2D
-
-OUTPUT:
-- Generate ONLY the visual illustration/diagram asset.
-- Return an isolated PNG with a fully transparent background.
-- Transparency is REQUIRED.
-- The asset will be composited into a separately designed 4:5 Instagram slide.
-- Do NOT generate the complete slide.
-- Do NOT generate a poster, canvas, page, card, or background.
-
-SOURCE CONCEPT:
-Topic:
-"${headline}"
-
-Concept:
-"${bodyText}"
-
-Vibe:
-${vibe}
-
-VISUAL ROLE:
-${composition.role}
-
-Visual weight:
-${composition.weight}
-
-Focal point:
-${composition.focalPoint}
-
-Maximum visual labels:
-${composition.maxLabels}
-
-ASSET DIRECTION:
-${assetStyle}
-
-CORE STYLE — STRICT:
-Pure flat 2D editorial vector illustration.
-
-- Premium independent magazine + engineering notebook visual language.
-- Clean, intelligent, restrained, technical.
-- Thin-to-medium controlled linework.
-- Simple geometric construction.
-- Flat fills only.
-- Minimal internal detail.
-- Strong silhouette and clear visual hierarchy.
-- One strong visual metaphor.
-- Designed, not rendered.
-- Crisp edges suitable for PNG compositing.
-- Keep the entire asset visually light and isolated.
-
-TRANSPARENCY / BACKGROUND — ABSOLUTE:
-- Background MUST be 100% transparent.
-- Output MUST contain an alpha channel.
-- No paper background.
-- No off-white background.
-- No grid.
-- No texture.
-- No grain.
-- No canvas decoration.
-- No colored rectangle behind the asset.
-- No white box around the asset.
-- No shadow baked into the background.
-- No environmental scene.
-- No floor or surface.
-- No framing panel unless the visual concept itself explicitly requires a flat outlined panel.
-- Leave transparent pixels around the entire asset.
-
-COMPOSITION:
-- Generate ONLY the visual centerpiece.
-- Center the asset within its transparent canvas.
-- Use generous transparent padding around the artwork.
-- Keep approximately 25–40% of the canvas transparent around the asset where practical.
-- Do not stretch the artwork to the edges.
-- Do not fill empty transparent space.
-- Maintain a clean silhouette for easy placement in the editor.
-
-TEXT:
-- Do NOT generate headlines.
-- Do NOT generate subtitles.
-- Do NOT generate body copy.
-- Do NOT generate footers.
-- Do NOT generate page numbers.
-- Do NOT generate "SWIPE".
-- Avoid text entirely unless a tiny technical label is essential to the visual concept.
-- If labels are necessary, use no more than ${composition.maxLabels}, keep them short, clean, and legible.
-
-HIGHLIGHTER / UNDERLINE:
-- Do NOT generate slide-level highlighter blocks.
-- Do NOT generate decorative marker backgrounds.
-- Do NOT generate slide-level pen underlines.
-- Only use a flat accent/highlight inside the illustration if it is necessary to communicate the concept.
-- Primary accent: ${primary}
-- Secondary accent: ${accent}
-
-COLOR:
-- Ink: #111827
-- Primary accent: ${primary}
-- Secondary accent: ${accent}
-- Optional neutral flat fills only when needed.
-- Restrained palette.
-- No rainbow colors.
-- No gradients.
-
-DEPTH:
-- Absolutely NO artificial 3D depth.
-- NO perspective.
-- NO isometric view.
-- NO extrusion.
-- NO bevels.
-- NO dimensional shading.
-- NO realistic lighting.
-- NO glossy surfaces.
-- NO dramatic shadows.
-- If grounding is necessary, use only a tiny flat contact mark that remains part of the 2D asset.
-
-PNG COMPOSITING RULE:
-The result must look correct when placed directly over:
-#F8F7F4
-
-The asset must NOT depend on any background color to look complete.
-
-NEGATIVE PROMPT — STRICT:
-3D
-3D render
-3D illustration
-3D icon
-3D object
-3D character
-isometric
-isometric perspective
-perspective rendering
-claymorphism
-clay render
-plastic
-toy-like
-glossy
-gloss
-chrome
-holographic
-glassmorphism
-beveled edges
-extrusion
-extruded typography
-realistic lighting
-cinematic lighting
-dramatic shadows
-long shadows
-floating objects
-heavy drop shadows
-photorealism
-realistic product render
-sticker style
-die-cut sticker
-bubble graphics
-cartoon clipart
-corporate stock illustration
-AI-generated stock art
+smooth vector logo
+generic icon set
+generic technology icon
 gradient
 gradient background
 neon glow
@@ -732,6 +586,7 @@ bokeh
 busy background
 photographic background
 paper background
+aged paper background
 off-white background
 white background
 colored background
@@ -745,222 +600,560 @@ headline
 body text
 footer
 page number
+decorative typography
+decorative clutter
+collage
+multiple separate illustrations
+photo collage
+filtered photograph
+photographic redraw
+realistic scene unless explicitly required by the real-world asset model
+
+REQUIRED STYLE:
+- Pure flat 2D.
+- Genuine carved rubber-stamp field-note character.
+- Limited spot inks.
+- Irregular carved linework.
+- Broken ink edges.
+- Dry ink.
+- Slight registration drift.
+- One coherent visual metaphor.
+- Transparent background.
+- Maximum ${maxLabels} labels.
+- No artificial depth.
+- No decorative filler.
+
+LAYOUT SOURCE:
+${layout || 'concept-explain'}`;
+}
+
+// ─────────────────────────────────────────────────────────────
+// NEGATIVE PROMPT — REAL PHOTO MODE (new)
+// ─────────────────────────────────────────────────────────────
+
+function buildRealPhotoNegativePrompt() {
+  return `STRICT NEGATIVE PROMPT:
+
+3D render
+CGI
+isometric
+flat 2D illustration
+icon
+clipart
+vector art
+cartoon
+anime
+sticker
+rubber-stamp texture
+editorial linework illustration
+studio lighting
+glossy product photography
+stock-photo staging
+plastic skin
+uncanny face
+extra fingers
+fused fingers
+warped hands
+warped or rendered text
+on-image headline
+caption
+logo
+watermark
+UI chrome
+oversaturated HDR
+lens flare
+bokeh hearts
+glitter
+neon glow
+gradient overlay
+perfectly symmetrical composition
+perfectly clean desk with no real clutter
+transparent background
+floating object with no environment
+compression blockiness beyond light natural grain
+
+REQUIRED:
+- Full photographic scene with real environment and lighting.
+- At least one tangible, story-relevant object visible.
+- Natural imperfection: slight tilt, casual crop, ambient light, real texture.
+- 1080x1350 (4:5) vertical framing.`;
+}
+
+// ─────────────────────────────────────────────────────────────
+// NORMALIZED POST CONTEXT
+// ─────────────────────────────────────────────────────────────
+
+export function normalizeSWEPost(post, dataJson = null) {
+  const slides = getPostSlides(post);
+  const palette = resolveTrackPalette(post, null, dataJson);
+
+  return {
+    track: getTrackName(post, dataJson),
+    postNo: post?.PostNo || post?.postNo || null,
+    title: getPostTitle(post),
+    isFirstPostInTrack: post?.IsFirstPostInTrack ?? post?.isFirstPostInTrack ?? false,
+    palette,
+    context: post?.Context || '',
+    description: post?.Description || post?.description || '',
+    hashtags: asArray(post?.Hashtags || post?.hashtags),
+    suggestedAudio: post?.SuggestedAudio || post?.audio || null,
+    slides: slides.map((slide, index) => ({
+      slideNo: getSlideNumber(slide, index),
+      title: getSlideTitle(slide, `Slide ${index + 1}`),
+      content: getSlideContent(slide),
+      layout: getSlideLayout(slide),
+      visualDirective: getVisualDirective(slide),
+      glossaryRefs: inferGlossaryRefs(slide, dataJson),
+      assetMode: resolveAssetMode(slide),
+      raw: slide,
+    })),
+  };
+}
+
+// ─────────────────────────────────────────────────────────────
+// SINGLE SLIDE IMAGE PROMPT (per-slide stamp asset)
+// ─────────────────────────────────────────────────────────────
+
+export function generateSlideImagePrompt(
+  post,
+  slide,
+  trackColor = null,
+  styleMode = 'minimal',
+  dataJson = null
+) {
+  const palette = resolveTrackPalette(post, trackColor, dataJson);
+  const layout = resolveLayoutDefinition(slide, dataJson);
+
+  const headline = getSlideTitle(slide);
+  const bodyText = getSlideContent(slide);
+  const visualDirective = getVisualDirective(slide);
+  const glossaryRefs = inferGlossaryRefs(slide, dataJson);
+  const assetMode = resolveAssetMode(slide);
+
+  const assetStyle = resolveAssetStyle(assetMode, visualDirective, glossaryRefs);
+
+  return `TRANSPARENT PNG ASSET GENERATOR — SWE NOTEBOOK
+
+SOURCE OF TRUTH:
+The visual must be generated from the supplied SWE Notebook data fields.
+Do not invent a different topic or replace the supplied VisualDirective.
+
+POST:
+"${getPostTitle(post)}"
+
+TRACK:
+"${getTrackName(post, dataJson)}"
+
+TRACK PALETTE:
+- Palette: ${palette.palette}
+- Primary: ${palette.primary}
+- Accent: ${palette.accent}
+
+SLIDE:
+- Number: ${getSlideNumber(slide)}
+- Title: "${headline}"
+- Layout: ${getSlideLayout(slide) || 'concept-explain'}
+- Asset mode: ${assetMode}
+
+CONTENT:
+"${bodyText}"
+
+VISUAL DIRECTIVE:
+"${visualDirective || 'Infer the strongest visual metaphor directly from the content.'}"
+
+CANONICAL GLOSSARY REFERENCES:
+${glossaryRefs.length ? glossaryRefs.join(', ') : 'None'}
+
+LAYOUT CONTRACT:
+- Role: ${layout.role}
+- Description: ${layout.description}
+- Visual model: ${layout.visualModel}
+- Visual weight: ${layout.weight}
+- Focal point: ${layout.focalPoint}
+- Maximum labels: ${layout.maxLabels}
+- Asset rule: ${layout.assetRule}
+
+${assetStyle}
+
+${STYLE_LOCK[styleMode] || STYLE_LOCK.minimal}
+
+TRANSPARENCY — ABSOLUTE:
+- Output ONLY the standalone visual asset.
+- Background MUST be 100% transparent.
+- Output MUST contain an alpha channel.
+- No paper.
+- No off-white canvas.
+- No grid.
+- No texture outside the stamped marks.
+- No white box.
+- No colored rectangle behind the asset.
+- No floor.
+- No environmental background.
+- No baked-in shadow.
+- No poster.
+- No slide frame.
+- Leave transparent pixels around the entire asset.
+- Keep approximately 25–40% transparent breathing room around the artwork.
+- Never stretch the artwork to the edges.
+
+CONCEPT INTERPRETATION:
+1. Understand the supplied CONTENT semantically.
+2. Respect the supplied VISUAL DIRECTIVE as the primary visual instruction.
+3. Respect the supplied LAYOUT contract.
+4. If a VisualGlossary reference exists, use its canonical visual language.
+5. Reduce the idea to the minimum visual information required.
+6. Build ONE coherent visual asset.
+7. Do not illustrate every sentence literally.
+8. Do not create unrelated icon collections.
+9. Do not add decorative objects.
+10. Do not invent labels, brands, locations, dates, or UI.
+
+TEXT:
+- Prefer NO text inside the asset.
+- Never reproduce the slide title.
+- Never reproduce the slide body.
+- Never generate CTA copy.
+- Only use a tiny technical label when genuinely necessary.
+- Maximum ${layout.maxLabels} labels.
+
+SPOT INK SYSTEM:
+- Core ink: ${DEFAULT_INK}
+- Primary ink: ${palette.primary}
+- Accent ink: ${palette.accent}
+- Use only the minimum number of colors needed.
+- Treat each color as an independently stamped layer.
+- Allow subtle physical registration drift.
+- Do not blend colors digitally.
+- Do not use gradients.
+
+RUBBER-STAMP EXECUTION:
+- The marks should look carved and physically transferred.
+- Use irregular carved contours.
+- Slightly uneven line weight.
+- Broken edges.
+- Dry ink starvation.
+- Small gaps in ink coverage.
+- Uneven pressure.
+- Slight ghosting.
+- Slight registration drift.
+- Keep imperfections subordinate to readability.
+- It must NOT look like a smooth vector logo with a stamp filter.
+
+${buildNegativePrompt(getSlideLayout(slide), layout.maxLabels)}
 
 FINAL QUALITY CHECK:
 1. Is the background fully transparent?
-2. Is the output ONLY the requested visual asset?
-3. Can the PNG be placed directly over another slide without a visible box?
-4. Does it look purely flat 2D?
-5. Does it avoid all 3D/rendered aesthetics?
-6. Is the asset simple, editorial, technical, and visually isolated?
+2. Is this ONLY one standalone asset?
+3. Does it directly represent the supplied content/directive?
+4. Does it obey the supplied layout contract?
+5. Is the canonical glossary language respected where applicable?
+6. Does it look genuinely carved and stamped?
+7. Are colors restrained to the track palette?
+8. Is the concept recognizable without the slide text?
+9. Is there no paper/background/card/frame?
+10. Is it completely free of 3D/rendered aesthetics?
 
 If any answer is NO, regenerate the asset.`;
 }
 
 // ─────────────────────────────────────────────────────────────
-// MASTER CAROUSEL PROMPT
+// MASTER CAROUSEL PROMPT (per-slide stamp assets)
 // ─────────────────────────────────────────────────────────────
 
-export function generatePostMasterPrompt(
-  post,
-  trackColor,
-  styleMode = 'minimal'
-) {
+export function generatePostMasterPrompt(post, trackColor = null, styleMode = 'minimal', dataJson = null) {
+  const normalized = normalizeSWEPost(post, dataJson);
+  const palette = resolveTrackPalette(post, trackColor, dataJson);
 
-  const primary =
-    trackColor?.primary || '#1E5FA8';
+  let prompt = `SWE NOTEBOOK — DATA-DRIVEN CAROUSEL ASSET MANIFEST
 
-  const accent =
-    trackColor?.accent || '#A9D0F5';
+SOURCE:
+data.json is the source of truth for this post.
 
-  const paletteName =
-    trackColor?.palette || 'Editorial';
+POST:
+"${normalized.title}"
 
-  const slides =
-    post.slides ||
-    post.Slides ||
-    [];
+POST NUMBER:
+${normalized.postNo ?? 'n/a'}
 
-  const totalSlides =
-    slides.length || 7;
+TRACK:
+"${normalized.track}"
 
-  const trackLabel =
-    post.trackId
-      ? `Track ${post.trackId}`
-      : (post.Track || post.trackName || '');
+PALETTE:
+- ${palette.palette}
+- Primary: ${palette.primary}
+- Accent: ${palette.accent}
 
-  const postTitle =
-    post.title ||
-    post.PostTitle ||
-    'Post';
+CANVAS:
+- ${DEFAULT_CANVAS.width}x${DEFAULT_CANVAS.height}
+- ${DEFAULT_CANVAS.aspectRatio}
 
-  let prompt = `INSTAGRAM IMAGE CREATOR
-MINIMAL EDITORIAL 2D CAROUSEL SYSTEM
+SYSTEM:
+${STYLE_LOCK[styleMode] || STYLE_LOCK.minimal}
 
-Track:
-${trackLabel}
-
-Palette:
-${paletteName}
-
-Primary:
-${primary}
-
-Accent:
-${accent}
-
-Post:
-"${postTitle}"
-
-Total Slides:
-${totalSlides}
-
-FORMAT:
-Every slide MUST be 4:5 vertical portrait.
-1080x1350px.
-
-GLOBAL STYLE:
-${STYLE_LOCK.minimal}
-
-CORE VISUAL PRINCIPLE:
-Design, don't render.
-
-Every visual should look like a premium editorial
-2D infographic drawn on paper — NOT like a 3D asset.
-
-Use:
-- flat vector shapes
-- thin editorial linework
-- simple diagrams
-- restrained icons
-- geometric blocks
-- highlighter strokes
-- hand-drawn underlines
-- negative space
-
-Never use:
-- 3D
-- isometric
-- glossy
-- holographic
-- gradients
-- clay
-- stickers
-- photorealism
-- dramatic shadows
+IMPORTANT:
+This master prompt describes the visual assets required by each slide.
+The slide editor remains responsible for the complete Instagram composition,
+typography, background, page indicators, CTA, and placement.
 
 CAROUSEL CONTINUITY:
-For carousels with more than 3 body slides, preserve the
-composition pattern's core visual element across slides.
+- Preserve the same visual grammar across related slides.
+- Reuse canonical glossary forms consistently.
+- Reuse process/arrow language when process slides recur.
+- Reuse comparison logic when comparison slides recur.
+- Keep the track palette consistent.
+- Each slide still has ONE conceptual job.
 
-Examples:
-- Timeline → same horizontal ribbon.
-- Concept Breakdown → same blueprint language.
-- Comparison → same center divider.
-- Process → same arrow/flow language.
-- Architecture → same box-and-arrow system.
-
-Each slide has ONE conceptual job.
-
-ASSET MANIFEST:
+SLIDE MANIFEST:
 `;
 
-  slides.forEach((s, idx) => {
-
-    const slideNo =
-      s.slideNo || idx + 1;
-
-    const headline =
-      s.headline ||
-      s.SlideTitle ||
-      `Slide ${slideNo}`;
-
-    const bodyText =
-      s.text ||
-      s.Content ||
-      '';
-
-    const composition =
-      getComposition(s);
+  normalized.slides.forEach((slide) => {
+    const layout = resolveLayoutDefinition(slide.raw, dataJson);
 
     prompt += `
 ────────────────────────────────────────
-SLIDE ${slideNo}
+SLIDE ${slide.slideNo}
 ────────────────────────────────────────
 
-Headline:
-"${headline}"
+TITLE:
+"${slide.title}"
 
-Slide Type:
-${s.slideType || '(inferred from layout: ' + (s.layout || 'n/a') + ')'}
+LAYOUT:
+${slide.layout}
 
-Role:
-${composition.role}
+ROLE:
+${layout.role}
 
-Concept:
-${bodyText}
+CONTENT:
+${slide.content}
 
-Visual Weight:
-${composition.weight}
+VISUAL DIRECTIVE:
+${slide.visualDirective || 'Infer the strongest visual metaphor from the content.'}
 
-Illustration:
-${composition.illustration}
+ASSET MODE:
+${slide.assetMode}
 
-Focal Point:
-${composition.focalPoint}
+GLOSSARY:
+${slide.glossaryRefs.length ? slide.glossaryRefs.join(', ') : 'No canonical glossary reference'}
 
-Maximum Labels:
-${composition.maxLabels}
+VISUAL WEIGHT:
+${layout.weight}
 
-VISUAL RULE:
-Pure flat 2D editorial illustration.
-No 3D depth.
-No perspective.
-No gradients.
-No glossy effects.
+FOCAL POINT:
+${layout.focalPoint}
+
+MAX LABELS:
+${layout.maxLabels}
+
+ASSET RULE:
+${layout.assetRule}
 
 `;
   });
 
   prompt += `
-GLOBAL NEGATIVE PROMPT:
-
+MASTER NEGATIVE:
 NO 3D
 NO ISOMETRIC
-NO CLAY
 NO GLOSS
 NO HOLOGRAPHIC
-NO GLASSMORPHISM
-NO EXTRUSION
-NO BEVEL
-NO REALISTIC LIGHTING
-NO CINEMATIC RENDERING
-NO PHOTOREALISM
-NO STICKER GRAPHICS
-NO TOY-LIKE OBJECTS
 NO GRADIENTS
-NO NEON GLOW
-NO HEAVY SHADOWS
-NO BUSY BACKGROUNDS
+NO CLAY
+NO STICKERS
+NO PHOTOREALISM
+NO CINEMATIC RENDERING
 NO GENERIC CORPORATE CLIPART
+NO DECORATIVE CLUTTER
 
-FINAL VISUAL TEST:
-
-If the image looks like it was rendered in Blender,
-reject it.
-
-If the image looks like a glossy app illustration,
-reject it.
-
-If the image looks like a 3D sticker,
-reject it.
-
-If the image looks like a premium printed editorial
-infographic drawn with flat vector shapes,
-approve it.
+APPROVAL TEST:
+Every asset must look like a compact, premium, editorial rubber-stamp field note
+derived from the actual data.json content and visual directive — not a generic
+illustration and not a complete Instagram slide.
 `;
 
   return prompt;
+}
+
+// ─────────────────────────────────────────────────────────────
+// REAL PHOTO / GEN Z HERO IMAGE(S) — new
+// ─────────────────────────────────────────────────────────────
+
+// Lightweight keyword → real-world scene mapping. Matched against the
+// post title + all slide headlines/content. Falls back to a generic
+// "late-night coding desk" scene when nothing matches.
+const SCENE_KEYWORD_MAP = [
+  {
+    keywords: ['memory', 'ram', 'cache'],
+    scene:
+      'a hand holding a phone next to an open laptop showing a code editor, a couple of sticky notes with short technical shorthand scattered on the desk',
+  },
+  {
+    keywords: ['network', 'internet', 'server', 'client', 'web'],
+    scene:
+      'a laptop and a phone side by side on a desk, both screens glowing, a loosely coiled ethernet cable resting nearby',
+  },
+  {
+    keywords: ['database', 'sql', 'query'],
+    scene:
+      'a notebook with hand-drawn table sketches next to an open laptop with a terminal window glowing on screen',
+  },
+  {
+    keywords: ['algorithm', 'data structure', 'dsa', 'problem solving'],
+    scene:
+      "a whiteboard with hand-drawn boxes and arrows, a coffee cup and a laptop in the foreground, a hand mid-sketch holding a marker",
+  },
+  {
+    keywords: ['machine learning', 'model', 'neural', 'deep learning', 'ai agent', 'agents'],
+    scene:
+      'a laptop screen showing a chart glowing in a dim room at night, a notebook with handwritten notes resting beside it',
+  },
+  {
+    keywords: ['cloud', 'devops', 'linux', 'terminal'],
+    scene:
+      'a close-up of hands typing on a mechanical keyboard with a terminal window glowing on the laptop screen, warm desk-lamp light',
+  },
+  {
+    keywords: ['security', 'password', 'encryption'],
+    scene:
+      'a phone lock screen mid-unlock next to a laptop, dim moody lighting, a hoodie sleeve visible at the edge of frame',
+  },
+  {
+    keywords: ['history', 'invent', 'origin', 'why did'],
+    scene: 'an old notebook and a modern laptop placed side by side on a wooden desk, warm window light',
+  },
+];
+
+function deriveSceneConcept(post) {
+  const slides = getPostSlides(post);
+  // Headline-only: slide body text is intentionally excluded so the
+  // image prompt never reads like source copy to edit/reproduce.
+  const searchable = [getPostTitle(post), ...slides.map((s) => getSlideTitle(s))].join(' ').toLowerCase();
+
+  const match = SCENE_KEYWORD_MAP.find(({ keywords }) => keywords.some((k) => searchable.includes(k)));
+
+  return (
+    match?.scene ||
+    'a laptop open on a desk showing a code editor, a phone propped beside it, a half-finished cup of coffee, warm ambient light — a real late-night coding setup'
+  );
+}
+
+function buildImageContext(post) {
+  const hook = getSlideByLayout(post, 'hook-open');
+  const realWorld = getSlideByLayout(post, 'real-world');
+  const parts = [getPostTitle(post)];
+  if (hook) parts.push(getSlideTitle(hook));
+  if (realWorld) parts.push(getSlideTitle(realWorld));
+  return parts.filter(Boolean).join(' — ');
+}
+
+// Decides whether one or two hero images best represent this post.
+// Two images are only suggested when the post actually contains a
+// comparison beat worth splitting into a second still-life shot.
+export function suggestRealImageCount(post) {
+  const hasComparison = getPostSlides(post).some((s) => getSlideLayout(s) === 'comparison');
+  return hasComparison ? 2 : 1;
+}
+
+function buildImagePayload(post, imageIndex, totalImages) {
+  if (totalImages === 1 || imageIndex === 1) {
+    return {
+      context: buildImageContext(post),
+      scene: deriveSceneConcept(post),
+      angle: 'wide establishing shot of the whole desk/scene',
+    };
+  }
+
+  const comparisonSlide = getSlideByLayout(post, 'comparison');
+  if (comparisonSlide) {
+    const headline = getSlideTitle(comparisonSlide);
+    return {
+      context: headline,
+      scene: `a real still-life shot placing two contrasting real objects side by side on the same surface to visually echo this comparison: ${headline}`,
+      angle: 'close-up still life, both objects in frame, natural light',
+    };
+  }
+
+  return {
+    context: buildImageContext(post),
+    scene: deriveSceneConcept(post),
+    angle: 'tighter close-up detail shot of the same setup, different angle than image 1 (e.g. hands on keyboard, or a screen close-up)',
+  };
+}
+
+/**
+ * Generates one photoreal, Gen Z-style hero image prompt for a post.
+ * This is a COMPLETE photographic scene (not a transparent isolated
+ * asset) meant to look like a real phone photo, not AI-generated art.
+ */
+export function generateRealImagePrompt(post, imageIndex = 1, totalImages = 1, dataJson = null, styleMode = 'genz-real') {
+  const palette = resolveTrackPalette(post, null, dataJson);
+  const trackName = getTrackName(post, dataJson);
+  const payload = buildImagePayload(post, imageIndex, totalImages);
+
+  return `REAL PHOTO HERO IMAGE GENERATOR — SWE NOTEBOOK (${styleMode.toUpperCase()})
+
+SOURCE OF TRUTH:
+Derived from data.json post "${getPostTitle(post)}" (Track: "${trackName}").
+Do not invent a different topic.
+
+IMAGE:
+${imageIndex} of ${totalImages}
+
+CORE CONTEXT (evoke this, do not spell it out literally):
+"${payload.context}"
+
+SCENE CONCEPT:
+${payload.scene}
+
+FRAMING:
+${payload.angle}
+
+TRACK COLOR CUE (use only as a believable real object color, never as an overlay):
+- Primary: ${palette.primary}
+- Accent: ${palette.accent}
+
+${REAL_PHOTO_STYLE_LOCK}
+
+${buildRealPhotoNegativePrompt()}
+
+OUTPUT:
+- Format: PNG.
+- Aspect ratio: 4:5 (1080x1350).
+- One complete photographic scene. No text, no logos, no UI overlays.
+
+FINAL CHECK:
+1. Would this pass as a real phone photo, not an AI/illustrated image?
+2. Does it evoke the post's concept without literally illustrating or labeling it?
+3. Is any face avoided, or kept safely partial (hands/screen/silhouette only)?
+4. Is the track color present only as a real object, never as a filter/overlay?
+5. Is there zero on-image text, logo, or watermark?
+
+If any answer is NO, regenerate.`;
+}
+
+/**
+ * Generates the full set of hero image prompts for a post (1 or 2,
+ * auto-detected via suggestRealImageCount unless overridden).
+ */
+export function generateRealImagePromptSet(post, dataJson = null, styleMode = 'genz-real', imageCountOverride = null) {
+  const count = imageCountOverride === 1 || imageCountOverride === 2 ? imageCountOverride : suggestRealImageCount(post);
+
+  return Array.from({ length: count }, (_, i) => generateRealImagePrompt(post, i + 1, count, dataJson, styleMode));
+}
+
+/**
+ * Convenience bundle: hero image prompt(s) + caption, ready to hand
+ * to an image generator and a scheduler in one call.
+ */
+export function generatePostRealAssetBundle(post, dataJson = null, styleMode = 'genz-real', imageCountOverride = null) {
+  const prompts = generateRealImagePromptSet(post, dataJson, styleMode, imageCountOverride);
+
+  return {
+    postTitle: getPostTitle(post),
+    track: getTrackName(post, dataJson),
+    imageCount: prompts.length,
+    prompts,
+    caption: generateCaptionText(post),
+  };
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -968,24 +1161,11 @@ approve it.
 // ─────────────────────────────────────────────────────────────
 
 export function generateCaptionText(post) {
+  const postTitle = getPostTitle(post);
+  const description = post?.Description || post?.description || '';
+  const slides = getPostSlides(post);
 
-  const postTitle =
-    post.title ||
-    post.PostTitle ||
-    'SWE Notebook';
-
-  const description =
-    post.Description ||
-    post.metadata?.description ||
-    '';
-
-  const slides =
-    post.slides ||
-    post.Slides ||
-    [];
-
-  let text =
-    `${postTitle}\n\n`;
+  let text = `${postTitle}\n\n`;
 
   if (description) {
     text += `${description}\n\n`;
@@ -993,29 +1173,12 @@ export function generateCaptionText(post) {
 
   text += `📌 Slide Breakdown:\n`;
 
-  slides.forEach((s, idx) => {
-
-    const slideNo =
-      s.slideNo || idx + 1;
-
-    const headline =
-      s.headline ||
-      s.SlideTitle ||
-      `Slide ${slideNo}`;
-
-    text +=
-      `• Slide ${slideNo}: ${headline}\n`;
+  slides.forEach((slide, index) => {
+    text += `• Slide ${getSlideNumber(slide, index)}: ${getSlideTitle(slide, `Slide ${index + 1}`)}\n`;
   });
 
-  const hashtags =
-    post.Hashtags ||
-    post.metadata?.hashtags ||
-    [];
-
-  const hashtagStr =
-    hashtags.length
-      ? hashtags.join(' ')
-      : '#softwareengineering #webdevelopment #programming #learncoding #developer';
+  const hashtags = asArray(post?.Hashtags || post?.hashtags);
+  const hashtagStr = hashtags.length ? hashtags.join(' ') : '#SWENotebook #ZeroToHero #SoftwareEngineering';
 
   text += `
 💡 Save this post for quick reference and share it with a fellow engineer.
@@ -1028,145 +1191,168 @@ ${hashtagStr}`;
 }
 
 // ─────────────────────────────────────────────────────────────
-// COVER PROMPT
+// CHAPTER COVER PROMPT
 // ─────────────────────────────────────────────────────────────
 
-export function generateCoverPrompt(
-  cover,
-  styleMode = 'minimal'
-) {
+export function generateCoverPrompt(cover, styleMode = 'minimal', dataJson = null) {
+  const trackId = cover?.trackId ?? cover?.TrackId ?? null;
+  const paletteEntry = trackId != null ? getTrackPalettes(dataJson)[trackId] : null;
 
   const primary =
-    cover.Primary ||
-    cover.primary ||
-    '#1E5FA8';
+    cover?.Primary ||
+    cover?.primary ||
+    paletteEntry?.primary ||
+    extractHexFromDirective(cover?.VisualDirective || cover?.vibe, 1) ||
+    DEFAULT_PRIMARY;
 
   const accent =
-    cover.Accent ||
-    cover.accent ||
-    '#A9D0F5';
+    cover?.Accent ||
+    cover?.accent ||
+    paletteEntry?.accent ||
+    extractHexFromDirective(cover?.VisualDirective || cover?.vibe, 2) ||
+    DEFAULT_ACCENT;
 
-  const palette =
-    cover.Palette ||
-    cover.palette ||
-    'Editorial';
+  const title =
+    cover?.CoverHeadline ||
+    cover?.headline ||
+    cover?.Title ||
+    cover?.title ||
+    cover?.Track ||
+    paletteEntry?.name ||
+    'SWE Notebook';
 
-  const composeNote = `
-Composition cap:
-Maximum THREE visual elements.
+  const subtitle = cover?.Subtitle || cover?.subtitle || cover?.text || '';
 
-Use ONE simple bridge motif if necessary.
+  const directive = cover?.VisualDirective || cover?.visualDirective || cover?.vibe || 'Minimal editorial chapter cover.';
 
-Do not illustrate the entire topic.
-Do not build a scene.
-Do not create decorative filler.
-`;
+  const track = cover?.Track || cover?.track || paletteEntry?.name || (trackId != null ? `Track ${trackId}` : '');
 
-  return `INSTAGRAM IMAGE CREATOR — EDITORIAL 2D COVER
+  return `SWE NOTEBOOK — CHAPTER COVER GENERATOR
 
-Format:
-4:5 vertical portrait.
-1080x1350px.
+SOURCE:
+Use the ChapterCovers entry from data.json as the source of truth.
 
-Series:
-SWE Notebook (Zero to Hero)
+TRACK:
+"${track}"
 
-Track:
-${cover.Track}
-
-Palette:
-${palette}
-
-Primary:
-${primary}
-
-Accent:
-${accent}
-
-CANVAS:
-Warm textured off-white paper #F8F7F4.
-Extremely subtle notebook grid if appropriate.
-No gradient.
-
-HEADLINE:
-"${cover.CoverHeadline || cover.Title}"
-
-Typography:
-Large elegant Editorial Serif.
-Use italic emphasis.
-Place a flat fluorescent ${accent} highlighter block behind
-the key word.
+TITLE:
+"${title}"
 
 SUBTITLE:
-"${cover.Subtitle || ''}"
+"${subtitle}"
 
-Use clean modern Sans-Serif.
+VISUAL DIRECTIVE:
+"${directive}"
 
-VISUAL:
-${cover.VisualPrompt ||
-    cover.VisualDirective ||
-    'One minimal flat editorial vector illustration representing the core idea.'}
+PALETTE:
+- Primary: ${primary}
+- Accent: ${accent}
 
-${composeNote}
+FORMAT:
+- 4:5 vertical portrait.
+- 1080x1350px.
+- Complete chapter-cover composition is allowed here.
 
-VISUAL STYLE:
-- Pure 2D vector.
-- Thin editorial linework.
-- Flat color fills.
-- Simple geometric construction.
-- No perspective.
-- No artificial depth.
+STYLE:
+${STYLE_LOCK[styleMode] || STYLE_LOCK.minimal}
+
+COVER-SPECIFIC RULES:
+- This function generates a COMPLETE chapter cover, unlike slide asset prompts.
+- Preserve the supplied title and subtitle.
+- Follow the supplied VisualDirective.
+- Use the supplied primary/accent colors.
+- Keep typography dominant.
+- Use one simple bridge visual at most.
+- Do not illustrate the entire track.
+- Keep at least 40% breathing room.
+- No gradient.
 - No 3D.
-- No isometric.
-- No glossy surfaces.
-- No stickers.
-- No shadows beyond an extremely subtle flat grounding mark.
-
-WHITESPACE:
-At least 40%.
-
-OVERALL FEEL:
-Premium independent magazine.
-Technical notebook.
-Quiet intelligence.
-Minimal but memorable.
+- No isometric rendering.
+- No glossy UI.
+- No photorealism.
+- No sticker graphics.
 
 NEGATIVE:
-3D, isometric, clay, glossy, holographic, chrome,
-gradient, extrusion, bevel, photorealistic,
-cinematic lighting, sticker, toy, heavy shadow,
-busy background, corporate clipart.
-`;
+3D, isometric, clay, glossy, holographic, chrome, gradient,
+extrusion, bevel, photorealistic, cinematic lighting,
+sticker, toy-like objects, busy background, corporate clipart.`;
+}
+
+function extractHexFromDirective(text = '', occurrence = 1) {
+  const matches = String(text).match(/#[0-9A-Fa-f]{6}/g) || [];
+  return matches[occurrence - 1] || null;
+}
+
+// ─────────────────────────────────────────────────────────────
+// DATA.JSON LOOKUPS
+// ─────────────────────────────────────────────────────────────
+
+const postMapCache = new WeakMap();
+
+function getPostMaps(dataJson) {
+  const posts = getPosts(dataJson);
+  if (!postMapCache.has(posts)) {
+    const byNo = new Map();
+    const byTitle = new Map();
+    posts.forEach((post) => {
+      const pNo = Number(post?.PostNo ?? post?.postNo);
+      if (!isNaN(pNo)) byNo.set(pNo, post);
+      const title = String(getPostTitle(post)).trim().toLowerCase();
+      if (title) byTitle.set(title, post);
+    });
+    postMapCache.set(posts, { byNo, byTitle });
+  }
+  return postMapCache.get(posts);
+}
+
+export function findSWEPost(dataJson, postNo) {
+  if (!dataJson) return null;
+  const maps = getPostMaps(dataJson);
+  return maps.byNo.get(Number(postNo)) || null;
+}
+
+export function findSWEPostByTitle(dataJson, title) {
+  if (!dataJson) return null;
+  const target = String(title || '').trim().toLowerCase();
+  const maps = getPostMaps(dataJson);
+  return maps.byTitle.get(target) || null;
+}
+
+// Matches by trackId (real schema, e.g. "10") OR by track name (legacy schema).
+export function findChapterCover(dataJson, trackIdOrName) {
+  const target = String(trackIdOrName ?? '').trim().toLowerCase();
+
+  return getChapterCovers(dataJson).find((cover) => {
+    const id = String(cover?.trackId ?? cover?.TrackId ?? '').trim().toLowerCase();
+    const name = String(cover?.Track ?? cover?.track ?? '').trim().toLowerCase();
+    return id === target || name === target;
+  });
+}
+
+export function getSWEVisualGlossary(dataJson) {
+  return getVisualGlossary(dataJson);
+}
+
+export function getSWELayoutRegistry(dataJson) {
+  return getLayoutRegistry(dataJson);
 }
 
 // ─────────────────────────────────────────────────────────────
 // PAGE INDICATOR
 // ─────────────────────────────────────────────────────────────
 
-export function generatePageIndicator(
-  slide,
-  totalSlides
-) {
+export function generatePageIndicator(slide, totalSlides) {
+  const n = getSlideNumber(slide);
+  const padded = (num) => String(num).padStart(2, '0');
 
-  const n =
-    slide.slideNo || 1;
-
-  const padded =
-    (num) => String(num).padStart(2, '0');
-
-  if (n === 1) {
-    return 'SWIPE →';
-  }
+  if (n === 1) return 'SWIPE →';
 
   if (n === totalSlides) {
+    const layout = getSlideLayout(slide);
 
-    if (
-      slide.slideType === 'next-up' ||
-      slide.layout === 'next-up'
-    ) {
-      return slide.text
-        ? `NEXT: ${String(slide.text).toUpperCase()} →`
-        : 'SAVE THIS →';
+    if (layout === 'next-up') {
+      const text = getSlideContent(slide);
+      return text ? `NEXT: ${String(text).toUpperCase()} →` : 'SAVE THIS →';
     }
 
     return 'SAVE THIS.';

@@ -1,5 +1,6 @@
 import { Rect, Circle, Textbox, FabricImage, FabricObject } from "fabric";
-import { buildHeadlineStyles, buildBodyStyles } from "./textAnnotations";
+import { THEME } from "../theme/theme";
+import { buildHeadlineStyles, buildBodyStyles, wrapTextToLines } from "./textAnnotations";
 
 export const SELECTION_CONTROL_CONFIG = {
   transparentCorners: false,
@@ -104,21 +105,24 @@ export function createFabricObject(element) {
     case "badge":
     case "text": {
       const rawText = element.text || element.content || "";
-      // Build editorial annotation styles:
-      // • headline → last word highlighted with accent background
-      // • body/text → first 2 important words underlined in primary color
+      const elemWidth = element.width || THEME.contentZone.width;
+      const elemFontSize = element.fontSize || (element.type === "headline" ? 44 : 30);
+
+      const lines = wrapTextToLines(rawText, elemFontSize, elemWidth);
+      const displayText = lines.length > 0 ? lines.join("\n") : rawText;
+
       const annotationStyles =
         element.type === "headline"
-          ? buildHeadlineStyles(rawText, element.accentColor || element._accent)
+          ? buildHeadlineStyles(displayText, element.accentColor || element._accent, elemFontSize, elemWidth)
           : element.type === "text"
-          ? buildBodyStyles(rawText, element.fill || element._primary)
+          ? buildBodyStyles(displayText, element.fill || element._primary, elemFontSize, elemWidth)
           : {};
 
-      return new Textbox(rawText, {
+      return new Textbox(displayText, {
         left: element.x,
         top: element.y,
-        width: element.width || THEME.contentZone.width,
-        fontSize: element.fontSize || 32,
+        width: elemWidth,
+        fontSize: elemFontSize,
         fontFamily: element.fontFamily || "Inter",
         fontWeight: element.fontWeight || "normal",
         fill: element.fill || "#000000",

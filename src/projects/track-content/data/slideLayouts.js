@@ -11,7 +11,7 @@
  */
 export function resolveLayoutId(slide = {}, totalSlides = 7) {
   const slideNo = slide.SlideNo || slide.slideNo || 1
-  const layout = slide.Layout || slide.layout?.id || slide.layout || ''
+  const layout = String(slide.Layout || slide.layoutId || (typeof slide.layout === 'string' ? slide.layout : slide.layout?.id) || '')
   const title = (slide.SlideTitle || slide.content?.title || slide.title || '').toLowerCase()
 
   // Last slide → next-up (closing CTA)

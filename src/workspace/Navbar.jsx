@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
   Layout,
@@ -16,10 +16,6 @@ export default function Navbar({
 }) {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  useEffect(() => {
-    setIsMobileMenuOpen(false)
-  }, [location.pathname])
 
   const activePath = currentPath || location.pathname
   const isCreatePost = activePath.startsWith('/design/new') || activePath === '/post-builder'

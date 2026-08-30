@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import Navbar from './Navbar'
 import BreadcrumbNav from './BreadcrumbNav'
@@ -25,11 +25,11 @@ export default function WorkspaceLayout() {
   useEffect(() => {
     if (location.pathname === '/search') {
       const q = searchParams.get('q') || ''
-      setSearchTerm(q)
-    } else if (searchTerm && !location.pathname.startsWith('/search')) {
-      setSearchTerm('')
+      setSearchTerm((prev) => (prev !== q ? q : prev))
+    } else {
+      setSearchTerm((prev) => (prev ? '' : prev))
     }
-  }, [location.pathname, location.search, searchParams])
+  }, [location.pathname, searchParams])
 
   const isBuilderPage =
     location.pathname.startsWith('/builder') ||

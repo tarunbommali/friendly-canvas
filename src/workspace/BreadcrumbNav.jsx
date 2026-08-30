@@ -1,7 +1,6 @@
-import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-export default function BreadcrumbNav({ tracks = [], trackPalettes = {}, activeTrack, postsByTrack = {} }) {
+export default function BreadcrumbNav({ tracks = [], activeTrack, postsByTrack = {} }) {
   const location = useLocation()
   const pathSegments = location.pathname.split('/').filter(Boolean)
 

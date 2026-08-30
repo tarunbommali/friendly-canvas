@@ -272,81 +272,14 @@ export function CarouselBuilderPage() {
   }, [currentPost]);
 
   return (
-    <div className="flex flex-col h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
-      {/* Top Header */}
-      <header className="h-14 border-b border-slate-800 bg-slate-900/90 backdrop-blur px-6 flex items-center justify-between">
-        {/* Left: Title & Track */}
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-600/20 text-blue-400 rounded-lg border border-blue-500/30">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              {isEditingTitle ? (
-                <input
-                  type="text"
-                  autoFocus
-                  value={document.metadata.title || ""}
-                  onChange={(e) => updateCarouselMetadata({ title: e.target.value })}
-                  onBlur={() => setIsEditingTitle(false)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") setIsEditingTitle(false);
-                  }}
-                  className="bg-slate-950 border border-blue-500 rounded px-2 py-0.5 text-sm font-semibold text-slate-100 focus:outline-none"
-                />
-              ) : (
-                <h1
-                  onClick={() => setIsEditingTitle(true)}
-                  className="font-semibold text-sm text-slate-100 flex items-center gap-2 cursor-pointer hover:text-blue-300 transition-colors group"
-                  title="Click to edit post title"
-                >
-                  <span>{document.metadata.title || "Untitled Post"}</span>
-                  <Edit3 className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity" />
-                </h1>
-              )}
-            </div>
-            <p className="text-xs text-slate-400">
-              {currentPost?.collectionName
-                ? `${currentPost.collectionName} • Design #${currentPost.designNo || 1}`
-                : "Custom Carousel Builder"}
-            </p>
-          </div>
-        </div>
-
-        {/* Center: Global Project Layout Settings Page Navigation */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleOpenSettingsPage}
-            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl flex items-center gap-2 border border-blue-400/30 shadow-lg shadow-blue-600/20 transition-all text-xs"
-            title="Open Global Layout & Transform Settings Page"
-          >
-            <Settings className="w-4 h-4" />
-            <span>Layout & Theme Settings</span>
-          </button>
-        </div>
-
-        {/* Right: Canvas Aspect Ratio Badge */}
-        <div className="flex items-center gap-2 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
-          <span className="text-slate-500 font-medium px-2 flex items-center gap-1">
-            <Layout className="w-3.5 h-3.5" /> Ratio:
-          </span>
-          <span className="px-2.5 py-1 rounded font-mono bg-blue-600 text-white font-semibold">
-            {document.metadata.aspectRatio || "4:5"} ({document.metadata.width}x
-            {document.metadata.height})
-          </span>
-        </div>
-      </header>
-
-      {/* Main Workbench Area */}
-      <div className="flex-1 flex flex-col min-h-0">
-        <Toolbar />
-        <div className="flex-1 flex min-h-0 overflow-hidden">
-          <SlideThumbnails />
-          <main className="flex-1 bg-slate-950 p-4 flex items-center justify-center overflow-hidden relative">
-            <CanvasEditor />
-          </main>
-          <PropertiesPanel />
-        </div>
+    <div className="flex flex-col h-screen bg-[#0f1117] text-slate-100 overflow-hidden font-sans select-none">
+      <Toolbar onOpenSettings={handleOpenSettingsPage} currentPost={currentPost} />
+      <div className="flex-1 flex min-h-0 overflow-hidden">
+        <SlideThumbnails />
+        <main className="flex-1 canvas-checkerboard p-4 flex items-center justify-center overflow-hidden relative">
+          <CanvasEditor />
+        </main>
+        <PropertiesPanel />
       </div>
     </div>
   );

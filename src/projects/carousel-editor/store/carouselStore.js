@@ -3,7 +3,7 @@ import { initialCarousel } from "../data/initialCarousel";
 import { THEME } from "../theme/theme";
 import { composeSlide } from "../theme/compose";
 import { DEFAULT_GLOBAL_LAYOUT_CONFIG } from "../theme/defaultGlobalLayout";
-import { getCanvasDimensions } from "../theme/layoutBounds";
+import { getCanvasDimensions, getLayoutBounds } from "../theme/layoutBounds";
 import {
   isChromeElement,
   isImageElement,
@@ -76,24 +76,29 @@ function estimateLineCount(text = "", fontSize = 44, maxWidth = 680) {
   return Math.max(1, lines);
 }
 
-function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth }) {
+function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHeight = 1350 }) {
+  const bounds = getLayoutBounds(config, { width: canvasWidth, height: canvasHeight });
+  const { contentZone, safeArea } = bounds;
+
   const headlineEl = slide.elements.find(isHeadlineElement);
   const headlineText = headlineEl?.text || headlineEl?.content || "";
   const headlineFontSize = config.headlineFontSize || headlineEl?.fontSize || 44;
+  const headlineY = config.headlineY ?? contentZone.top;
   const headlineHeight =
-    Math.max(1, estimateLineCount(headlineText, headlineFontSize, 680)) *
+    Math.max(1, estimateLineCount(headlineText, headlineFontSize, contentZone.width)) *
     headlineFontSize *
     1.2;
+
   const dynamicBodyY = Math.max(
-    config.bodyY,
-    config.headlineY + headlineHeight + 36
+    config.bodyY ?? (headlineY + headlineHeight + 36),
+    headlineY + headlineHeight + 36
   );
 
   const bodyEl = slide.elements.find(isBodyElement);
   const bodyText = bodyEl?.text || bodyEl?.content || "";
   const bodyFontSize = config.bodyFontSize || bodyEl?.fontSize || 30;
   const bodyHeight =
-    Math.max(1, estimateLineCount(bodyText, bodyFontSize, 680)) *
+    Math.max(1, estimateLineCount(bodyText, bodyFontSize, contentZone.width)) *
     bodyFontSize *
     1.5;
 
@@ -101,21 +106,22 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth }) {
   const dirText = dirEl?.text || dirEl?.content || "";
   const dirFontSize = config.dirTextFontSize || dirEl?.fontSize || 24;
   const dirTextHeight =
-    Math.max(1, estimateLineCount(dirText, dirFontSize, 700)) * dirFontSize * 1.4;
-  const dynamicDirRectHeight = Math.max(config.dirRectHeight, dirTextHeight + 60);
+    Math.max(1, estimateLineCount(dirText, dirFontSize, contentZone.width)) * dirFontSize * 1.4;
+  const dynamicDirRectHeight = Math.max(config.dirRectHeight || 120, dirTextHeight + 60);
   const dynamicDirRectY = Math.max(
-    config.dirRectY,
+    config.dirRectY || 780,
     dynamicBodyY + bodyHeight + 40 + dynamicDirRectHeight / 2
   );
   const dynamicDirTextY = dynamicDirRectY - dynamicDirRectHeight / 2 + 30;
 
-  let alignX = config.headlineX;
+  const textAlign = config.textAlign || "left";
+  let alignX = contentZone.left;
   let originX = "left";
-  if (config.textAlign === "center") {
+  if (textAlign === "center") {
     alignX = Math.round(canvasWidth / 2);
     originX = "center";
-  } else if (config.textAlign === "right") {
-    alignX = canvasWidth - 140;
+  } else if (textAlign === "right") {
+    alignX = contentZone.right;
     originX = "right";
   }
 
@@ -123,17 +129,18 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth }) {
     if (isChromeBadgeElement(el)) {
       return {
         ...el,
-        fill: config.primaryColor,
+        fill: config.primaryColor || el.fill,
         x: alignX,
+        y: safeArea.top + 24,
         originX,
-        textAlign: config.textAlign,
+        textAlign,
       };
     }
     if (isPageNumberElement(el)) {
       return {
         ...el,
-        x: config.pageNumberX ?? THEME.chrome.pageNumber.x,
-        y: config.pageNumberY ?? THEME.chrome.pageNumber.y,
+        x: safeArea.left,
+        y: safeArea.bottom - 24,
         fontSize: config.pageNumberFontSize ?? THEME.typography.footer.fontSize,
         fill: config.pageNumberColor || THEME.colors.footer,
       };
@@ -144,8 +151,9 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth }) {
         (typeof el.text === "string" && el.text.includes("Follow"));
       return {
         ...el,
-        x: isFollow ? (config.followX ?? 940) : (config.swipeX ?? 940),
-        y: isFollow ? (config.followY ?? 1210) : (config.swipeY ?? 1210),
+        x: safeArea.right,
+        originX: "right",
+        y: safeArea.bottom - 24,
         fontSize: isFollow
           ? (config.followFontSize ?? 24)
           : (config.swipeFontSize ?? 24),
@@ -160,11 +168,10 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth }) {
     if (isBackgroundRect(el)) {
       return {
         ...el,
-        stroke: config.accentColor,
+        stroke: config.accentColor || el.stroke,
       };
     }
 
-    // Uploaded images must pass through untouched — registry restores them after.
     if (isImageElement(el)) {
       return el;
     }
@@ -173,46 +180,49 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth }) {
     if (isHeadlineElement(el)) {
       resEl = {
         ...el,
-        x: config.textAlign === "left" ? config.headlineX : alignX,
-        y: config.headlineY,
-        fontSize: config.headlineFontSize,
-        fontFamily: config.headlineFont,
+        x: alignX,
+        y: headlineY,
+        width: contentZone.width,
+        fontSize: headlineFontSize,
+        fontFamily: config.headlineFont || el.fontFamily,
         fill: config.headlineColor || el.fill,
         originX,
-        textAlign: config.textAlign,
+        textAlign,
       };
     } else if (isBodyElement(el)) {
       resEl = {
         ...el,
-        x: config.textAlign === "left" ? config.bodyX : alignX,
+        x: alignX,
         y: dynamicBodyY,
-        fontSize: config.bodyFontSize,
-        fontFamily: config.bodyFont,
+        width: contentZone.width,
+        fontSize: bodyFontSize,
+        fontFamily: config.bodyFont || el.fontFamily,
         fill: config.bodyColor || el.fill,
         originX,
-        textAlign: config.textAlign,
+        textAlign,
       };
     } else if (isDirectiveTextElement(el)) {
       resEl = {
         ...el,
-        x: config.textAlign === "left" ? config.dirTextX : alignX,
+        x: textAlign === "left" ? contentZone.left : alignX,
         y: dynamicDirTextY,
-        fontSize: config.dirTextFontSize,
-        fontFamily: config.bodyFont,
-        fill: config.dirTextColor || config.primaryColor,
-        originX: config.textAlign === "left" ? "left" : originX,
-        textAlign: config.textAlign,
+        width: contentZone.width,
+        fontSize: dirFontSize,
+        fontFamily: config.bodyFont || el.fontFamily,
+        fill: config.dirTextColor || config.primaryColor || el.fill,
+        originX: textAlign === "left" ? "left" : originX,
+        textAlign,
       };
     } else if (isDirectiveRectElement(el)) {
       resEl = {
         ...el,
-        x: config.dirRectX,
+        x: Math.round(canvasWidth / 2),
         y: dynamicDirRectY,
-        width: config.dirRectWidth,
+        width: Math.min(config.dirRectWidth || 760, contentZone.width),
         height: dynamicDirRectHeight,
-        fill: config.dirRectFill,
-        stroke: config.dirRectStroke || config.primaryColor,
-        strokeWidth: config.dirRectStrokeWidth,
+        fill: config.dirRectFill || el.fill,
+        stroke: config.dirRectStroke || config.primaryColor || el.stroke,
+        strokeWidth: config.dirRectStrokeWidth || el.strokeWidth,
         originX: "center",
         originY: "center",
       };
@@ -234,8 +244,8 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth }) {
 
   return {
     ...slide,
-    backgroundColor: config.bgColor,
-    bgPattern: config.bgPattern,
+    backgroundColor: config.bgColor || slide.backgroundColor,
+    bgPattern: config.bgPattern || slide.bgPattern,
     elements: updatedElements,
   };
 }
@@ -468,6 +478,143 @@ export const useCarouselStore = create((set, get) => ({
         ),
       },
     })),
+
+  applyBgColorToAllSlides: (color) =>
+    set((state) => ({
+      document: {
+        ...state.document,
+        slides: state.document.slides.map((slide) => ({
+          ...slide,
+          backgroundColor: color,
+        })),
+      },
+      globalLayoutConfig: {
+        ...state.globalLayoutConfig,
+        bgColor: color,
+      },
+    })),
+
+  updateSlideBgPattern: (slideId, bgPattern) =>
+    set((state) => ({
+      document: {
+        ...state.document,
+        metadata: {
+          ...state.document.metadata,
+          bgPattern,
+        },
+        slides: state.document.slides.map((slide) =>
+          slide.id === slideId ? { ...slide, bgPattern } : slide
+        ),
+      },
+      globalLayoutConfig: {
+        ...state.globalLayoutConfig,
+        bgPattern,
+      },
+    })),
+
+  applyBgPatternToAllSlides: (pattern) =>
+    set((state) => ({
+      document: {
+        ...state.document,
+        metadata: {
+          ...state.document.metadata,
+          bgPattern: pattern,
+        },
+        slides: state.document.slides.map((slide) => ({
+          ...slide,
+          bgPattern: pattern,
+        })),
+      },
+      globalLayoutConfig: {
+        ...state.globalLayoutConfig,
+        bgPattern: pattern,
+      },
+    })),
+
+  applyPaletteToAllSlides: ({ primary, accent, bg } = {}) =>
+    set((state) => {
+      const nextConfig = {
+        ...state.globalLayoutConfig,
+        primaryColor: primary || state.globalLayoutConfig.primaryColor,
+        accentColor: accent || state.globalLayoutConfig.accentColor,
+        bgColor: bg || state.globalLayoutConfig.bgColor,
+      };
+
+      const canvasWidth = state.document.metadata.width || 1080;
+      const canvasHeight = state.document.metadata.height || 1350;
+
+      const updatedSlides = state.document.slides.map((slide, sIdx) => {
+        const slideUpdated = {
+          ...slide,
+          backgroundColor: bg || slide.backgroundColor,
+          elements: slide.elements.map((el) => {
+            const elAccent = accent || el.accentColor || nextConfig.accentColor;
+            const elPrimary = primary || el.fill || nextConfig.primaryColor;
+            if (isHeadlineElement(el) || isDirectiveTextElement(el)) {
+              return { ...el, accentColor: elAccent, fill: elPrimary };
+            }
+            if (isBodyElement(el)) {
+              return { ...el, fill: elPrimary };
+            }
+            if (isChromeBadgeElement(el) || isDirectiveRectElement(el)) {
+              return { ...el, fill: elPrimary, stroke: elPrimary };
+            }
+            return el;
+          }),
+        };
+        return applyConfigToSlide(slideUpdated, nextConfig, {
+          isLastSlide: sIdx === state.document.slides.length - 1,
+          canvasWidth,
+          canvasHeight,
+        });
+      });
+
+      return {
+        globalLayoutConfig: nextConfig,
+        document: restoreImagesFromRegistry(
+          { ...state.document, slides: updatedSlides },
+          state.imageRegistry
+        ),
+      };
+    }),
+
+  updateGlobalLayoutConfig: (updates) =>
+    set((state) => {
+      const nextConfig = {
+        ...state.globalLayoutConfig,
+        ...updates,
+      };
+
+      const { slides } = state.document;
+      if (!slides || slides.length === 0) {
+        return { globalLayoutConfig: nextConfig };
+      }
+
+      const canvasWidth = state.document.metadata.width || 1080;
+      const canvasHeight = state.document.metadata.height || 1350;
+
+      const updatedSlides = slides.map((slide, sIdx) =>
+        applyConfigToSlide(slide, nextConfig, {
+          isLastSlide: sIdx === slides.length - 1,
+          canvasWidth,
+          canvasHeight,
+        })
+      );
+
+      const nextDoc = {
+        ...state.document,
+        metadata: {
+          ...state.document.metadata,
+          bgPattern: nextConfig.bgPattern,
+        },
+        slides: updatedSlides,
+      };
+
+      return {
+        globalLayoutConfig: nextConfig,
+        document: restoreImagesFromRegistry(nextDoc, state.imageRegistry),
+      };
+    }),
 
   addElement: (element) => {
     get().pushHistory();

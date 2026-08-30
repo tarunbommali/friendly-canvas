@@ -264,7 +264,7 @@ export function CanvasEditor() {
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [activeSlide, document.metadata, canvasWidth, canvasHeight]);
+  }, [activeSlide, document.metadata, canvasWidth, canvasHeight, globalLayoutConfig]);
 
   return (
     <div
@@ -284,7 +284,7 @@ export function CanvasEditor() {
 
         {showSafeAreaGuides && (
           <div
-            className="absolute border-2 border-dashed border-cyan-400/50 pointer-events-none rounded-2xl flex flex-col justify-between p-2"
+            className="absolute border-2 border-dashed border-cyan-400/50 pointer-events-none rounded-2xl flex flex-col justify-between p-2 z-30"
             style={{
               top: `${layoutBounds.safeArea.top}px`,
               left: `${layoutBounds.safeArea.left}px`,
@@ -303,8 +303,8 @@ export function CanvasEditor() {
             <div
               className="absolute border border-dashed border-amber-400/60 pointer-events-none rounded-xl overflow-hidden"
               style={{
-                top: `${layoutBounds.contentZone.paddingTop}px`,
-                left: `${layoutBounds.contentZone.paddingLeft}px`,
+                top: `${layoutBounds.contentZone.top - layoutBounds.safeArea.top}px`,
+                left: `${layoutBounds.contentZone.left - layoutBounds.safeArea.left}px`,
                 width: `${layoutBounds.contentZone.width}px`,
                 height: `${layoutBounds.contentZone.height}px`,
               }}
@@ -314,12 +314,12 @@ export function CanvasEditor() {
                 {layoutBounds.contentZone.bottom}px)
               </span>
 
-              {/* 4 Column Grid Overlay Lines */}
-              <div className="w-full h-full grid grid-cols-4 gap-4 px-2 opacity-15 pointer-events-none">
-                <div className="bg-amber-400/20 border-x border-amber-400/40 h-full" />
-                <div className="bg-amber-400/20 border-x border-amber-400/40 h-full" />
-                <div className="bg-amber-400/20 border-x border-amber-400/40 h-full" />
-                <div className="bg-amber-400/20 border-x border-amber-400/40 h-full" />
+              {/* 4 Column Grid Overlay Lines (Clean Outlines, No Color Fill Obscuring Text) */}
+              <div className="w-full h-full grid grid-cols-4 gap-4 px-2 opacity-25 pointer-events-none">
+                <div className="border-x border-amber-400/40 h-full" />
+                <div className="border-x border-amber-400/40 h-full" />
+                <div className="border-x border-amber-400/40 h-full" />
+                <div className="border-x border-amber-400/40 h-full" />
               </div>
             </div>
 

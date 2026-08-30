@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function Toast({ toast, onClose }) {
   if (!toast) return null
 

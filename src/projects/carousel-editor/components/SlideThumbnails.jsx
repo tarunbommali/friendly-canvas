@@ -28,23 +28,21 @@ export function SlideThumbnails() {
   };
 
   return (
-    <div className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-full">
-      <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-slate-200 font-semibold">
-          <Layers className="w-4 h-4 text-blue-400" />
-          <span>Slides ({document.slides.length})</span>
-        </div>
+    <div className="w-[100px] bg-[#151821] border-r border-white/5 flex flex-col h-full shrink-0 select-none">
+      <div className="p-2 border-b border-white/5 flex items-center justify-between">
+        <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider pl-1">
+          SLIDES ({document.slides.length})
+        </span>
         <button
           onClick={addSlide}
-          className="p-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors flex items-center gap-1 text-xs font-medium"
+          className="p-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 rounded-md transition-all text-xs"
           title="Add Slide"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>Add</span>
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3 space-y-3">
+      <div className="flex-1 overflow-y-auto p-2 space-y-3.5">
         {document.slides.map((slide, index) => {
           const isActive = slide.id === document.activeSlideId;
 
@@ -52,81 +50,87 @@ export function SlideThumbnails() {
             <div
               key={slide.id}
               onClick={() => setActiveSlide(slide.id)}
-              className={`group relative rounded-xl border p-2 cursor-pointer transition-all ${
-                isActive
-                  ? "border-blue-500 bg-blue-950/40 shadow-lg shadow-blue-500/10"
-                  : "border-slate-800 bg-slate-950/50 hover:border-slate-700 hover:bg-slate-800/40"
-              }`}
+              className="relative group cursor-pointer"
             >
-              <div className="flex items-center justify-between text-xs text-slate-400 mb-1.5 px-1">
-                <span className="font-semibold text-slate-300">
-                  Slide {index + 1}
-                </span>
-                <span className="text-[10px] text-slate-500">
-                  {slide.elements.length} elements
-                </span>
-              </div>
-
-              {/* Thumbnail Mini Canvas Preview */}
+              {/* Outer Thumbnail Container */}
               <div
-                className="w-full aspect-[4/5] rounded-lg border border-slate-800 flex flex-col justify-between p-2 overflow-hidden relative shadow-inner"
-                style={{ backgroundColor: slide.backgroundColor || "#ffffff" }}
+                className={`relative rounded-lg border overflow-hidden transition-all ${
+                  isActive
+                    ? "border-cyan-400 ring-2 ring-cyan-500/40 shadow-lg shadow-cyan-500/10"
+                    : "border-white/10 opacity-70 hover:opacity-100 hover:border-white/30"
+                }`}
               >
-                <div className="space-y-1">
-                  <div className="text-[9px] font-bold text-slate-900 line-clamp-2 leading-tight">
-                    {slide.elements.find((e) => e.type === "headline" || e.id?.includes("head") || e.id?.includes("title"))?.text ||
-                     slide.elements.find((e) => e.type === "headline" || e.id?.includes("head") || e.id?.includes("title"))?.content ||
-                     `Slide ${index + 1}`}
-                  </div>
-                  <div className="text-[7.5px] text-slate-600 line-clamp-3 leading-tight opacity-75">
-                    {slide.elements.find((e) => e.type === "text" && !e.id?.includes("head") && !e.id?.includes("title"))?.text ||
-                     slide.elements.find((e) => e.type === "text" && !e.id?.includes("head") && !e.id?.includes("title"))?.content ||
-                     ""}
+                {/* 4:5 Slide Aspect Preview */}
+                <div
+                  className="w-full aspect-[4/5] flex flex-col justify-between p-1.5 overflow-hidden relative shadow-inner"
+                  style={{ backgroundColor: slide.backgroundColor || "#ffffff" }}
+                >
+                  <div className="space-y-0.5">
+                    <div className="text-[8px] font-bold text-slate-900 line-clamp-2 leading-tight">
+                      {slide.elements.find((e) => e.type === "headline" || e.id?.includes("head") || e.id?.includes("title"))?.text ||
+                       slide.elements.find((e) => e.type === "headline" || e.id?.includes("head") || e.id?.includes("title"))?.content ||
+                       `Slide ${index + 1}`}
+                    </div>
+                    <div className="text-[6.5px] text-slate-600 line-clamp-3 leading-tight opacity-75">
+                      {slide.elements.find((e) => e.type === "text" && !e.id?.includes("head") && !e.id?.includes("title"))?.text ||
+                       slide.elements.find((e) => e.type === "text" && !e.id?.includes("head") && !e.id?.includes("title"))?.content ||
+                       ""}
+                    </div>
                   </div>
                 </div>
-                {(slide.visualDirective || slide.imagePrompt) && (
-                  <div className="text-[6.5px] text-amber-700 bg-amber-50 border border-amber-200/60 p-0.5 rounded line-clamp-1 font-mono">
-                    💡 AI Image Prompt Available
-                  </div>
-                )}
-              </div>
 
-              {/* Quick Hover Actions */}
-              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-slate-900/90 backdrop-blur-sm p-1 rounded-md border border-slate-700">
-                {/* Download this slide */}
-                <button
-                  onClick={(e) => downloadSingleSlide(e, slide, index)}
-                  className="p-1 hover:bg-emerald-900/60 text-emerald-400 rounded"
-                  title={`Download Slide ${index + 1} as PNG`}
-                >
-                  <Download className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    duplicateSlide(slide.id);
-                  }}
-                  className="p-1 hover:bg-slate-700 text-slate-300 rounded"
-                  title="Duplicate Slide"
-                >
-                  <Copy className="w-3 h-3" />
-                </button>
-                {document.slides.length > 1 && (
+                {/* Quick Action Hover Bar (Bottom Bar) */}
+                <div className="absolute bottom-0 inset-x-0 bg-[#0f1117]/90 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-evenly py-1 px-0.5 border-t border-white/10 z-20">
+                  <button
+                    onClick={(e) => downloadSingleSlide(e, slide, index)}
+                    className="p-1 text-cyan-300 hover:text-cyan-100 hover:bg-cyan-500/20 rounded transition-colors"
+                    title="Export PNG"
+                  >
+                    <Download className="w-3 h-3" />
+                  </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteSlide(slide.id);
+                      duplicateSlide(slide.id);
                     }}
-                    className="p-1 hover:bg-red-950 text-red-400 rounded"
-                    title="Delete Slide"
+                    className="p-1 text-slate-300 hover:text-white hover:bg-white/10 rounded transition-colors"
+                    title="Duplicate"
                   >
-                    <Trash2 className="w-3 h-3" />
+                    <Copy className="w-3 h-3" />
                   </button>
-                )}
+                  {document.slides.length > 1 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteSlide(slide.id);
+                      }}
+                      className="p-1 text-red-400 hover:bg-red-500/20 rounded transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Vertical Slide Index Indicator Badge */}
+              <div className="absolute -left-1.5 top-0 bottom-0 flex items-center pointer-events-none">
+                <span className={`text-[8px] font-mono font-bold -rotate-90 origin-center ${isActive ? "text-cyan-400" : "text-slate-500"}`}>
+                  {String(index + 1).padStart(2, "0")}
+                </span>
               </div>
             </div>
           );
         })}
+
+        {/* Add Slide Button */}
+        <button
+          onClick={addSlide}
+          className="w-full aspect-[4/5] rounded-lg border border-dashed border-white/10 hover:border-cyan-500/50 hover:bg-cyan-500/5 flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-cyan-400 transition-all group"
+        >
+          <Plus className="w-4 h-4 group-hover:scale-110 transition-transform" />
+          <span className="text-[8px] font-mono font-bold">ADD SLIDE</span>
+        </button>
       </div>
     </div>
   );

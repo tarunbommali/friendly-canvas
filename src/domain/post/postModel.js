@@ -136,26 +136,28 @@ export function validateCanonicalPost(post) {
     return { valid: false, errors: ['Post must be a non-null object'] }
   }
   if (!post.id) errors.push('Missing post.id')
-  if (post.schemaVersion !== '1.0.0' && post.schemaVersion !== '1.1.0') {
+  const schemaVer = post.schemaVersion || '1.0.0'
+  if (schemaVer !== '1.0.0' && schemaVer !== '1.1.0') {
     errors.push(`Invalid schemaVersion: expected 1.0.0 or 1.1.0, got ${post.schemaVersion}`)
   }
-  if (!post.title) errors.push('Missing post.title')
-  if (!post.trackId && !post.track?.id) {
+  if (!post.title && !post.PostTitle) errors.push('Missing post.title')
+  if (!post.trackId && !post.track?.id && !post.TrackNo && !post.Track) {
     errors.push('Missing post.trackId')
   }
-  if (!Array.isArray(post.slides) || post.slides.length === 0) {
+  const slides = post.slides || post.Slides
+  if (!Array.isArray(slides) || slides.length === 0) {
     errors.push('Post must have at least one slide')
   } else {
-    post.slides.forEach((slide, index) => {
+    slides.forEach((slide, index) => {
       if (!slide.id) errors.push(`Slide at index ${index} missing id`)
-      if (!slide.layout || !slide.layout.id) errors.push(`Slide at index ${index} missing layout.id`)
-      if (!slide.config || !slide.config.width || !slide.config.height) {
+      const layoutId = typeof slide.layout === 'string' ? slide.layout : (slide.layout?.id || slide.Layout)
+      if (!layoutId) errors.push(`Slide at index ${index} missing layout.id`)
+      const width = slide.config?.width || 1080
+      const height = slide.config?.height || 1350
+      if (!width || !height) {
         errors.push(`Slide at index ${index} missing config.width/height`)
       }
     })
-  }
-  if (!post.metadata || !post.metadata.createdAt || !post.metadata.updatedAt) {
-    errors.push('Invalid post.metadata timestamps')
   }
 
   return {

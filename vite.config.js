@@ -36,4 +36,11 @@ export default defineConfig({
       },
     },
   ],
+  server: {
+    hmr: {
+      // Suppress Vite 8 ErrorOverlay bug: "split is not a function"
+      // triggered when err.id is non-string. HMR itself still works.
+      overlay: false,
+    },
+  },
 })

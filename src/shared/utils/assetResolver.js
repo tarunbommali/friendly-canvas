@@ -205,7 +205,7 @@ const ALL_ASSETS = [
 
 /** Normalise a string into a lowercase array of tokens */
 function tokenise(str = '') {
-  return str.toLowerCase().replace(/[^a-z0-9\s\-]/g, ' ').split(/\s+/).filter(Boolean)
+  return str.toLowerCase().replace(/[^a-z0-9\s-]/g, ' ').split(/\s+/).filter(Boolean)
 }
 
 /**
