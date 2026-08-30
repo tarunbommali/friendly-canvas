@@ -76,6 +76,13 @@ export function GlobalLayoutSettingsPage() {
       "safeAreaMarginBottom",
       "safeAreaMarginLeft",
       "safeAreaMarginRight",
+      "marginTop",
+      "marginRight",
+      "marginBottom",
+      "marginLeft",
+      "gridColumns",
+      "gutterWidth",
+      "elementPadding",
       "contentTopClearance",
       "contentBottomClearance",
       "contentPaddingLeft",
@@ -884,119 +891,174 @@ export function GlobalLayoutSettingsPage() {
               {/* TAB 3: SAFE AREA & MARGINS */}
               {activeTab === "margins" && (
                 <div className="space-y-6">
-                  <div className="border-b border-slate-800 pb-3">
-                    <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                      <Grid className="w-4 h-4 text-cyan-400" />
-                      <span>Safe Area Margins & Content Zone Clearance</span>
-                    </h2>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      Configure outer safe area margins and inner content zone clearances. Updates overlay guide boundaries live on the canvas.
-                    </p>
-                  </div>
-
-                  {/* Outer Safe Area Canvas Margins */}
-                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-xl">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                      <div className="flex items-center gap-2 font-semibold text-xs text-slate-100">
-                        <Grid className="w-4 h-4 text-cyan-400" />
-                        <span>Outer Safe Area Canvas Margins</span>
-                      </div>
-                      <span className="font-mono text-[11px] text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-2 py-0.5 rounded-full">
-                        {localConfig.safeAreaMarginTop || 80}px Top / {localConfig.safeAreaMarginLeft || 80}px L/R
-                      </span>
+                  {/* Master Card Matching User Mockup */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 shadow-2xl">
+                    <div>
+                      <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+                        <span>Layout & theme settings</span>
+                      </h2>
+                      <p className="text-xs text-slate-400 mt-1">
+                        Applies to every slide unless overridden.
+                      </p>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                      <div>
-                        <label className="block text-slate-400 mb-1 font-medium">Top Margin (px)</label>
+                    {/* Show Grid & Snap to Guides Toggles */}
+                    <div className="space-y-3 border-b border-slate-800 pb-5">
+                      <label className="flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800/80 rounded-xl cursor-pointer hover:border-slate-700 transition-colors">
+                        <div className="flex items-center gap-2 text-xs font-semibold text-slate-200">
+                          <Grid className="w-4 h-4 text-cyan-400" />
+                          <span>Show grid</span>
+                        </div>
                         <input
-                          type="number"
-                          value={localConfig.safeAreaMarginTop ?? 80}
-                          onChange={(e) => handleChange("safeAreaMarginTop", e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
+                          type="checkbox"
+                          checked={Boolean(localConfig.showGrid)}
+                          onChange={(e) => handleChange("showGrid", e.target.checked)}
+                          className="w-4 h-4 rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-blue-500 cursor-pointer"
                         />
-                      </div>
-                      <div>
-                        <label className="block text-slate-400 mb-1 font-medium">Bottom Margin (px)</label>
-                        <input
-                          type="number"
-                          value={localConfig.safeAreaMarginBottom ?? 80}
-                          onChange={(e) => handleChange("safeAreaMarginBottom", e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-slate-400 mb-1 font-medium">Left Margin (px)</label>
-                        <input
-                          type="number"
-                          value={localConfig.safeAreaMarginLeft ?? 80}
-                          onChange={(e) => handleChange("safeAreaMarginLeft", e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-slate-400 mb-1 font-medium">Right Margin (px)</label>
-                        <input
-                          type="number"
-                          value={localConfig.safeAreaMarginRight ?? 80}
-                          onChange={(e) => handleChange("safeAreaMarginRight", e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                      </label>
 
-                  {/* Inner Content Zone Clearance & Paddings */}
-                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-xl">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                      <div className="flex items-center gap-2 font-semibold text-xs text-slate-100">
-                        <Layout className="w-4 h-4 text-amber-400" />
-                        <span>Content Zone Clearance & Inner Paddings</span>
-                      </div>
-                      <span className="font-mono text-[11px] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full">
-                        Top: {localConfig.contentTopClearance || 210}px | Bottom: {localConfig.contentBottomClearance || 1180}px
-                      </span>
+                      <label className="flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800/80 rounded-xl cursor-pointer hover:border-slate-700 transition-colors">
+                        <div className="flex items-center gap-2 text-xs font-semibold text-slate-200">
+                          <Sparkles className="w-4 h-4 text-pink-400" />
+                          <span>Snap to guides</span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={localConfig.snapToGuides !== false}
+                          onChange={(e) => handleChange("snapToGuides", e.target.checked)}
+                          className="w-4 h-4 rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        />
+                      </label>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                      <div>
-                        <label className="block text-slate-400 mb-1 font-medium">Top Clearance (px)</label>
-                        <input
-                          type="number"
-                          value={localConfig.contentTopClearance ?? 210}
-                          onChange={(e) => handleChange("contentTopClearance", e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
-                          title="Clearance below top track badge line"
-                        />
+                    {/* Margin (px) - Top, Right, Bottom, Left Inputs */}
+                    <div className="space-y-2 border-b border-slate-800 pb-5">
+                      <label className="block text-xs font-semibold text-slate-200">
+                        Margin (px)
+                      </label>
+                      <div className="grid grid-cols-4 gap-3">
+                        <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 text-center space-y-1">
+                          <input
+                            type="number"
+                            value={localConfig.marginTop ?? localConfig.safeAreaMarginTop ?? 30}
+                            onChange={(e) => {
+                              handleChange("marginTop", e.target.value);
+                              handleChange("safeAreaMarginTop", e.target.value);
+                            }}
+                            className="w-full text-center bg-transparent font-bold text-base text-slate-100 focus:outline-none"
+                          />
+                          <span className="block text-[11px] text-slate-500">Top</span>
+                        </div>
+                        <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 text-center space-y-1">
+                          <input
+                            type="number"
+                            value={localConfig.marginRight ?? localConfig.safeAreaMarginRight ?? 30}
+                            onChange={(e) => {
+                              handleChange("marginRight", e.target.value);
+                              handleChange("safeAreaMarginRight", e.target.value);
+                            }}
+                            className="w-full text-center bg-transparent font-bold text-base text-slate-100 focus:outline-none"
+                          />
+                          <span className="block text-[11px] text-slate-500">Right</span>
+                        </div>
+                        <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 text-center space-y-1">
+                          <input
+                            type="number"
+                            value={localConfig.marginBottom ?? localConfig.safeAreaMarginBottom ?? 30}
+                            onChange={(e) => {
+                              handleChange("marginBottom", e.target.value);
+                              handleChange("safeAreaMarginBottom", e.target.value);
+                            }}
+                            className="w-full text-center bg-transparent font-bold text-base text-slate-100 focus:outline-none"
+                          />
+                          <span className="block text-[11px] text-slate-500">Bottom</span>
+                        </div>
+                        <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 text-center space-y-1">
+                          <input
+                            type="number"
+                            value={localConfig.marginLeft ?? localConfig.safeAreaMarginLeft ?? 30}
+                            onChange={(e) => {
+                              handleChange("marginLeft", e.target.value);
+                              handleChange("safeAreaMarginLeft", e.target.value);
+                            }}
+                            className="w-full text-center bg-transparent font-bold text-base text-slate-100 focus:outline-none"
+                          />
+                          <span className="block text-[11px] text-slate-500">Left</span>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-slate-400 mb-1 font-medium">Bottom Clearance (px)</label>
-                        <input
-                          type="number"
-                          value={localConfig.contentBottomClearance ?? 1180}
-                          onChange={(e) => handleChange("contentBottomClearance", e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
-                          title="Clearance above bottom page number / swipe indicator"
-                        />
+                    </div>
+
+                    {/* Grid Columns Slider */}
+                    <div className="space-y-2 border-b border-slate-800 pb-5">
+                      <div className="flex items-center justify-between text-xs font-semibold">
+                        <span className="text-slate-200">Grid columns</span>
+                        <span className="font-mono text-slate-100 text-sm font-bold">
+                          {localConfig.gridColumns ?? 4}
+                        </span>
                       </div>
-                      <div>
-                        <label className="block text-slate-400 mb-1 font-medium">Padding Left (px)</label>
-                        <input
-                          type="number"
-                          value={localConfig.contentPaddingLeft ?? 60}
-                          onChange={(e) => handleChange("contentPaddingLeft", e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
-                        />
+                      <input
+                        type="range"
+                        min={2}
+                        max={12}
+                        step={1}
+                        value={localConfig.gridColumns ?? 4}
+                        onChange={(e) => handleChange("gridColumns", e.target.value)}
+                        className="w-full accent-blue-500 bg-slate-950 cursor-pointer h-2 rounded-lg"
+                      />
+                    </div>
+
+                    {/* Gutter Width Slider */}
+                    <div className="space-y-2 border-b border-slate-800 pb-5">
+                      <div className="flex items-center justify-between text-xs font-semibold">
+                        <span className="text-slate-200">Gutter width (px)</span>
+                        <span className="font-mono text-slate-100 text-sm font-bold">
+                          {localConfig.gutterWidth ?? 16}
+                        </span>
                       </div>
-                      <div>
-                        <label className="block text-slate-400 mb-1 font-medium">Padding Right (px)</label>
-                        <input
-                          type="number"
-                          value={localConfig.contentPaddingRight ?? 60}
-                          onChange={(e) => handleChange("contentPaddingRight", e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
-                        />
+                      <input
+                        type="range"
+                        min={0}
+                        max={60}
+                        step={2}
+                        value={localConfig.gutterWidth ?? 16}
+                        onChange={(e) => handleChange("gutterWidth", e.target.value)}
+                        className="w-full accent-blue-500 bg-slate-950 cursor-pointer h-2 rounded-lg"
+                      />
+                    </div>
+
+                    {/* Element Padding Slider */}
+                    <div className="space-y-2 border-b border-slate-800 pb-5">
+                      <div className="flex items-center justify-between text-xs font-semibold">
+                        <span className="text-slate-200">Element padding (px)</span>
+                        <span className="font-mono text-slate-100 text-sm font-bold">
+                          {localConfig.elementPadding ?? 14}
+                        </span>
                       </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={40}
+                        step={1}
+                        value={localConfig.elementPadding ?? 14}
+                        onChange={(e) => handleChange("elementPadding", e.target.value)}
+                        className="w-full accent-blue-500 bg-slate-950 cursor-pointer h-2 rounded-lg"
+                      />
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-4 pt-2">
+                      <button
+                        onClick={handleResetDefaults}
+                        className="flex-1 py-3 px-4 bg-slate-950 hover:bg-slate-800 text-slate-200 text-xs font-semibold rounded-xl border border-slate-800 transition-colors"
+                      >
+                        Reset to defaults
+                      </button>
+                      <button
+                        onClick={handleApplyAll}
+                        className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-all"
+                      >
+                        Apply to all slides
+                      </button>
                     </div>
                   </div>
                 </div>

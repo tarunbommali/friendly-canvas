@@ -53,6 +53,17 @@ export function useEditorKeyboardShortcuts() {
         duplicateSelectedElement,
       } = useCarouselStore.getState();
 
+<<<<<<< HEAD
+=======
+      // Copy Shortcut (Ctrl+C / Cmd+C)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c") {
+        const { copySelectedElement } = useCarouselStore.getState();
+        copySelectedElement();
+        return;
+      }
+
+      // Undo / Redo Shortcuts
+>>>>>>> f016dd846d67a9fb45224c08def64d989678295a
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
         e.preventDefault();
         if (e.shiftKey) redo();
@@ -113,7 +124,77 @@ export function useEditorKeyboardShortcuts() {
       }
     };
 
+    // Native Window Paste Event Handler (Ctrl+V / Cmd+V / Right-Click Paste)
+    const handlePaste = (e) => {
+      const activeEl = document.activeElement;
+      const isInput =
+        activeEl &&
+        (activeEl.tagName === "INPUT" ||
+          activeEl.tagName === "TEXTAREA" ||
+          activeEl.isContentEditable);
+
+      if (isInput) return;
+
+      const clipboardData = e.clipboardData || window.clipboardData;
+      if (!clipboardData) return;
+
+      const { pasteClipboardElement, clipboardElement } = useCarouselStore.getState();
+
+      // 1. Check if clipboard contains an image file / blob item
+      const items = clipboardData.items;
+      if (items) {
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          if (item.type && item.type.indexOf("image") !== -1) {
+            e.preventDefault();
+            const blob = item.getAsFile();
+            if (blob) {
+              const reader = new FileReader();
+              reader.onload = (evt) => {
+                pasteClipboardElement(evt.target.result);
+              };
+              reader.readAsDataURL(blob);
+              return;
+            }
+          }
+        }
+      }
+
+      // 2. Check if clipboard contains text (Image Data URL, Image Web URL, or Plain Text)
+      const text = clipboardData.getData("text");
+      if (text && text.trim()) {
+        const trimmed = text.trim();
+        if (
+          trimmed.startsWith("data:image/") ||
+          trimmed.match(/\.(jpeg|jpg|gif|png|svg|webp)($|\?)/i)
+        ) {
+          e.preventDefault();
+          pasteClipboardElement(trimmed);
+          return;
+        }
+
+        // If internal clipboard element exists, paste element; otherwise paste text
+        e.preventDefault();
+        if (clipboardElement) {
+          pasteClipboardElement();
+        } else {
+          pasteClipboardElement(null, trimmed);
+        }
+        return;
+      }
+
+      // 3. Fallback: paste internal copied element if available
+      if (clipboardElement) {
+        e.preventDefault();
+        pasteClipboardElement();
+      }
+    };
+
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("paste", handlePaste);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("paste", handlePaste);
+    };
   }, []);
 }
