@@ -6,6 +6,60 @@
     "height": 1350
   },
   "trackPalettes": {
+    "01": {
+      "name": "Track 1 — Why Computers Exist",
+      "palette": "Sepia",
+      "primary": "#8B5E3C",
+      "accent": "#D9C7A3"
+    },
+    "02": {
+      "name": "Track 2 — How a Computer Actually Works",
+      "palette": "Tech Blue",
+      "primary": "#1E5FA8",
+      "accent": "#A9D0F5"
+    },
+    "03": {
+      "name": "Track 3 — How Software Became Possible",
+      "palette": "Lavender",
+      "primary": "#5B4A8A",
+      "accent": "#C8BFDF"
+    },
+    "04": {
+      "name": "Track 4 — Operating Systems",
+      "palette": "Teal",
+      "primary": "#1B6B6B",
+      "accent": "#A8D8D8"
+    },
+    "05": {
+      "name": "Track 5 — Programming",
+      "palette": "Emerald",
+      "primary": "#1F8A5F",
+      "accent": "#B6E6CE"
+    },
+    "06": {
+      "name": "Track 6 — Problem Solving & DSA",
+      "palette": "Amber",
+      "primary": "#C05621",
+      "accent": "#FBD38D"
+    },
+    "07": {
+      "name": "Track 7 — Software Engineering",
+      "palette": "Indigo",
+      "primary": "#4A3F8C",
+      "accent": "#C9C2EC"
+    },
+    "08": {
+      "name": "Track 8 — How the Web Works",
+      "palette": "Cyan",
+      "primary": "#0E8FA0",
+      "accent": "#A9E7EE"
+    },
+    "09": {
+      "name": "Track 9 — Web Development",
+      "palette": "Coral",
+      "primary": "#C84B31",
+      "accent": "#FAD4C0"
+    },
     "10": {
       "name": "Track 10 — Frameworks & Backend",
       "palette": "Mint",
@@ -13,7 +67,7 @@
       "accent": "#B7E4C7"
     },
     "11": {
-      "name": "Track 11 — Databases & DBMS",
+      "name": "Track 11 — Databases",
       "palette": "Sky Blue",
       "primary": "#2B6CB0",
       "accent": "#BEE3F8"
@@ -71,60 +125,6 @@
       "palette": "Futuristic Purple",
       "primary": "#5B2C91",
       "accent": "#C9A9F0"
-    },
-    "01": {
-      "name": "Track 1 — Why Computers Exist",
-      "palette": "Sepia",
-      "primary": "#8B5E3C",
-      "accent": "#D9C7A3"
-    },
-    "02": {
-      "name": "Track 2 — How a Computer Actually Works",
-      "palette": "Tech Blue",
-      "primary": "#1E5FA8",
-      "accent": "#A9D0F5"
-    },
-    "03": {
-      "name": "Track 3 — How Software Became Possible",
-      "palette": "Lavender",
-      "primary": "#5B4A8A",
-      "accent": "#C8BFDF"
-    },
-    "04": {
-      "name": "Track 4 — Operating Systems",
-      "palette": "Teal",
-      "primary": "#1B6B6B",
-      "accent": "#A8D8D8"
-    },
-    "05": {
-      "name": "Track 5 — Programming",
-      "palette": "Emerald",
-      "primary": "#1F8A5F",
-      "accent": "#B6E6CE"
-    },
-    "06": {
-      "name": "Track 6 — Problem Solving & DSA",
-      "palette": "Amber",
-      "primary": "#C05621",
-      "accent": "#FBD38D"
-    },
-    "07": {
-      "name": "Track 7 — Software Engineering",
-      "palette": "Indigo",
-      "primary": "#4A3F8C",
-      "accent": "#C9C2EC"
-    },
-    "08": {
-      "name": "Track 8 — Computer Networks",
-      "palette": "Cyan",
-      "primary": "#0E8FA0",
-      "accent": "#A9E7EE"
-    },
-    "09": {
-      "name": "Track 9 — Web Development",
-      "palette": "Coral",
-      "primary": "#C84B31",
-      "accent": "#FAD4C0"
     }
   },
   "chapterCovers": [
@@ -172,8 +172,8 @@
     },
     {
       "trackId": "08",
-      "headline": "Track 8 — Computer Networks",
-      "text": "From wiring two machines together to moving packets across the planet — the protocols, layers, and hardware beneath everything online bookmark this — 20 tracks, one complete system.",
+      "headline": "Track 8 — How the Web Works",
+      "text": "From wiring two machines together to loading a page across the planet — the network beneath everything online. bookmark this — 20 tracks, one complete system.",
       "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
@@ -190,8 +190,8 @@
     },
     {
       "trackId": "11",
-      "headline": "Track 11 — Databases & DBMS",
-      "text": "From ER models and normalization to ACID transactions, indexing, and advanced SQL bookmark this — 20 tracks, one complete system.",
+      "headline": "Track 11 — Databases",
+      "text": "Software needs to remember things. Here's how it does that safely, at scale bookmark this — 20 tracks, one complete system.",
       "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
@@ -1077,582 +1077,305 @@
       ]
     },
     {
-      "id": "post_os_01",
-      "title": "Operating System Basics",
+      "id": "post_t04_p15",
+      "title": "Why Does Every Computer Need an Operating System?",
       "trackId": "04",
-      "resources": [],
-      "assets": [],
+      "postNo": 15,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_os_01_s01",
+          "id": "slide_t04_p15_s01",
           "slideNo": 1,
           "layout": "hook-open",
           "headline": "Your laptop runs a browser, music, and twenty background tasks — none of them fighting over the CPU",
-          "text": "Something is refereeing all of it. That something is the Operating System."
+          "text": "Something is refereeing all of it."
         },
         {
-          "id": "slide_os_01_s02",
+          "id": "slide_t04_p15_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "An operating system manages hardware and provides services for programs",
-          "text": "It allocates CPU time, memory, and I/O devices. It acts as an intermediary between user applications and the bare metal, providing abstractions like files, processes, and a user interface."
+          "headline": "An operating system manages the hardware so programs don't have to",
+          "text": "It decides which program gets the CPU, how memory is shared, and how apps reach the disk, network, and screen without colliding."
         },
         {
-          "id": "slide_os_01_s03",
+          "id": "slide_t04_p15_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "The OS boots, loads the kernel, then launches system services and user programs",
-          "text": "On startup, the bootloader loads the kernel into memory. The kernel initialises hardware, mounts filesystems, and starts system services (daemons). Finally, it presents a login prompt or GUI for user interaction."
+          "headline": "The OS sits between your apps and the bare metal",
+          "text": "Apps ask the OS for resources through system calls; the OS grants, schedules, and protects — so no single app can seize the whole machine or read another's memory."
         },
         {
-          "id": "slide_os_01_s04",
+          "id": "slide_t04_p15_s04",
           "slideNo": 4,
           "layout": "comparison",
           "headline": "Without an OS, one program owns everything; with one, everything shares safely",
-          "text": "Direct hardware access is fast but chaotic. A managed layer costs a little overhead to buy multitasking, isolation, and security — the OS is the referee that makes it work."
+          "text": "Direct hardware access is faster but chaotic; a managed layer costs a little overhead to buy multitasking, isolation, and security."
         },
         {
-          "id": "slide_os_01_s05",
+          "id": "slide_t04_p15_s05",
           "slideNo": 5,
           "layout": "recap-close",
           "headline": "The OS is the referee that lets many programs share one machine without stepping on each other",
-          "text": "Its job is arbitration, resource management, and providing a stable environment for applications."
+          "text": "Its job is arbitration, not computation."
         },
         {
-          "id": "slide_os_01_s06",
+          "id": "slide_t04_p15_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Processes & Execution"
+          "text": "Processes, Threads & the Art of Multitasking"
         }
-      ],
-      "postNo": 15
+      ]
     },
     {
-      "id": "post_os_02",
-      "title": "Processes & Execution",
+      "id": "post_t04_p16",
+      "title": "Processes, Threads & the Art of Multitasking",
       "trackId": "04",
-      "resources": [],
-      "assets": [],
+      "postNo": 16,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_os_02_s01",
+          "id": "slide_t04_p16_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "A program on disk is just a file — but when it runs, it becomes a living entity",
-          "text": "That living entity is called a process."
+          "headline": "Your CPU has a handful of cores, yet hundreds of tasks 'run at once' — how?",
+          "text": "By switching faster than you can notice."
         },
         {
-          "id": "slide_os_02_s02",
+          "id": "slide_t04_p16_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "A process is a program in execution, with its own address space and resources",
-          "text": "The Process Control Block (PCB) stores its state (program counter, registers, memory limits). The OS manages process lifecycle: new, ready, running, waiting, terminated."
+          "headline": "A process is a running program; a thread is a task inside it",
+          "text": "Each process gets its own isolated memory; threads inside a process share that memory to work together on one job."
         },
         {
-          "id": "slide_os_02_s03",
+          "id": "slide_t04_p16_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Create → Ready → Running → Waiting/Terminated",
-          "text": "A process is created by fork() or spawn(). The scheduler picks a ready process to run. It may wait for I/O (blocked) or finish. Context switching saves/restores the PCB to switch between processes."
+          "headline": "The scheduler slices CPU time and switches between tasks constantly",
+          "text": "Each task runs for a few milliseconds, then the OS saves its state and swaps in another — fast enough that everything feels simultaneous."
         },
         {
-          "id": "slide_os_02_s04",
+          "id": "slide_t04_p16_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "Processes are isolated; threads share memory within a process",
-          "text": "Each process has its own memory space, so one crash doesn't affect others. Threads are lighter — they share memory, making communication fast but also riskier."
+          "headline": "Threads share memory cheaply but can corrupt it; processes are isolated but costlier to coordinate",
+          "text": "Sharing memory makes threads fast to communicate and dangerous to get wrong; separate memory makes processes safe but slower to talk between."
         },
         {
-          "id": "slide_os_02_s05",
+          "id": "slide_t04_p16_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "The OS gives every program the illusion of having its own CPU and memory",
-          "text": "Through processes, context switching, and virtual memory, it turns one machine into many virtual machines."
+          "headline": "Multitasking is illusion by speed — one core, many tasks, switched too fast to see",
+          "text": "Concurrency is mostly clever scheduling, not literal simultaneity."
         },
         {
-          "id": "slide_os_02_s06",
+          "id": "slide_t04_p16_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "CPU Scheduling Policies"
+          "text": "Memory Management: How the OS Juggles Everything"
         }
-      ],
-      "postNo": 16
+      ]
     },
     {
-      "id": "post_os_03",
-      "title": "CPU Scheduling Policies",
+      "id": "post_t04_p17",
+      "title": "Memory Management: How the OS Juggles Everything",
       "trackId": "04",
-      "resources": [],
-      "assets": [],
-      "slides": [
+      "postNo": 17,
+      "resources": [
         {
-          "id": "slide_os_03_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "With more processes than cores, the OS must decide who runs next — and that choice shapes performance",
-          "text": "CPU scheduling is the art of managing processor time."
-        },
-        {
-          "id": "slide_os_03_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "Scheduling policies decide which ready process gets the CPU and for how long",
-          "text": "Common policies: FCFS (First Come First Served), SJF (Shortest Job First), Round Robin (preemptive time slices), Priority Scheduling, and Multilevel Queue. Metrics: throughput, turnaround time, waiting time, response time."
-        },
-        {
-          "id": "slide_os_03_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "The scheduler picks a process from the ready queue, dispatches it, and preempts when time expires",
-          "text": "The dispatcher gives control to the selected process. If the process blocks or its time quantum expires, the scheduler saves its state and picks the next process from the ready queue."
-        },
-        {
-          "id": "slide_os_03_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "SJF minimises average wait time; Round Robin ensures fairness but has overhead",
-          "text": "SJF is optimal for turnaround time but requires knowing burst times ahead. Round Robin gives each process a fair slice, good for interactive systems, but context switching overhead can be high."
-        },
-        {
-          "id": "slide_os_03_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "No single scheduler is best — pick one that matches your workload's priority (throughput vs latency)",
-          "text": "Batch systems favour SJF; interactive systems favour Round Robin; real-time systems use priority-based scheduling."
-        },
-        {
-          "id": "slide_os_03_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Concurrency & Synchronization"
+          "youtubeLink": "",
+          "blog": ""
         }
       ],
-      "postNo": 17
-    },
-    {
-      "id": "post_os_04",
-      "title": "Concurrency & Synchronization",
-      "trackId": "04",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_os_04_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "Two processes updating the same variable — without coordination, the result is unpredictable",
-          "text": "That's a race condition, and synchronization prevents it."
-        },
-        {
-          "id": "slide_os_04_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "Synchronization ensures orderly access to shared resources using locks, semaphores, or monitors",
-          "text": "The critical section is a code segment that accesses shared data. Mutual exclusion guarantees only one process enters at a time. Semaphores (counting/binary) and mutexes are common tools."
-        },
-        {
-          "id": "slide_os_04_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Enter critical section, acquire lock, access shared data, release lock",
-          "text": "A process acquires a lock before entering the critical section. After finishing, it releases the lock. If the lock is held, other processes wait — preventing data corruption."
-        },
-        {
-          "id": "slide_os_04_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Semaphores are flexible but error‑prone; monitors (like in Java) provide higher‑level structure",
-          "text": "Semaphores allow arbitrary increments/decrements, making them powerful but easy to misuse. Monitors encapsulate shared data and methods with implicit locking, reducing bugs."
-        },
-        {
-          "id": "slide_os_04_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Synchronization is the discipline that makes concurrent programming safe",
-          "text": "Without it, shared data quickly becomes inconsistent and unreliable."
-        },
-        {
-          "id": "slide_os_04_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Deadlock Strategies"
-        }
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
       ],
-      "postNo": 18
-    },
-    {
-      "id": "post_os_05",
-      "title": "Deadlock Strategies",
-      "trackId": "04",
-      "resources": [],
-      "assets": [],
       "slides": [
         {
-          "id": "slide_os_05_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "Two processes each holding a resource the other needs — and neither will let go — that's a deadlock",
-          "text": "Deadlocks bring systems to a grinding halt."
-        },
-        {
-          "id": "slide_os_05_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "Deadlock requires all four Coffman conditions: Mutual Exclusion, Hold & Wait, No Preemption, Circular Wait",
-          "text": "Break any one condition and deadlock is impossible. Prevention eliminates one condition; Avoidance uses algorithms like Banker's to stay in safe states; Detection & Recovery allows deadlock and fixes it."
-        },
-        {
-          "id": "slide_os_05_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Detection: build a resource allocation graph; Recovery: terminate a process or preempt resources",
-          "text": "If the graph has a cycle, deadlock exists. Recovery options: abort one or more processes, or forcibly take resources from a victim (rollback). Often, the simplest recovery is a system restart."
-        },
-        {
-          "id": "slide_os_05_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Prevention is safe but conservative; Avoidance is dynamic; Detection & Recovery is pragmatic",
-          "text": "Prevention may underutilize resources. Avoidance (Banker's) requires knowing future requests. Detection allows maximum resource usage but recovery costs time."
-        },
-        {
-          "id": "slide_os_05_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Deadlock is a design flaw, not a bug — the strategy you choose depends on the system's needs",
-          "text": "Critical systems (banking) use prevention; general‑purpose OSes often use detection and recovery."
-        },
-        {
-          "id": "slide_os_05_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Main Memory Architecture"
-        }
-      ],
-      "postNo": 19
-    },
-    {
-      "id": "post_os_06",
-      "title": "Main Memory Architecture",
-      "trackId": "04",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_os_06_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "RAM is fast but expensive — and there's never enough. The OS makes it seem like there is",
-          "text": "Memory management is the art of illusion."
-        },
-        {
-          "id": "slide_os_06_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "Memory management handles allocation, protection, and sharing of physical memory",
-          "text": "Logical addresses (virtual) are mapped to physical addresses. Contiguous allocation (fixed partitions) vs non‑contiguous (paging, segmentation). Fragmentation (internal/external) is managed with compaction or paging."
-        },
-        {
-          "id": "slide_os_06_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "A program uses logical addresses; the MMU translates them to physical addresses",
-          "text": "The CPU generates logical addresses. The Memory Management Unit (MMU) uses page tables to translate them to physical addresses. Paging breaks memory into fixed‑size frames and pages."
-        },
-        {
-          "id": "slide_os_06_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Paging eliminates external fragmentation; segmentation provides logical structuring",
-          "text": "Paging maps pages to frames — easy to manage but no logical grouping. Segmentation splits memory by logical units (code, data, stack) but can cause external fragmentation."
-        },
-        {
-          "id": "slide_os_06_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Memory management gives every program a private address space — and makes RAM feel larger than it is",
-          "text": "Through paging, segmentation, and virtual memory, the OS creates the illusion of unlimited memory."
-        },
-        {
-          "id": "slide_os_06_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Virtual Memory & Paging"
-        }
-      ],
-      "postNo": 20
-    },
-    {
-      "id": "post_os_07",
-      "title": "Virtual Memory & Paging",
-      "trackId": "04",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_os_07_s01",
+          "id": "slide_t04_p17_s01",
           "slideNo": 1,
           "layout": "hook-open",
           "headline": "You've opened more tabs than you have RAM, and nothing crashed — where did the extra memory come from?",
-          "text": "Virtual memory makes it possible."
+          "text": "It was never entirely real."
         },
         {
-          "id": "slide_os_07_s02",
+          "id": "slide_t04_p17_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "Virtual memory uses disk as an extension of RAM, via demand paging",
-          "text": "Pages are loaded into RAM only when needed (demand paging). When RAM is full, a page replacement algorithm (LRU, FIFO, Optimal) swaps out less‑used pages. Page tables map virtual to physical frames."
+          "headline": "The OS gives every process its own private, virtual view of memory",
+          "text": "Each program thinks it owns a clean address space; the OS secretly maps those virtual addresses onto real RAM and disk."
         },
         {
-          "id": "slide_os_07_s03",
+          "id": "slide_t04_p17_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "The CPU tries to access a page; if it's not in RAM, a page fault occurs; the OS loads it from disk",
-          "text": "On a page fault, the OS finds a free frame or evicts a page. It loads the needed page from swap space, updates the page table, and restarts the instruction. This is repeated many times per second."
+          "headline": "Virtual memory and paging stretch RAM further than it physically goes",
+          "text": "Memory is split into pages; rarely-used pages get parked on disk and swapped back in on demand, so more can 'fit' than physically exists."
         },
         {
-          "id": "slide_os_07_s04",
+          "id": "slide_t04_p17_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "LRU approximates optimal but has overhead; FIFO is simple but can cause Belady's anomaly",
-          "text": "Optimal replacement (theoretical) evicts the page used farthest in the future. LRU evicts the least recently used — practical but requires tracking. FIFO is easy but sometimes increases page faults with more frames."
+          "headline": "Virtual memory buys isolation and capacity, at the cost of speed when it swaps",
+          "text": "Every process is protected from every other, and you can run more than fits — until heavy swapping to disk grinds things to a crawl (thrashing)."
         },
         {
-          "id": "slide_os_07_s05",
+          "id": "slide_t04_p17_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "Virtual memory makes programs fit into memory that is physically too small — at the cost of speed",
-          "text": "It's the reason modern multitasking works at all. Thrashing (constant swapping) is the price of over‑committing."
+          "headline": "Virtual memory is a lie the OS tells every program: 'the RAM is all yours'",
+          "text": "The illusion is what keeps programs isolated and safe."
         },
         {
-          "id": "slide_os_07_s06",
+          "id": "slide_t04_p17_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "File Systems & Storage"
+          "text": "System Calls, Drivers & the Big 3 Operating Systems"
         }
-      ],
-      "postNo": 21
+      ]
     },
     {
-      "id": "post_os_08",
-      "title": "File Systems & Storage",
+      "id": "post_t04_p18",
+      "title": "System Calls, Drivers & the Big 3 Operating Systems",
       "trackId": "04",
-      "resources": [],
-      "assets": [],
+      "postNo": 18,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_os_08_s01",
+          "id": "slide_t04_p18_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "Files are the persistent memory of a computer — and they're stored on disks, which are slow",
-          "text": "File systems and disk scheduling make storage usable."
+          "headline": "Your code wants to read a file, but it's not allowed to touch the disk directly",
+          "text": "It has to ask the kernel."
         },
         {
-          "id": "slide_os_08_s02",
+          "id": "slide_t04_p18_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "A file system organises data into files and directories; disk scheduling optimises access",
-          "text": "File attributes include name, size, permissions. Directories map file names to inodes. Disk scheduling algorithms (FCFS, SSTF, SCAN, LOOK) reduce seek time by ordering requests."
+          "headline": "A system call is how a program requests a privileged operation from the OS",
+          "text": "Reading files, opening sockets, spawning processes — all cross the boundary from user space into the protected kernel."
         },
         {
-          "id": "slide_os_08_s03",
+          "id": "slide_t04_p18_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "A file is opened, read/written, and closed; the disk scheduler orders pending I/O requests",
-          "text": "The OS reads file metadata from the directory, locates data blocks via inodes, and issues disk reads. The scheduler reorders requests to minimise mechanical movement (head seeks)."
+          "headline": "Drivers translate generic OS requests into device-specific commands",
+          "text": "Your app says 'write these bytes'; the OS routes it through a driver that knows how to speak to that exact disk, GPU, or network card."
         },
         {
-          "id": "slide_os_08_s04",
+          "id": "slide_t04_p18_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "SSTF minimises average seek time; SCAN provides fairness; FCFS is simple but inefficient",
-          "text": "SSTF may starve distant requests. SCAN moves across the disk servicing requests in one direction — fairer and predictable. FCFS processes in arrival order, which can cause long waits."
+          "headline": "Windows, macOS, and Linux differ on top but all guard the kernel boundary",
+          "text": "They expose different APIs and philosophies, yet each separates untrusted user code from privileged hardware access the same way."
         },
         {
-          "id": "slide_os_08_s05",
+          "id": "slide_t04_p18_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "File systems provide structure; disk scheduling provides speed — together they make storage reliable",
-          "text": "Good file system design and scheduling are critical for overall system performance."
+          "headline": "A system call is the guarded door between your program and the hardware it isn't allowed to touch",
+          "text": "User space asks; the kernel decides."
         },
         {
-          "id": "slide_os_08_s06",
+          "id": "slide_t04_p18_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Input/Output Management"
+          "text": "What Actually Happens When You Open Chrome or Run a Terminal Command"
         }
-      ],
-      "postNo": 22
+      ]
     },
     {
-      "id": "post_os_09",
-      "title": "Input/Output Management",
+      "id": "post_t04_p19",
+      "title": "What Actually Happens When You Open Chrome or Run a Terminal Command",
       "trackId": "04",
-      "resources": [],
-      "assets": [],
+      "postNo": 19,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_os_09_s01",
+          "id": "slide_t04_p19_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "The CPU is fast — but disks, keyboards, and networks are painfully slow",
-          "text": "I/O management bridges this speed gap."
+          "headline": "You type a command or click an icon, and a new program springs into existence",
+          "text": "What actually creates it?"
         },
         {
-          "id": "slide_os_09_s02",
+          "id": "slide_t04_p19_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "I/O management handles communication between the CPU and peripherals",
-          "text": "Programmed I/O (polling) — CPU waits for I/O. Interrupt‑driven I/O — CPU does other work until I/O interrupts. DMA (Direct Memory Access) — device moves data directly to/from memory without CPU involvement."
+          "headline": "Launching a program means the OS creates a new process for it",
+          "text": "It allocates memory, loads the executable, sets up its environment, and schedules it to run."
         },
         {
-          "id": "slide_os_09_s03",
+          "id": "slide_t04_p19_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "A request is sent, the device processes it, and the OS handles completion (interrupt or polling)",
-          "text": "The OS issues a command to the device controller. The controller performs the I/O and either interrupts the CPU or sets a status bit. The OS copies data from the controller's buffer to user memory."
+          "headline": "On Unix, one process clones itself, then becomes the new program",
+          "text": "fork() copies the current process; exec() replaces that copy's code with the program you asked for — that pair is how the shell runs everything you type."
         },
         {
-          "id": "slide_os_09_s04",
+          "id": "slide_t04_p19_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "Polling wastes CPU cycles; interrupts use CPU only when needed; DMA offloads CPU entirely",
-          "text": "Polling is simple but burns CPU. Interrupts are efficient for sporadic I/O. DMA is best for large data transfers (disk, network) because it frees the CPU to do other work."
+          "headline": "Fork-then-exec is elegant but copies state; spawning fresh avoids the copy but loses inheritance",
+          "text": "Cloning lets a child inherit the parent's setup cheaply; a from-scratch spawn is cleaner but has to rebuild context."
         },
         {
-          "id": "slide_os_09_s05",
+          "id": "slide_t04_p19_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "I/O management hides device complexity from applications and minimises CPU idle time",
-          "text": "Through buffering, caching, and spooling, it makes slow devices feel fast."
+          "headline": "Opening an app is the OS cloning a process and swapping in your program's code",
+          "text": "Every launch is birth by fork and exec."
         },
         {
-          "id": "slide_os_09_s06",
+          "id": "slide_t04_p19_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Operating System Models"
+          "text": "What Is Programming, Actually?"
         }
-      ],
-      "postNo": 23
-    },
-    {
-      "id": "post_os_10",
-      "title": "Operating System Models",
-      "trackId": "04",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_os_10_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "Not all operating systems are the same — some run servers, some run pacemakers, some run toasters",
-          "text": "OS designs are tailored to their purpose."
-        },
-        {
-          "id": "slide_os_10_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "OS models vary in architecture: monolithic, microkernel, modular, and hybrid",
-          "text": "Monolithic (Linux, Unix) — all OS services in one large kernel, fast but less modular. Microkernel (Minix) — minimal kernel, most services in user space, more stable but slower. Modular — combines the two."
-        },
-        {
-          "id": "slide_os_10_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Each model balances performance, security, and maintainability differently",
-          "text": "Monolithic systems make system calls directly into the kernel. Microkernel systems use message passing between user‑space servers, adding overhead but improving fault isolation."
-        },
-        {
-          "id": "slide_os_10_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Monolithic is fast but risky; microkernel is safer but slower; modular is a middle path",
-          "text": "Monolithic: one crash brings down the system. Microkernel: a driver crash can be restarted without rebooting. Modular: loadable kernel modules give flexibility without full monolithic risk."
-        },
-        {
-          "id": "slide_os_10_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "The OS architecture reflects its design priorities: speed, stability, or both",
-          "text": "Linux is monolithic; Windows is hybrid; real‑time OSes are often microkernel‑based for predictability."
-        },
-        {
-          "id": "slide_os_10_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Real‑World OS Variants"
-        }
-      ],
-      "postNo": 24
-    },
-    {
-      "id": "post_os_11",
-      "title": "Real‑World OS Variants",
-      "trackId": "04",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_os_11_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "Linux runs the cloud, Windows runs desktops, macOS runs creatives — each with its own philosophy",
-          "text": "The big three dominate the real world."
-        },
-        {
-          "id": "slide_os_11_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "Linux: open‑source, server‑dominant. Windows: commercial, desktop‑focused. macOS: Unix‑based, consumer‑oriented",
-          "text": "Linux is monolithic, highly customisable, and free. Windows has a hybrid kernel with strong backward compatibility. macOS uses a Mach microkernel + BSD, blending Unix power with a polished UI."
-        },
-        {
-          "id": "slide_os_11_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Each OS provides a kernel, system libraries, and a user interface — but with different trade‑offs",
-          "text": "Linux: shell/CLI + GUI (GNOME/KDE). Windows: GUI‑first with PowerShell. macOS: Aqua GUI with Terminal underneath. All support multitasking, memory protection, and networking."
-        },
-        {
-          "id": "slide_os_11_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Linux is flexible and low‑cost; Windows has wide software support; macOS integrates well with Apple hardware",
-          "text": "Linux: thousands of distributions for every need. Windows: unmatched desktop app ecosystem and gaming. macOS: seamless integration with iPhones, iPads, and creative tools."
-        },
-        {
-          "id": "slide_os_11_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "No OS is 'best' — each solves a different set of problems for different users",
-          "text": "Choose by ecosystem, cost, hardware, and personal preference. Linux dominates servers; Windows dominates enterprise; macOS dominates creative and consumer spaces."
-        },
-        {
-          "id": "slide_os_11_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "You've completed the Operating Systems track",
-          "text": "From boot to processes, scheduling to file systems — you now understand the core of every modern OS."
-        }
-      ],
-      "postNo": 25
+      ]
     },
     {
       "id": "post_t05_p20",
       "title": "What Is Programming, Actually?",
       "trackId": "05",
-      "postNo": 26,
+      "postNo": 20,
       "resources": [
         {
           "youtubeLink": "",
@@ -1711,7 +1434,7 @@
       "id": "post_t05_p21",
       "title": "Imperative vs Declarative: Two Ways to Tell a Computer What to Do",
       "trackId": "05",
-      "postNo": 27,
+      "postNo": 21,
       "resources": [
         {
           "youtubeLink": "",
@@ -1770,7 +1493,7 @@
       "id": "post_t05_p22",
       "title": "The Building Blocks Every Programmer Learns First",
       "trackId": "05",
-      "postNo": 28,
+      "postNo": 22,
       "resources": [
         {
           "youtubeLink": "",
@@ -1829,7 +1552,7 @@
       "id": "post_t05_p23",
       "title": "Functional Programming: Pure Functions & Immutability",
       "trackId": "05",
-      "postNo": 29,
+      "postNo": 23,
       "resources": [
         {
           "youtubeLink": "",
@@ -1888,7 +1611,7 @@
       "id": "post_t05_p24",
       "title": "Scope, Recursion & Handling Errors Like a Pro",
       "trackId": "05",
-      "postNo": 30,
+      "postNo": 24,
       "resources": [
         {
           "youtubeLink": "",
@@ -1947,7 +1670,7 @@
       "id": "post_t05_p25",
       "title": "Modules, Libraries, Packages & APIs Explained",
       "trackId": "05",
-      "postNo": 31,
+      "postNo": 25,
       "resources": [
         {
           "youtubeLink": "",
@@ -2006,7 +1729,7 @@
       "id": "post_t06_p26",
       "title": "What Is an Algorithm? (And Why Coding Is Not Problem Solving)",
       "trackId": "06",
-      "postNo": 32,
+      "postNo": 26,
       "resources": [
         {
           "youtubeLink": "",
@@ -2065,7 +1788,7 @@
       "id": "post_t06_p27",
       "title": "Big O Notation: The Skill That Separates Junior From Senior",
       "trackId": "06",
-      "postNo": 33,
+      "postNo": 27,
       "resources": [
         {
           "youtubeLink": "",
@@ -2124,7 +1847,7 @@
       "id": "post_t06_p28",
       "title": "Arrays, Strings & Linked Lists: Where Everyone Starts",
       "trackId": "06",
-      "postNo": 34,
+      "postNo": 28,
       "resources": [
         {
           "youtubeLink": "",
@@ -2183,7 +1906,7 @@
       "id": "post_t06_p29",
       "title": "Stacks, Queues & Hash Tables Explained",
       "trackId": "06",
-      "postNo": 35,
+      "postNo": 29,
       "resources": [
         {
           "youtubeLink": "",
@@ -2242,7 +1965,7 @@
       "id": "post_t06_p30",
       "title": "Trees, Heaps & Graphs: Where DSA Gets Real",
       "trackId": "06",
-      "postNo": 36,
+      "postNo": 30,
       "resources": [
         {
           "youtubeLink": "",
@@ -2301,7 +2024,7 @@
       "id": "post_t06_p31",
       "title": "Searching & Sorting: The Algorithms Behind Everything",
       "trackId": "06",
-      "postNo": 37,
+      "postNo": 31,
       "resources": [
         {
           "youtubeLink": "",
@@ -2360,7 +2083,7 @@
       "id": "post_t06_p32",
       "title": "Recursion, Backtracking, Greedy & DP: The Hard Stuff",
       "trackId": "06",
-      "postNo": 38,
+      "postNo": 32,
       "resources": [
         {
           "youtubeLink": "",
@@ -2419,7 +2142,7 @@
       "id": "post_t07_p33",
       "title": "Software Engineering vs Just Writing Code",
       "trackId": "07",
-      "postNo": 39,
+      "postNo": 33,
       "resources": [
         {
           "youtubeLink": "",
@@ -2478,7 +2201,7 @@
       "id": "post_t07_p34",
       "title": "The Software Lifecycle: Build, Test, Ship, Maintain",
       "trackId": "07",
-      "postNo": 40,
+      "postNo": 34,
       "resources": [
         {
           "youtubeLink": "",
@@ -2537,7 +2260,7 @@
       "id": "post_t07_p35",
       "title": "Git, GitHub & How Teams Actually Collaborate on Code",
       "trackId": "07",
-      "postNo": 41,
+      "postNo": 35,
       "resources": [
         {
           "youtubeLink": "",
@@ -2596,7 +2319,7 @@
       "id": "post_t07_p36",
       "title": "Clean Code, SOLID & Design Patterns",
       "trackId": "07",
-      "postNo": 42,
+      "postNo": 36,
       "resources": [
         {
           "youtubeLink": "",
@@ -2652,582 +2375,600 @@
       ]
     },
     {
-      "id": "post_cn_01",
-      "title": "What is a Computer Network?",
+      "id": "post_t08_p37",
+      "title": "Network Topologies & The Devices That Move Data",
       "trackId": "08",
-      "resources": [],
-      "assets": [],
+      "postNo": 37,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_cn_01_s01",
+          "id": "slide_t08_p37_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "Every device you own is part of a silent conversation — how do they talk?",
-          "text": "From your phone to the server halfway across the world, they all share data through a hidden system: a computer network."
+          "headline": "Two computers a metre apart can't talk until you decide how to wire them together",
+          "text": "That layout has a name: topology."
         },
         {
-          "id": "slide_cn_01_s02",
+          "id": "slide_t08_p37_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "A computer network is a group of interconnected devices that share data and resources",
-          "text": "Devices (nodes) communicate via wired or wireless links, following rules (protocols). Networks enable email, file sharing, web browsing, and remote access."
+          "headline": "A topology is the shape of how devices connect; switches and routers move the data",
+          "text": "Star, mesh, bus — each is a pattern for wiring machines together, and networking hardware forwards traffic along those links."
         },
         {
-          "id": "slide_cn_01_s03",
+          "id": "slide_t08_p37_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "How does data actually move?",
-          "text": "Each device gets a unique IP address. Data is broken into packets, labelled with source/destination, routed by switches and routers, and reassembled at the receiving end — all governed by protocols."
+          "headline": "A switch connects devices in one network; a router connects networks to each other",
+          "text": "Data hops device-to-switch inside your network, and switch-to-router when it needs to leave for another network."
         },
         {
-          "id": "slide_cn_01_s04",
+          "id": "slide_t08_p37_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "Networks bring huge advantages, but also risks",
-          "text": "Pros: resource sharing, fast communication, centralised storage, remote access. Cons: security threats, setup cost, maintenance, single‑point‑of‑failure risks."
+          "headline": "A mesh survives failures but costs many links; a star is cheap but hinges on one hub",
+          "text": "Connecting everything to everything is resilient and expensive; connecting everything to a central point is simple and fragile at that point."
         },
         {
-          "id": "slide_cn_01_s05",
+          "id": "slide_t08_p37_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "A network is the backbone of modern computing — without it, we'd still be moving files by hand",
-          "text": "It's a system of nodes, links, and rules that makes global connectivity possible."
+          "headline": "Topology is the shape of the network; switches move data within it, routers move it between networks",
+          "text": "How machines are wired decides how — and whether — they can talk."
         },
         {
-          "id": "slide_cn_01_s06",
+          "id": "slide_t08_p37_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Network Topologies & Devices"
+          "text": "OSI Model, TCP/IP & How Devices Find Each Other"
         }
-      ],
-      "postNo": 43
+      ]
     },
     {
-      "id": "post_cn_02",
-      "title": "Network Topologies & Devices",
+      "id": "post_t08_p38",
+      "title": "OSI Model, TCP/IP & How Devices Find Each Other",
       "trackId": "08",
-      "resources": [],
-      "assets": [],
+      "postNo": 38,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_cn_02_s01",
+          "id": "slide_t08_p38_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "The shape of a network determines how resilient and fast it is",
-          "text": "Star, mesh, bus — each topology has its own trade‑offs in cost, performance, and fault tolerance."
+          "headline": "A message crossing the internet is handled by a dozen layers you never see",
+          "text": "Models like OSI make that stack understandable."
         },
         {
-          "id": "slide_cn_02_s02",
+          "id": "slide_t08_p38_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "Topology is the physical or logical layout of connections",
-          "text": "Star: all devices connect to a central hub. Mesh: every device connects to every other. Bus: all share a single line. Devices like switches, routers, and hubs forward traffic along these links."
+          "headline": "The OSI and TCP/IP models split networking into layers, each with one job",
+          "text": "From physical signals up to the application, each layer handles one concern and hands off to the next — so problems can be isolated to a layer."
         },
         {
-          "id": "slide_cn_02_s03",
+          "id": "slide_t08_p38_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Data travels from source to destination through a series of hops",
-          "text": "A switch forwards frames within a local network. A router moves packets between different networks. The chosen topology decides how many alternative paths exist and how failures affect the whole."
+          "headline": "Your data gets wrapped by each layer on the way out and unwrapped on the way in",
+          "text": "The app hands bytes down; each layer adds its own header (addressing, ports, error checks); the receiver peels them off in reverse."
         },
         {
-          "id": "slide_cn_02_s04",
+          "id": "slide_t08_p38_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "Star is simple but fragile; mesh is resilient but expensive",
-          "text": "A star network hinges on one central device — if it fails, the whole network goes down. A mesh has many redundant links, but cabling and configuration costs are much higher."
+          "headline": "OSI's seven layers teach cleanly; TCP/IP's four layers ship in reality",
+          "text": "The seven-layer model is a precise teaching tool; the internet actually runs on the leaner TCP/IP stack — the map isn't quite the territory."
         },
         {
-          "id": "slide_cn_02_s05",
+          "id": "slide_t08_p38_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "Topology sets the rules for communication resilience; devices make the forwarding happen",
-          "text": "Choose a topology that matches your budget, reliability needs, and expected traffic patterns."
+          "headline": "Layering means each part of networking solves one problem and trusts the layers around it",
+          "text": "Complexity becomes manageable when every layer minds its own job."
         },
         {
-          "id": "slide_cn_02_s06",
+          "id": "slide_t08_p38_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "OSI & TCP/IP Models"
+          "text": "Why Do Networks Even Exist?"
         }
-      ],
-      "postNo": 44
+      ]
     },
     {
-      "id": "post_cn_03",
-      "title": "OSI & TCP/IP Models",
+      "id": "post_t09_p39",
+      "title": "Why Do Networks Even Exist?",
       "trackId": "08",
-      "resources": [],
-      "assets": [],
+      "postNo": 39,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_cn_03_s01",
+          "id": "slide_t09_p39_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "A message crossing the internet is handled by invisible layers — each with one job",
-          "text": "Layering makes networking manageable; each layer solves a specific problem and trusts the others."
+          "headline": "One computer is useful; the value explodes the moment two of them can share",
+          "text": "That's why networks exist."
         },
         {
-          "id": "slide_cn_03_s02",
+          "id": "slide_t09_p39_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "The OSI model has 7 layers; TCP/IP has 4 layers that actually run the internet",
-          "text": "OSI: Physical, Data Link, Network, Transport, Session, Presentation, Application. TCP/IP: Network Interface, Internet, Transport, Application. Each adds its own header (encapsulation) and passes data down."
+          "headline": "A network exists to let separate machines share data and resources",
+          "text": "Instead of copying files by hand, machines exchange them directly — and can share printers, storage, and services too."
         },
         {
-          "id": "slide_cn_03_s03",
+          "id": "slide_t09_p39_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Data is wrapped on the way out and unwrapped on the way in",
-          "text": "At the sending side, each layer adds a header (or trailer). The receiving side peels them off in reverse, like opening nested boxes. This is called encapsulation and decapsulation."
+          "headline": "Connect machines, agree on rules, and any of them can reach any other",
+          "text": "Physical links plus shared protocols mean a message can travel from one machine to another it has never directly met."
         },
         {
-          "id": "slide_cn_03_s04",
+          "id": "slide_t09_p39_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "OSI is a teaching tool; TCP/IP is what the internet actually uses",
-          "text": "The 7‑layer OSI model is great for conceptual understanding. The 4‑layer TCP/IP model is leaner and matches real implementation. They share similar layers (Network ↔ Internet, Transport, Application)."
+          "headline": "Networking multiplies capability but adds latency, failure, and attack surface",
+          "text": "Sharing unlocks everything from email to the cloud; it also means your data now travels links that can be slow, broken, or eavesdropped."
         },
         {
-          "id": "slide_cn_03_s05",
+          "id": "slide_t09_p39_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "Layering isolates complexity — each layer minds its own business and trusts the neighbours",
-          "text": "This modularity allows us to change one layer (e.g., physical media) without rewriting the whole stack."
+          "headline": "A network turns isolated computers into a system whose value grows with every connection",
+          "text": "The point of a network is that the whole beats the sum of the machines."
         },
         {
-          "id": "slide_cn_03_s06",
+          "id": "slide_t09_p39_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Physical Layer"
+          "text": "The Internet's Origin Story: ARPANET to Today"
         }
-      ],
-      "postNo": 45
+      ]
     },
     {
-      "id": "post_cn_04",
-      "title": "Physical Layer",
+      "id": "post_t09_p40",
+      "title": "The Internet's Origin Story: ARPANET to Today",
       "trackId": "08",
-      "resources": [],
-      "assets": [],
+      "postNo": 40,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_cn_04_s01",
+          "id": "slide_t09_p40_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "Bits don't travel by magic — they need a medium and a way to represent 0s and 1s",
-          "text": "The physical layer turns digital data into electrical, optical, or radio signals."
+          "headline": "The internet wasn't designed as one thing — it grew from a small, deliberately fault-tolerant experiment",
+          "text": "ARPANET is where it started."
         },
         {
-          "id": "slide_cn_04_s02",
+          "id": "slide_t09_p40_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "The physical layer defines transmission media, modes, and protocols",
-          "text": "Media: twisted pair, fibre optic, coaxial, wireless. Modes: simplex (one way), half‑duplex (both ways but not simultaneously), full‑duplex (both ways at once). Protocols handle bit timing and encoding."
+          "headline": "The internet began as ARPANET, built to survive partial failure",
+          "text": "It connected a few research computers with a design goal: if one link died, data should reroute rather than stop."
         },
         {
-          "id": "slide_cn_04_s03",
+          "id": "slide_t09_p40_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Bits are converted to signals, sent over a medium, and received",
-          "text": "A transmitter encodes bits into voltage levels or light pulses. The signal travels through the medium, experiences attenuation and noise, and the receiver decodes it back into bits."
+          "headline": "Packet switching let messages take any working path",
+          "text": "Instead of a dedicated line, data is chopped into packets that each find their own route and reassemble at the destination — no single point brings it down."
         },
         {
-          "id": "slide_cn_04_s04",
+          "id": "slide_t09_p40_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "Wired media are reliable and fast; wireless offers mobility but more interference",
-          "text": "Fibre optics give huge bandwidth and long distance but are costly. Wireless (Wi‑Fi, cellular) is convenient but susceptible to signal degradation and eavesdropping."
+          "headline": "A decentralised design is resilient but has no one in charge",
+          "text": "No central authority means no single failure or off-switch, and also no single body that can guarantee performance or fix everything."
         },
         {
-          "id": "slide_cn_04_s05",
+          "id": "slide_t09_p40_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "The physical layer is the foundation — if signals don't get through, nothing higher works",
-          "text": "It's all about moving raw bits reliably from point A to point B."
+          "headline": "The internet is robust because it was built to route around damage, not to be controlled from the centre",
+          "text": "Its resilience is a design choice from day one."
         },
         {
-          "id": "slide_cn_04_s06",
+          "id": "slide_t09_p40_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Data Link Layer"
+          "text": "IP Addresses, MAC Addresses & Ports Explained"
         }
-      ],
-      "postNo": 46
+      ]
     },
     {
-      "id": "post_cn_05",
-      "title": "Data Link Layer",
+      "id": "post_t09_p41",
+      "title": "IP Addresses, MAC Addresses & Ports Explained",
       "trackId": "08",
-      "resources": [],
-      "assets": [],
+      "postNo": 41,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_cn_05_s01",
+          "id": "slide_t09_p41_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "Bits become frames, and frames need a way to know where one ends and the next begins",
-          "text": "That's framing — the data link layer's first job."
+          "headline": "Your laptop has at least two different 'addresses', and they do completely different jobs",
+          "text": "IP and MAC aren't interchangeable."
         },
         {
-          "id": "slide_cn_05_s02",
+          "id": "slide_t09_p41_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "The data link layer packages bits into frames and handles error/flow control",
-          "text": "It adds source and destination MAC addresses, performs error detection (CRC), and manages flow control to prevent a fast sender from overwhelming a slow receiver. It also supports switching and VLANs."
+          "headline": "IP addresses locate networks; MAC addresses identify devices; ports identify apps",
+          "text": "An IP says which machine on which network; a MAC is the hardware's fixed identity on the local link; a port says which program on that machine."
         },
         {
-          "id": "slide_cn_05_s03",
+          "id": "slide_t09_p41_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "A frame is created, transmitted, and verified",
-          "text": "The sender assembles a frame with header, payload, and trailer. It transmits the frame over the physical layer. The receiver checks the frame's integrity, acknowledges if needed, and passes it to the network layer."
+          "headline": "Data is delivered by IP across networks, by MAC on the final hop, to the right port",
+          "text": "Routers forward by IP until the last network, where MAC delivers to the exact device, and the port hands it to the right application."
         },
         {
-          "id": "slide_cn_05_s04",
+          "id": "slide_t09_p41_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "Error control (retransmission) vs flow control (pacing)",
-          "text": "Error control (like ARQ) resends lost/corrupted frames. Flow control (like sliding window) ensures the sender doesn't outrun the receiver's buffer. They address different problems."
+          "headline": "IP can change with location; MAC is burned into the hardware",
+          "text": "Your IP shifts as you move between networks; your MAC stays the same — one is a mailing address, the other a fingerprint."
         },
         {
-          "id": "slide_cn_05_s05",
+          "id": "slide_t09_p41_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "The data link layer turns an unreliable physical channel into a reliable link for the network layer",
-          "text": "It transforms raw bits into structured frames with error checks and flow regulation."
+          "headline": "IP finds the network, MAC finds the device, the port finds the app — three addresses, three scopes",
+          "text": "Delivery on the internet is three questions answered in order."
         },
         {
-          "id": "slide_cn_05_s06",
+          "id": "slide_t09_p41_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Network Layer"
+          "text": "TCP vs UDP: The Protocols Behind Every Connection"
         }
-      ],
-      "postNo": 47
+      ]
     },
     {
-      "id": "post_cn_06",
-      "title": "Network Layer",
+      "id": "post_t09_p42",
+      "title": "TCP vs UDP: The Protocols Behind Every Connection",
       "trackId": "08",
-      "resources": [],
-      "assets": [],
+      "postNo": 42,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_cn_06_s01",
+          "id": "slide_t09_p42_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "How does data find its way across the internet? One address at a time — IP addresses",
-          "text": "The network layer is responsible for logical addressing and routing."
+          "headline": "A video call and a file download both cross the same wire, but they want opposite things",
+          "text": "So they use different protocols."
         },
         {
-          "id": "slide_cn_06_s02",
+          "id": "slide_t09_p42_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "The network layer handles IP addressing, subnetting, and routing",
-          "text": "IPv4 (32‑bit) and IPv6 (128‑bit) identify devices globally. Classful and classless addressing (CIDR) define network sizes. Subnetting divides networks for efficiency. Routing protocols (RIP, OSPF, BGP) determine the best path."
+          "headline": "TCP guarantees delivery in order; UDP just fires packets and moves on",
+          "text": "TCP checks that every packet arrives and reassembles them correctly; UDP sends without confirmation, accepting that some may be lost."
         },
         {
-          "id": "slide_cn_06_s03",
+          "id": "slide_t09_p42_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "A packet is forwarded hop by hop based on routing tables",
-          "text": "The source creates an IP packet with source/destination addresses. Each router reads the destination, consults its routing table, and forwards the packet to the next hop until it reaches the destination network."
+          "headline": "TCP handshakes, acknowledges, and retransmits; UDP skips all of it",
+          "text": "TCP sets up a connection and confirms each chunk, adding round-trips; UDP has no setup and no acknowledgements, so it's leaner but lossy."
         },
         {
-          "id": "slide_cn_06_s04",
+          "id": "slide_t09_p42_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "IPv4 is running out; IPv6 solves the address shortage but has slower adoption",
-          "text": "IPv4 offers ~4.3 billion addresses, now exhausted. IPv6 provides 2^128 addresses and built‑in security (IPsec), but migration takes time and effort."
+          "headline": "TCP: reliable but slower. UDP: fast but lossy.",
+          "text": "Downloads and web pages need every byte, so they use TCP; live video and games prefer fresh data over complete data, so they use UDP and tolerate drops."
         },
         {
-          "id": "slide_cn_06_s05",
+          "id": "slide_t09_p42_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "The network layer is the internet's postal service — addressing and routing packets across the globe",
-          "text": "It ensures packets get from source to destination, even across multiple networks."
+          "headline": "TCP promises every packet arrives in order; UDP promises speed and nothing else",
+          "text": "Reliability or latency — the protocol is the choice."
         },
         {
-          "id": "slide_cn_06_s06",
+          "id": "slide_t09_p42_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Transport Layer"
+          "text": "DNS & DHCP: How Devices Find Each Other"
         }
-      ],
-      "postNo": 48
+      ]
     },
     {
-      "id": "post_cn_07",
-      "title": "Transport Layer",
+      "id": "post_t09_p43",
+      "title": "DNS & DHCP: How Devices Find Each Other",
       "trackId": "08",
-      "resources": [],
-      "assets": [],
+      "postNo": 43,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_cn_07_s01",
+          "id": "slide_t09_p43_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "Delivering packets is only half the job — ensuring they arrive in order and without corruption is the other",
-          "text": "That's the transport layer's responsibility."
+          "headline": "You type a name, not an address — and something silently gets you a phone number for the internet",
+          "text": "That's DNS at work."
         },
         {
-          "id": "slide_cn_07_s02",
+          "id": "slide_t09_p43_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "The transport layer provides end‑to‑end communication, with TCP (reliable) or UDP (fast)",
-          "text": "TCP establishes a connection, segments data, numbers segments, and retransmits lost ones. UDP is connectionless and doesn't guarantee delivery — used for real‑time applications."
+          "headline": "DNS turns names into IP addresses; DHCP hands out addresses automatically",
+          "text": "DNS is the internet's phone book, resolving google.com to an IP; DHCP is what assigns your device its own IP the moment it joins a network."
         },
         {
-          "id": "slide_cn_07_s03",
+          "id": "slide_t09_p43_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "TCP's 3‑way handshake sets up a reliable connection",
-          "text": "SYN (client) → SYN‑ACK (server) → ACK (client). After that, data flows with sequence numbers and acknowledgements. The connection is torn down with a FIN handshake."
+          "headline": "Join a network, DHCP gives you an address; visit a site, DNS resolves its name",
+          "text": "Your device asks DHCP for a local IP, then asks DNS to translate each domain you visit into the server's IP so it can connect."
         },
         {
-          "id": "slide_cn_07_s04",
+          "id": "slide_t09_p43_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "TCP is reliable but slower; UDP is fast but lossy — choose based on need",
-          "text": "TCP guarantees delivery and order, but has overhead. UDP skips acknowledgements, perfect for streaming, gaming, and VoIP where occasional loss is acceptable."
+          "headline": "Caching DNS makes browsing fast but can serve stale records",
+          "text": "Resolved names are remembered for speed, so you don't look up google.com every time — but a changed IP can linger in caches until they expire."
         },
         {
-          "id": "slide_cn_07_s05",
+          "id": "slide_t09_p43_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "The transport layer bridges the network layer and the application — it ensures data gets to the right port and is correct",
-          "text": "It provides multiplexing, error control, and flow control between hosts."
+          "headline": "DNS is the internet's phone book; DHCP is the desk that hands you a number when you walk in",
+          "text": "Names for humans, numbers for machines, translated automatically."
         },
         {
-          "id": "slide_cn_07_s06",
+          "id": "slide_t09_p43_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Session Layer"
+          "text": "Routers, Switches, NAT & Firewalls"
         }
-      ],
-      "postNo": 49
+      ]
     },
     {
-      "id": "post_cn_08",
-      "title": "Session Layer",
+      "id": "post_t09_p44",
+      "title": "Routers, Switches, NAT & Firewalls",
       "trackId": "08",
-      "resources": [],
-      "assets": [],
+      "postNo": 44,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_cn_08_s01",
+          "id": "slide_t09_p44_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "How do two applications keep a conversation going over time? They establish a session",
-          "text": "The session layer manages dialogues between end‑user applications."
+          "headline": "Your home has one public IP, but a dozen devices reach the internet through it at once",
+          "text": "NAT is quietly making that work."
         },
         {
-          "id": "slide_cn_08_s02",
+          "id": "slide_t09_p44_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "The session layer sets up, manages, and tears down communication sessions",
-          "text": "It provides services like authentication, authorisation, and full‑duplex or half‑duplex control. Protocols like NetBIOS, RPC, and PPTP operate here."
+          "headline": "Routers, switches, NAT, and firewalls together move and guard traffic",
+          "text": "Switches connect local devices, routers connect networks, NAT lets many devices share one public IP, and firewalls decide what traffic is allowed."
         },
         {
-          "id": "slide_cn_08_s03",
+          "id": "slide_t09_p44_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "A session is created, used, then ended",
-          "text": "The session layer establishes a connection (dialogue), synchronises data exchange (checkpoints), and gracefully terminates the session when done. Checkpoints allow resuming after failure."
+          "headline": "NAT rewrites addresses so private devices can share one public identity",
+          "text": "Outgoing traffic gets the router's public IP and a tracked port; replies are mapped back to the right internal device — many hidden behind one."
         },
         {
-          "id": "slide_cn_08_s04",
+          "id": "slide_t09_p44_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "The session layer is often combined with the presentation layer in the TCP/IP model",
-          "text": "In OSI, they are separate. In TCP/IP, their functions are absorbed into the application layer. Many modern applications handle session management themselves."
+          "headline": "NAT conserves addresses and hides devices, but complicates direct incoming connections",
+          "text": "It stretched a limited IP supply and adds a layer of obscurity; it also makes it harder for outside machines to initiate a connection inward."
         },
         {
-          "id": "slide_cn_08_s05",
+          "id": "slide_t09_p44_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "The session layer keeps application conversations organised, with the ability to resume after interruptions",
-          "text": "It adds structure to long‑lived interactions between programs."
+          "headline": "A router directs, NAT translates, a firewall filters — the trio that lets a private network face the internet safely",
+          "text": "Sharing one address and staying guarded is the everyday job of your router."
         },
         {
-          "id": "slide_cn_08_s06",
+          "id": "slide_t09_p44_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Presentation Layer"
+          "text": "HTTP, HTTPS & TLS: How the Web Stays (Somewhat) Secure"
         }
-      ],
-      "postNo": 50
+      ]
     },
     {
-      "id": "post_cn_09",
-      "title": "Presentation Layer",
+      "id": "post_t09_p45",
+      "title": "HTTP, HTTPS & TLS: How the Web Stays (Somewhat) Secure",
       "trackId": "08",
-      "resources": [],
-      "assets": [],
+      "postNo": 45,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_cn_09_s01",
+          "id": "slide_t09_p45_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "Different systems use different formats for data — how do they understand each other?",
-          "text": "The presentation layer translates, encrypts, and compresses data."
+          "headline": "The 's' in https isn't cosmetic — without it, anyone on the network can read your login",
+          "text": "That letter is TLS."
         },
         {
-          "id": "slide_cn_09_s02",
+          "id": "slide_t09_p45_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "The presentation layer handles data representation, encryption, and compression",
-          "text": "It ensures that data from one system (e.g., ASCII) is readable by another (e.g., Unicode). It may also encrypt data for security and compress it to save bandwidth."
+          "headline": "HTTP carries web requests; HTTPS wraps them in TLS encryption",
+          "text": "HTTP is the plain protocol browsers and servers speak; HTTPS is the same protocol run inside an encrypted TLS tunnel."
         },
         {
-          "id": "slide_cn_09_s03",
+          "id": "slide_t09_p45_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Data is converted, secured, and compressed before delivery",
-          "text": "The sender's application produces data; the presentation layer translates it to a standard format, optionally encrypts and compresses it; the receiver reverses these steps."
+          "headline": "TLS verifies the server's identity, then encrypts everything after",
+          "text": "A handshake checks the site's certificate and agrees on keys; from then on, requests and responses are scrambled to anyone in between."
         },
         {
-          "id": "slide_cn_09_s04",
+          "id": "slide_t09_p45_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "Encryption protects confidentiality; compression saves bandwidth — both add overhead",
-          "text": "Encryption is essential for privacy but requires CPU time. Compression reduces data size but adds latency. The choice depends on the sensitivity of data and network constraints."
+          "headline": "HTTPS adds a handshake and CPU cost to buy privacy and integrity",
+          "text": "The extra setup and encryption cost a little latency and compute; in return, traffic can't be read or tampered with in transit — nearly always worth it."
         },
         {
-          "id": "slide_cn_09_s05",
+          "id": "slide_t09_p45_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "The presentation layer makes sure that data is in a usable, secure, and compact form for the application",
-          "text": "It abstracts away differences in data formats between systems."
+          "headline": "HTTPS is HTTP inside a locked tunnel — same messages, but no one in the middle can read them",
+          "text": "Encryption is what makes the web safe to log in to."
         },
         {
-          "id": "slide_cn_09_s06",
+          "id": "slide_t09_p45_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Application Layer"
+          "text": "What Really Happens When You Type google.com"
         }
-      ],
-      "postNo": 51
+      ]
     },
     {
-      "id": "post_cn_10",
-      "title": "Application Layer",
+      "id": "post_t09_p46",
+      "title": "What Really Happens When You Type google.com",
       "trackId": "08",
-      "resources": [],
-      "assets": [],
+      "postNo": 46,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_cn_10_s01",
+          "id": "slide_t09_p46_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "HTTP, Email, CDN — these are the protocols you actually interact with every day",
-          "text": "The application layer is where users and applications meet the network."
+          "headline": "You type google.com and hit enter — in under a second, a dozen systems cooperate",
+          "text": "Here's the whole chain."
         },
         {
-          "id": "slide_cn_10_s02",
+          "id": "slide_t09_p46_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "The application layer provides services directly to end‑user applications",
-          "text": "HTTP/HTTPS for web browsing, SMTP/POP3/IMAP for email, DNS for name resolution, CDN for content delivery. These protocols define how applications exchange data."
+          "headline": "One URL triggers DNS, TCP, TLS, HTTP, and rendering in sequence",
+          "text": "The name is resolved, a connection is opened and secured, a request is sent, a response comes back, and the browser paints it."
         },
         {
-          "id": "slide_cn_10_s03",
+          "id": "slide_t09_p46_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "A web request goes through HTTP from browser to server",
-          "text": "Your browser sends an HTTP GET request to the server. The server responds with HTML, CSS, and JavaScript. The browser renders the page. CDNs cache static assets to speed up delivery."
+          "headline": "Resolve, connect, secure, request, respond, render",
+          "text": "DNS finds the IP, TCP opens the connection, TLS encrypts it, HTTP asks for the page, the server responds, and the browser turns the response into pixels."
         },
         {
-          "id": "slide_cn_10_s04",
+          "id": "slide_t09_p46_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "HTTP is plain text; HTTPS adds TLS encryption; CDN distributes content globally",
-          "text": "HTTP is insecure — anyone can read it. HTTPS wraps HTTP in TLS, ensuring privacy and integrity. CDNs replicate content to edge servers, reducing latency for users worldwide."
+          "headline": "Each step is fast alone but they add up, so caching cuts the repeats",
+          "text": "DNS answers, connections, and assets get cached so the second visit skips most of the chain — the cost is possibly serving something slightly stale."
         },
         {
-          "id": "slide_cn_10_s05",
+          "id": "slide_t09_p46_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "The application layer is the one users see — it turns network packets into meaningful services",
-          "text": "It's the top of the stack, where data becomes useful."
+          "headline": "Loading a web page is a relay race across DNS, TCP, TLS, and HTTP — every runner has to finish",
+          "text": "One address quietly sets a whole stack in motion."
         },
         {
-          "id": "slide_cn_10_s06",
+          "id": "slide_t09_p46_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Miscellaneous Topics: Bluetooth, Ethernet, WiFi, Firewall"
+          "text": "HTML: The Skeleton of Every Website"
         }
-      ],
-      "postNo": 52
-    },
-    {
-      "id": "post_cn_11",
-      "title": "Miscellaneous Topics: Bluetooth, Ethernet, WiFi, Firewall",
-      "trackId": "08",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_cn_11_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "Beyond the internet, everyday devices connect through Bluetooth, Ethernet, and WiFi — and firewalls guard them",
-          "text": "These technologies are the building blocks of personal and local networks."
-        },
-        {
-          "id": "slide_cn_11_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "Ethernet is wired LAN; WiFi is wireless LAN; Bluetooth is short‑range personal area networking; Firewalls filter traffic",
-          "text": "Ethernet (IEEE 802.3) uses cables for reliable, high‑speed connections. WiFi (IEEE 802.11) uses radio waves for mobility. Bluetooth (IEEE 802.15.1) connects peripherals over short distances. Firewalls enforce security policies by allowing/blocking packets."
-        },
-        {
-          "id": "slide_cn_11_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Each technology works at different layers and for different use cases",
-          "text": "Ethernet and WiFi operate at the data link and physical layers. Bluetooth also at physical/link. Firewalls operate at network/transport layers (and sometimes application). They all work together to connect and protect devices."
-        },
-        {
-          "id": "slide_cn_11_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Ethernet is fast and stable; WiFi offers mobility; Bluetooth is low‑power and short‑range",
-          "text": "Ethernet is best for desktops and servers. WiFi is for laptops and mobile devices. Bluetooth is for headphones, keyboards, and IoT. Firewalls are essential for any network exposed to the internet."
-        },
-        {
-          "id": "slide_cn_11_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "These technologies extend networking to every corner of our lives — connecting devices, enabling mobility, and keeping us secure",
-          "text": "Understanding them completes the picture of how modern networks operate."
-        },
-        {
-          "id": "slide_cn_11_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "You've covered Computer Networks from the ground up",
-          "text": "From bits to applications — and everything in between."
-        }
-      ],
-      "postNo": 53
+      ]
     },
     {
       "id": "post_t10_p47",
       "title": "HTML: The Skeleton of Every Website",
       "trackId": "09",
-      "postNo": 54,
+      "postNo": 47,
       "resources": [
         {
           "youtubeLink": "",
@@ -3286,7 +3027,7 @@
       "id": "post_t10_p48",
       "title": "CSS: Making the Web Actually Look Good",
       "trackId": "09",
-      "postNo": 55,
+      "postNo": 48,
       "resources": [
         {
           "youtubeLink": "",
@@ -3345,7 +3086,7 @@
       "id": "post_t10_p49",
       "title": "JavaScript Basics: Making Pages Interactive",
       "trackId": "09",
-      "postNo": 56,
+      "postNo": 49,
       "resources": [
         {
           "youtubeLink": "",
@@ -3404,7 +3145,7 @@
       "id": "post_t10_p50",
       "title": "Closures, Promises & Async/Await: JS Gets Real",
       "trackId": "09",
-      "postNo": 57,
+      "postNo": 50,
       "resources": [
         {
           "youtubeLink": "",
@@ -3463,7 +3204,7 @@
       "id": "post_t10_p51",
       "title": "Fetch, APIs & JS Modules",
       "trackId": "09",
-      "postNo": 58,
+      "postNo": 51,
       "resources": [
         {
           "youtubeLink": "",
@@ -3522,7 +3263,7 @@
       "id": "post_t11_p52",
       "title": "Library vs Framework: Why React Exists",
       "trackId": "10",
-      "postNo": 59,
+      "postNo": 52,
       "resources": [
         {
           "youtubeLink": "",
@@ -3581,7 +3322,7 @@
       "id": "post_t11_p53",
       "title": "State, Routing & Server-Side Rendering",
       "trackId": "10",
-      "postNo": 60,
+      "postNo": 53,
       "resources": [
         {
           "youtubeLink": "",
@@ -3640,7 +3381,7 @@
       "id": "post_t11_p54",
       "title": "Node.js & Express: JavaScript on the Backend",
       "trackId": "10",
-      "postNo": 61,
+      "postNo": 54,
       "resources": [
         {
           "youtubeLink": "",
@@ -3699,7 +3440,7 @@
       "id": "post_t11_p55",
       "title": "REST APIs, Auth & Authorization Explained",
       "trackId": "10",
-      "postNo": 62,
+      "postNo": 55,
       "resources": [
         {
           "youtubeLink": "",
@@ -3758,7 +3499,7 @@
       "id": "post_t11_p56",
       "title": "Cookies, Sessions, JWT, Middleware & WebSockets",
       "trackId": "10",
-      "postNo": 63,
+      "postNo": 56,
       "resources": [
         {
           "youtubeLink": "",
@@ -3814,634 +3555,305 @@
       ]
     },
     {
-      "id": "post_dbms_01",
-      "title": "Database Foundations & Introduction",
+      "id": "post_t12_p57",
+      "title": "Why Do We Even Need Databases?",
       "trackId": "11",
-      "resources": [],
-      "assets": [],
+      "postNo": 57,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_dbms_01_s01",
+          "id": "slide_t12_p57_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "A spreadsheet is fine until your customer's name appears three ways — and you lose trust",
-          "text": "Databases exist to keep data consistent, safe, and queryable — even under heavy use."
+          "headline": "You could store everything in files — until two users write at once and the data corrupts",
+          "text": "That's the problem databases solve."
         },
         {
-          "id": "slide_dbms_01_s02",
+          "id": "slide_t12_p57_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "A database is a structured, persistent, and logically cohesive collection of related data",
-          "text": "A DBMS (Database Management System) is the software that manages that data, enforcing integrity, security, and concurrent access. It abstracts physical storage and provides logical views."
+          "headline": "A database stores data with structure, safety, and fast querying",
+          "text": "It handles concurrent access, prevents corruption, enforces rules, and lets you retrieve exactly what you need quickly — things raw files don't."
         },
         {
-          "id": "slide_dbms_01_s03",
+          "id": "slide_t12_p57_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Data is defined, stored, manipulated, and retrieved through a DBMS",
-          "text": "You define a schema (structure), insert data, run queries (SQL), and the DBMS handles indexing, caching, and transaction management behind the scenes."
+          "headline": "Many clients read and write at once; the database keeps it consistent",
+          "text": "It coordinates simultaneous access, so two users updating the same record don't overwrite each other or leave the data half-changed."
         },
         {
-          "id": "slide_dbms_01_s04",
+          "id": "slide_t12_p57_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "File systems are simple but chaotic; DBMS adds order, safety, and power",
-          "text": "Files cause redundancy, inconsistency, and lack of concurrent access. DBMS provides centralised control, ACID transactions, and declarative querying — at the cost of complexity."
+          "headline": "A database adds power and safety but also a system to run and learn",
+          "text": "Files are simple and portable; a database buys querying, integrity, and concurrency at the cost of setup, operation, and a query language to learn."
         },
         {
-          "id": "slide_dbms_01_s05",
+          "id": "slide_t12_p57_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "A DBMS is a file system that knows how to be shared, queried, and kept correct under pressure",
-          "text": "It turns raw storage into a trusted source of truth."
+          "headline": "A database is a file that knows how to be shared, queried, and kept correct under pressure",
+          "text": "When many users touch the same data, structure stops being optional."
         },
         {
-          "id": "slide_dbms_01_s06",
+          "id": "slide_t12_p57_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Entity Relationship Model"
+          "text": "Tables, Keys & Relationships: The Relational Model"
         }
-      ],
-      "postNo": 64
+      ]
     },
     {
-      "id": "post_dbms_02",
-      "title": "Entity Relationship Model",
+      "id": "post_t12_p58",
+      "title": "Tables, Keys & Relationships: The Relational Model",
       "trackId": "11",
-      "resources": [],
-      "assets": [],
+      "postNo": 58,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_dbms_02_s01",
+          "id": "slide_t12_p58_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "Before you write a single table, you need to understand the world you're modelling",
-          "text": "The ER model is a high‑level design tool for databases."
+          "headline": "A spreadsheet works until the same customer's name is spelled three ways in three places",
+          "text": "The relational model fixes that."
         },
         {
-          "id": "slide_dbms_02_s02",
+          "id": "slide_t12_p58_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "The Entity‑Relationship model describes data as entities, attributes, and relationships",
-          "text": "Entities are objects (e.g., Customer, Order). Attributes describe them (name, date). Relationships define how entities interact (Customer places Order)."
+          "headline": "The relational model organises data into tables linked by keys",
+          "text": "Each table holds one kind of thing; a primary key uniquely identifies each row; a foreign key points from one table to another to model relationships."
         },
         {
-          "id": "slide_dbms_02_s03",
+          "id": "slide_t12_p58_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Design the ER diagram, then map it to a relational schema",
-          "text": "Identify entities and their attributes, define primary keys, specify cardinalities (1:1, 1:N, M:N), and handle weak entities. The ER diagram becomes the blueprint for tables."
+          "headline": "Store each fact once, then connect tables through keys",
+          "text": "A customer lives in one row of one table; orders reference that customer by key — update the name once and every order stays correct."
         },
         {
-          "id": "slide_dbms_02_s04",
+          "id": "slide_t12_p58_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "ER is conceptual; relational is implementation‑oriented",
-          "text": "ER uses diamonds for relationships and ovals for attributes — it's human‑readable. The relational model uses tables, rows, and foreign keys — it's machine‑executable. Both are complementary."
+          "headline": "Normalising removes duplication but adds joins to reassemble data",
+          "text": "Splitting data into related tables prevents inconsistency; the cost is that answering a question often means joining several tables back together."
         },
         {
-          "id": "slide_dbms_02_s05",
+          "id": "slide_t12_p58_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "The ER model turns real‑world requirements into a clear visual blueprint",
-          "text": "It's the first step to building a correct and maintainable database."
+          "headline": "The relational model stores each fact once and links the rest with keys",
+          "text": "No duplication means no contradictions."
         },
         {
-          "id": "slide_dbms_02_s06",
+          "id": "slide_t12_p58_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Relational Schema, Constraints & Keys"
+          "text": "SQL, JOINs & Indexes Explained"
         }
-      ],
-      "postNo": 65
+      ]
     },
     {
-      "id": "post_dbms_03",
-      "title": "Relational Schema, Constraints & Keys",
+      "id": "post_t12_p59",
+      "title": "SQL, JOINs & Indexes Explained",
       "trackId": "11",
-      "resources": [],
-      "assets": [],
+      "postNo": 59,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_dbms_03_s01",
+          "id": "slide_t12_p59_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "Tables are the building blocks — but without keys and constraints, they're just lists",
-          "text": "Relational integrity comes from keys and constraints."
+          "headline": "Your query returned the right rows and took eight seconds — the same query with an index takes eight milliseconds",
+          "text": "JOINs and indexes are why."
         },
         {
-          "id": "slide_dbms_03_s02",
+          "id": "slide_t12_p59_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "A relational schema defines tables, columns, data types, and constraints",
-          "text": "Primary key uniquely identifies each row. Foreign key links tables. Constraints like NOT NULL, UNIQUE, and CHECK enforce data quality."
+          "headline": "SQL queries data; JOINs combine tables; indexes make lookups fast",
+          "text": "SQL describes what data you want; a JOIN stitches related tables together; an index is a sorted lookup structure that avoids scanning every row."
         },
         {
-          "id": "slide_dbms_03_s03",
+          "id": "slide_t12_p59_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Design tables, choose primary keys, and add foreign key references",
-          "text": "Start with entities, define their attributes, set a primary key for each table, then add foreign keys to express relationships. Apply additional constraints to maintain data integrity."
+          "headline": "Without an index, the database reads every row; with one, it jumps straight there",
+          "text": "An index is like a book's index — instead of reading all pages to find a term, the database goes directly to matching rows."
         },
         {
-          "id": "slide_dbms_03_s04",
+          "id": "slide_t12_p59_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "Primary keys ensure uniqueness; foreign keys maintain referential integrity",
-          "text": "A primary key cannot be NULL or duplicate. A foreign key must match a primary key in another table or be NULL. Constraints prevent invalid data from being inserted."
+          "headline": "Indexes speed reads but slow writes and use space",
+          "text": "Every index makes matching queries fast; it also has to be updated on every insert and update and takes storage — index the columns you filter on, not everything."
         },
         {
-          "id": "slide_dbms_03_s05",
+          "id": "slide_t12_p59_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "Keys and constraints are the rules that keep relational data honest",
-          "text": "Without them, your database is just a pile of unreliable rows."
+          "headline": "A JOIN reassembles what normalisation split; an index is the shortcut that stops the database reading everything",
+          "text": "Query the shape you stored, and index the columns you search."
         },
         {
-          "id": "slide_dbms_03_s06",
+          "id": "slide_t12_p59_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Functional Dependencies & Decomposition"
+          "text": "Transactions, ACID & Concurrency"
         }
-      ],
-      "postNo": 66
+      ]
     },
     {
-      "id": "post_dbms_04",
-      "title": "Functional Dependencies & Decomposition",
+      "id": "post_t12_p60",
+      "title": "Transactions, ACID & Concurrency",
       "trackId": "11",
-      "resources": [],
-      "assets": [],
+      "postNo": 60,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_dbms_04_s01",
+          "id": "slide_t12_p60_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "A phone number determines a customer — that's a functional dependency, and it drives design",
-          "text": "Understanding dependencies helps you split tables properly."
+          "headline": "A transfer debited one account and crashed before crediting the other — money vanished",
+          "text": "Transactions exist so that can't happen."
         },
         {
-          "id": "slide_dbms_04_s02",
+          "id": "slide_t12_p60_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "A functional dependency (FD) means one attribute determines another",
-          "text": "X → Y means if two rows have the same X, they must have the same Y. Dependency analysis is key to normalization and decomposition."
+          "headline": "A transaction groups operations so they all succeed or all fail; ACID defines the guarantees",
+          "text": "Atomicity, Consistency, Isolation, Durability: all-or-nothing, valid states only, isolated from other transactions, and permanent once committed."
         },
         {
-          "id": "slide_dbms_04_s03",
+          "id": "slide_t12_p60_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Find FDs, then decompose relations to avoid redundancy",
-          "text": "Identify all FDs from business rules. Use them to split tables into smaller ones that preserve data while minimizing duplication. Decomposition must be lossless and dependency‑preserving."
+          "headline": "Wrap related writes in a transaction; commit together or roll back together",
+          "text": "The debit and credit run inside one transaction — if anything fails, both are undone, so the account balances never end up half-updated."
         },
         {
-          "id": "slide_dbms_04_s04",
+          "id": "slide_t12_p60_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "Lossless decomposition ensures no data is lost; dependency preservation keeps rules intact",
-          "text": "Lossless joins let you reconstruct the original from the decomposed tables. Dependency preservation means all FDs are enforceable without joining tables. Trade‑offs often occur."
+          "headline": "Stronger isolation prevents concurrency bugs but reduces throughput",
+          "text": "Higher isolation levels stop transactions from seeing each other's half-done work; they also force more locking and waiting, cutting how much runs in parallel."
         },
         {
-          "id": "slide_dbms_04_s05",
+          "id": "slide_t12_p60_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "Functional dependencies reveal hidden redundancy — decomposition cuts it out",
-          "text": "A well‑decomposed schema is easier to maintain and less prone to anomalies."
+          "headline": "A transaction is all-or-nothing — the operations commit together or leave no trace",
+          "text": "ACID is the promise that half-finished work never becomes reality."
         },
         {
-          "id": "slide_dbms_04_s06",
+          "id": "slide_t12_p60_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Database Normalization & Normal Forms"
+          "text": "SQL vs NoSQL: Postgres, MongoDB & Redis"
         }
-      ],
-      "postNo": 67
+      ]
     },
     {
-      "id": "post_dbms_05",
-      "title": "Database Normalization & Normal Forms",
+      "id": "post_t12_p61",
+      "title": "SQL vs NoSQL: Postgres, MongoDB & Redis",
       "trackId": "11",
-      "resources": [],
-      "assets": [],
+      "postNo": 61,
+      "resources": [
+        {
+          "youtubeLink": "",
+          "blog": ""
+        }
+      ],
+      "assets": [
+        "https://images.unsplash.com/photo-1581092336026-3f2c3c3c3c3a"
+      ],
       "slides": [
         {
-          "id": "slide_dbms_05_s01",
+          "id": "slide_t12_p61_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "A table that stores everything is a nightmare to update — normalization solves that",
-          "text": "Normal forms are a set of rules to organize tables efficiently."
+          "headline": "'Just use a database' hides a real fork: rigid-and-consistent, or flexible-and-fast?",
+          "text": "SQL and NoSQL answer it differently."
         },
         {
-          "id": "slide_dbms_05_s02",
+          "id": "slide_t12_p61_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "Normalization reduces redundancy and anomaly using defined normal forms",
-          "text": "1NF: atomic columns. 2NF: no partial dependency. 3NF: no transitive dependency. BCNF: every determinant is a candidate key. Higher forms exist but are rarely used."
+          "headline": "SQL databases enforce a schema and strong consistency; NoSQL trades some of that for scale and flexibility",
+          "text": "Postgres is relational and strict; MongoDB stores flexible documents; Redis is an in-memory key-value store built for speed."
         },
         {
-          "id": "slide_dbms_05_s03",
+          "id": "slide_t12_p61_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Apply the normal forms in sequence to refine your schema",
-          "text": "Start with 1NF, ensure all attributes are atomic. Move to 2NF by removing partial dependencies. Advance to 3NF by eliminating transitive dependencies. Check BCNF if needed."
+          "headline": "Pick by the shape of your data and what you can't compromise on",
+          "text": "Structured, related data with strict correctness leans SQL; loosely-structured or massive, high-throughput data leans NoSQL — often you use both."
         },
         {
-          "id": "slide_dbms_05_s04",
+          "id": "slide_t12_p61_s04",
           "slideNo": 4,
           "layout": "comparison",
-          "headline": "Higher normalization reduces redundancy but increases join complexity",
-          "text": "3NF and BCNF minimize duplication and update anomalies but require more joins to retrieve data. In practice, you often stop at 3NF or BCNF, and denormalize for performance."
+          "headline": "SQL: consistency and rich queries. NoSQL: flexibility and horizontal scale.",
+          "text": "Relational databases give you joins, transactions, and guarantees; NoSQL stores scale out easily and bend to changing data, but often relax consistency and cross-record queries."
         },
         {
-          "id": "slide_dbms_05_s05",
+          "id": "slide_t12_p61_s05",
           "slideNo": 5,
           "layout": "recap-close",
-          "headline": "Normalization is a design discipline — it prevents data from lying to you",
-          "text": "It's the structural insurance against insert/update/delete anomalies."
+          "headline": "SQL is strict and relational; NoSQL is flexible and scalable — match the store to what the data can't give up",
+          "text": "There's no default winner, only a fit to your constraints."
         },
         {
-          "id": "slide_dbms_05_s06",
+          "id": "slide_t12_p61_s06",
           "slideNo": 6,
           "layout": "next-up",
           "headline": "Coming next",
-          "text": "Transaction Management & ACID"
+          "text": "Why Security Isn't Optional"
         }
-      ],
-      "postNo": 68
-    },
-    {
-      "id": "post_dbms_06",
-      "title": "Transaction Management & ACID",
-      "trackId": "11",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_dbms_06_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "A bank transfer that debits one account and crashes before crediting the other — that's a disaster",
-          "text": "Transactions ensure that such partial updates never happen."
-        },
-        {
-          "id": "slide_dbms_06_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "A transaction is a unit of work that must be atomic, consistent, isolated, and durable (ACID)",
-          "text": "Atomicity: all or nothing. Consistency: data remains valid. Isolation: transactions don't interfere. Durability: once committed, it persists."
-        },
-        {
-          "id": "slide_dbms_06_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Begin, execute, commit (or rollback)",
-          "text": "A transaction starts with BEGIN, runs multiple SQL statements, and either COMMIT (save changes) or ROLLBACK (undo all). The DBMS uses logs to ensure durability and recoverability."
-        },
-        {
-          "id": "slide_dbms_06_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "ACID guarantees correctness but adds overhead",
-          "text": "Strong isolation (serializability) prevents anomalies but reduces concurrency. Weaker isolation levels improve performance at the cost of some consistency guarantees."
-        },
-        {
-          "id": "slide_dbms_06_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Transactions are the DBMS's promise: your data is safe, even when things go wrong",
-          "text": "ACID is what makes databases trustworthy for critical applications."
-        },
-        {
-          "id": "slide_dbms_06_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Concurrency Control & Recoverability"
-        }
-      ],
-      "postNo": 69
-    },
-    {
-      "id": "post_dbms_07",
-      "title": "Concurrency Control & Recoverability",
-      "trackId": "11",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_dbms_07_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "Two users updating the same row at the same time — without control, one update is lost",
-          "text": "Concurrency control keeps simultaneous operations from corrupting data."
-        },
-        {
-          "id": "slide_dbms_07_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "Concurrency control ensures serializability via locks or timestamps",
-          "text": "Locking (shared/exclusive) prevents conflicts. Two‑phase locking (2PL) guarantees serializability. Timestamp ordering assigns each transaction a timestamp to resolve conflicts. Recoverability ensures that committed transactions are not lost."
-        },
-        {
-          "id": "slide_dbms_07_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Transactions acquire locks, read/write, then release locks",
-          "text": "A transaction requests a lock before accessing data. If a conflicting lock is held, it waits. After committing, it releases all locks. Recoverability uses logs to undo uncommitted changes after crashes."
-        },
-        {
-          "id": "slide_dbms_07_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Strict 2PL avoids cascading aborts; optimistic concurrency (MVCC) avoids locking overhead",
-          "text": "Strict 2PL is safe but can cause deadlocks. MVCC (Multi‑Version Concurrency Control) keeps multiple versions, allowing non‑blocking reads. Each approach trades complexity for performance."
-        },
-        {
-          "id": "slide_dbms_07_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Concurrency control and recoverability are the invisible traffic cops of multi‑user databases",
-          "text": "They allow many users to work safely and recover after failures."
-        },
-        {
-          "id": "slide_dbms_07_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Relational Algebra"
-        }
-      ],
-      "postNo": 70
-    },
-    {
-      "id": "post_dbms_08",
-      "title": "Relational Algebra",
-      "trackId": "11",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_dbms_08_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "SQL is declarative — but underneath, it's all set operations",
-          "text": "Relational algebra is the theoretical foundation of SQL query execution."
-        },
-        {
-          "id": "slide_dbms_08_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "Relational algebra defines operations on relations (tables) using set theory",
-          "text": "Basic operations: SELECT (σ), PROJECT (π), UNION (∪), INTERSECTION (∩), DIFFERENCE (−), CARTESIAN PRODUCT (×), and JOIN (⋈). These are used to express any query."
-        },
-        {
-          "id": "slide_dbms_08_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "A query is built by combining these operations",
-          "text": "Start with tables. Apply selection (filter rows), projection (choose columns), join (combine tables), and set operations. The result is a new relation that answers the query."
-        },
-        {
-          "id": "slide_dbms_08_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Relational algebra is procedural; SQL is declarative",
-          "text": "Algebra specifies the exact steps to get results. SQL specifies what you want, and the DBMS chooses how to execute it — but both are equivalent in power."
-        },
-        {
-          "id": "slide_dbms_08_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Relational algebra is the math behind every SQL query",
-          "text": "Understanding it helps you optimize and reason about complex queries."
-        },
-        {
-          "id": "slide_dbms_08_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "File Indexing"
-        }
-      ],
-      "postNo": 71
-    },
-    {
-      "id": "post_dbms_09",
-      "title": "File Indexing",
-      "trackId": "11",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_dbms_09_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "Your query returns in milliseconds — but without an index, it would scan millions of rows",
-          "text": "Indexing is the secret to database performance."
-        },
-        {
-          "id": "slide_dbms_09_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "An index is a data structure that speeds up data retrieval",
-          "text": "Common types: B‑tree (balanced tree) and hash indexes. They store key‑to‑row mappings, allowing the DBMS to skip directly to matching rows instead of scanning the whole table."
-        },
-        {
-          "id": "slide_dbms_09_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Create an index on columns used in WHERE, JOIN, or ORDER BY",
-          "text": "The DBMS maintains the index alongside the table. On a query, it uses the index to locate rows quickly. Without an index, a full table scan occurs, which is O(n)."
-        },
-        {
-          "id": "slide_dbms_09_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Indexes speed up reads but slow down writes and take storage",
-          "text": "Every INSERT, UPDATE, DELETE must update the index too. So add indexes judiciously — typically on high‑selectivity columns and frequently queried keys."
-        },
-        {
-          "id": "slide_dbms_09_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "An index is a shortcut that turns a linear search into a logarithmic one",
-          "text": "Proper indexing can make the difference between a responsive app and a slow one."
-        },
-        {
-          "id": "slide_dbms_09_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "SQL Basics"
-        }
-      ],
-      "postNo": 72
-    },
-    {
-      "id": "post_dbms_10",
-      "title": "SQL Basics",
-      "trackId": "11",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_dbms_10_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "SQL is the language of databases — and it's surprisingly straightforward",
-          "text": "You describe what you want, not how to get it."
-        },
-        {
-          "id": "slide_dbms_10_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "SQL (Structured Query Language) has three main categories: DDL, DML, DCL",
-          "text": "DDL (Data Definition Language): CREATE, ALTER, DROP. DML (Data Manipulation Language): SELECT, INSERT, UPDATE, DELETE. DCL (Data Control Language): GRANT, REVOKE."
-        },
-        {
-          "id": "slide_dbms_10_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Write a query: SELECT columns FROM table WHERE condition",
-          "text": "Start with SELECT to project columns, FROM to specify tables, WHERE to filter rows. You can add ORDER BY, GROUP BY, and LIMIT for sorting and aggregation."
-        },
-        {
-          "id": "slide_dbms_10_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "SQL is declarative — you say what you need, and the DBMS figures out the execution plan",
-          "text": "This contrasts with procedural code where you specify every step. The DBMS uses statistics and indexes to optimize the query plan."
-        },
-        {
-          "id": "slide_dbms_10_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "SQL is the universal interface to relational databases",
-          "text": "Mastering the basics unlocks the ability to interact with any SQL database."
-        },
-        {
-          "id": "slide_dbms_10_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Advanced SQL: Data Manipulation & Aggregations"
-        }
-      ],
-      "postNo": 73
-    },
-    {
-      "id": "post_dbms_11",
-      "title": "Advanced SQL: Data Manipulation & Aggregations",
-      "trackId": "11",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_dbms_11_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "Counting, summing, and grouping — that's where SQL shows its real power",
-          "text": "Aggregations turn raw data into meaningful summaries."
-        },
-        {
-          "id": "slide_dbms_11_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "Advanced SQL includes aggregate functions, subqueries, and window functions",
-          "text": "Aggregates: COUNT, SUM, AVG, MIN, MAX. GROUP BY groups rows, HAVING filters groups. Subqueries nest queries. Window functions allow calculations over a set of rows without grouping."
-        },
-        {
-          "id": "slide_dbms_11_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Group data, apply aggregates, filter with HAVING, and use subqueries for complex logic",
-          "text": "Start with a base table, GROUP BY a column, compute aggregate, then filter groups with HAVING. Use subqueries in WHERE or FROM to create dynamic conditions."
-        },
-        {
-          "id": "slide_dbms_11_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Aggregations reduce rows; subqueries add flexibility; window functions preserve rows",
-          "text": "Aggregates collapse groups into one row per group. Subqueries let you use results from one query inside another. Window functions (e.g., RANK, LEAD) compute values across ordered rows without collapsing."
-        },
-        {
-          "id": "slide_dbms_11_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Advanced SQL turns raw data into insights — group, filter, rank, and compare",
-          "text": "It's the key to answering complex business questions efficiently."
-        },
-        {
-          "id": "slide_dbms_11_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Complex Joins, Grouping & Schema Modifications"
-        }
-      ],
-      "postNo": 74
-    },
-    {
-      "id": "post_dbms_12",
-      "title": "Complex Joins, Grouping & Schema Modifications",
-      "trackId": "11",
-      "resources": [],
-      "assets": [],
-      "slides": [
-        {
-          "id": "slide_dbms_12_s01",
-          "slideNo": 1,
-          "layout": "hook-open",
-          "headline": "The real power of SQL is combining multiple tables — and that's where things get interesting",
-          "text": "Joins, grouping, and schema changes are the final pieces of the puzzle."
-        },
-        {
-          "id": "slide_dbms_12_s02",
-          "slideNo": 2,
-          "layout": "concept-explain",
-          "headline": "Complex joins (INNER, LEFT, RIGHT, FULL, SELF) combine tables; GROUP BY with ROLLUP/CUBE; schema modifications add/change columns",
-          "text": "Joins link tables on keys. GROUP BY extensions (ROLLUP, CUBE) produce subtotals. Schema modifications (ALTER TABLE) change structure after initial design."
-        },
-        {
-          "id": "slide_dbms_12_s03",
-          "slideNo": 3,
-          "layout": "process-flow",
-          "headline": "Write a join query, group with extensions, and alter table if needed",
-          "text": "Start with a join, then add GROUP BY and aggregate. Use ROLLUP for hierarchical summaries. If requirements change, use ALTER TABLE to add/drop columns or constraints."
-        },
-        {
-          "id": "slide_dbms_12_s04",
-          "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Joins add rows (multiplication); aggregations reduce rows; modifications change the schema",
-          "text": "Joins combine tables side‑by‑side. Aggregations collapse rows. Schema modifications restructure the database — each serves a different purpose."
-        },
-        {
-          "id": "slide_dbms_12_s05",
-          "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Complex queries and schema evolution are part of every production database's life",
-          "text": "Mastering them lets you handle real‑world data challenges."
-        },
-        {
-          "id": "slide_dbms_12_s06",
-          "slideNo": 6,
-          "layout": "next-up",
-          "headline": "You've completed the Database track",
-          "text": "From foundations to advanced queries — you now understand the full DBMS picture."
-        }
-      ],
-      "postNo": 75
+      ]
     },
     {
       "id": "post_t13_p62",
       "title": "Why Security Isn't Optional",
       "trackId": "12",
-      "postNo": 76,
+      "postNo": 62,
       "resources": [
         {
           "youtubeLink": "",
@@ -4500,7 +3912,7 @@
       "id": "post_t13_p63",
       "title": "Encryption Explained: Symmetric vs Asymmetric",
       "trackId": "12",
-      "postNo": 77,
+      "postNo": 63,
       "resources": [
         {
           "youtubeLink": "",
@@ -4559,7 +3971,7 @@
       "id": "post_t13_p64",
       "title": "Password Security & the Attacks Every Dev Should Know",
       "trackId": "12",
-      "postNo": 78,
+      "postNo": 64,
       "resources": [
         {
           "youtubeLink": "",
@@ -4618,7 +4030,7 @@
       "id": "post_t13_p65",
       "title": "Rate Limiting, Secrets & OAuth",
       "trackId": "12",
-      "postNo": 79,
+      "postNo": 65,
       "resources": [
         {
           "youtubeLink": "",
@@ -4677,7 +4089,7 @@
       "id": "post_t14_p66",
       "title": "Linux & the Command Line Every Server Speaks",
       "trackId": "13",
-      "postNo": 80,
+      "postNo": 66,
       "resources": [
         {
           "youtubeLink": "",
@@ -4736,7 +4148,7 @@
       "id": "post_t14_p67",
       "title": "What Is DevOps, Really? The Culture Behind the Tools",
       "trackId": "13",
-      "postNo": 81,
+      "postNo": 67,
       "resources": [
         {
           "youtubeLink": "",
@@ -4795,7 +4207,7 @@
       "id": "post_t14_p68",
       "title": "Logs, SSH & Shell Scripting",
       "trackId": "13",
-      "postNo": 82,
+      "postNo": 68,
       "resources": [
         {
           "youtubeLink": "",
@@ -4854,7 +4266,7 @@
       "id": "post_t14_p69",
       "title": "Nginx & What Deployment Actually Means",
       "trackId": "13",
-      "postNo": 83,
+      "postNo": 69,
       "resources": [
         {
           "youtubeLink": "",
@@ -4913,7 +4325,7 @@
       "id": "post_t14_p70",
       "title": "Docker: Containers, Images & Your First Dockerfile",
       "trackId": "13",
-      "postNo": 84,
+      "postNo": 70,
       "resources": [
         {
           "youtubeLink": "",
@@ -4972,7 +4384,7 @@
       "id": "post_t14_p71",
       "title": "Docker Volumes, Networking & Compose",
       "trackId": "13",
-      "postNo": 85,
+      "postNo": 71,
       "resources": [
         {
           "youtubeLink": "",
@@ -5031,7 +4443,7 @@
       "id": "post_t14_p72",
       "title": "Container Registries & CI/CD",
       "trackId": "13",
-      "postNo": 86,
+      "postNo": 72,
       "resources": [
         {
           "youtubeLink": "",
@@ -5090,7 +4502,7 @@
       "id": "post_t14_p73",
       "title": "Monitoring, Alerting & Distributed Tracing: Prometheus, Grafana & Jaeger",
       "trackId": "13",
-      "postNo": 87,
+      "postNo": 73,
       "resources": [
         {
           "youtubeLink": "",
@@ -5149,7 +4561,7 @@
       "id": "post_t14_p74",
       "title": "Infrastructure as Code & Config Management: Terraform & Ansible",
       "trackId": "13",
-      "postNo": 88,
+      "postNo": 74,
       "resources": [
         {
           "youtubeLink": "",
@@ -5208,7 +4620,7 @@
       "id": "post_t14_p75",
       "title": "Service Mesh: Istio & Service-to-Service Communication",
       "trackId": "13",
-      "postNo": 89,
+      "postNo": 75,
       "resources": [
         {
           "youtubeLink": "",
@@ -5267,7 +4679,7 @@
       "id": "post_t15_p76",
       "title": "Why Cloud Computing Exists",
       "trackId": "14",
-      "postNo": 90,
+      "postNo": 76,
       "resources": [
         {
           "youtubeLink": "",
@@ -5326,7 +4738,7 @@
       "id": "post_t15_p77",
       "title": "Regions, Availability Zones & Data Centers",
       "trackId": "14",
-      "postNo": 91,
+      "postNo": 77,
       "resources": [
         {
           "youtubeLink": "",
@@ -5385,7 +4797,7 @@
       "id": "post_t15_p78",
       "title": "AWS Basics: EC2, S3 & IAM",
       "trackId": "14",
-      "postNo": 92,
+      "postNo": 78,
       "resources": [
         {
           "youtubeLink": "",
@@ -5444,7 +4856,7 @@
       "id": "post_t15_p79",
       "title": "VPC, Load Balancers & Auto Scaling",
       "trackId": "14",
-      "postNo": 93,
+      "postNo": 79,
       "resources": [
         {
           "youtubeLink": "",
@@ -5503,7 +4915,7 @@
       "id": "post_t15_p80",
       "title": "RDS, Lambda & CloudWatch",
       "trackId": "14",
-      "postNo": 94,
+      "postNo": 80,
       "resources": [
         {
           "youtubeLink": "",
@@ -5562,7 +4974,7 @@
       "id": "post_t15_p81",
       "title": "CDN, Infrastructure as Code & Production Architecture",
       "trackId": "14",
-      "postNo": 95,
+      "postNo": 81,
       "resources": [
         {
           "youtubeLink": "",
@@ -5621,7 +5033,7 @@
       "id": "post_t16_p82",
       "title": "What Is System Design & Why It's Different From Coding",
       "trackId": "15",
-      "postNo": 96,
+      "postNo": 82,
       "resources": [
         {
           "youtubeLink": "",
@@ -5680,7 +5092,7 @@
       "id": "post_t16_p83",
       "title": "Scaling: Vertical vs Horizontal, Load Balancing & Caching",
       "trackId": "15",
-      "postNo": 97,
+      "postNo": 83,
       "resources": [
         {
           "youtubeLink": "",
@@ -5739,7 +5151,7 @@
       "id": "post_t16_p84",
       "title": "Database Replication & Sharding at Scale",
       "trackId": "15",
-      "postNo": 98,
+      "postNo": 84,
       "resources": [
         {
           "youtubeLink": "",
@@ -5798,7 +5210,7 @@
       "id": "post_t16_p85",
       "title": "Message Queues, Kafka & Event-Driven Architecture",
       "trackId": "15",
-      "postNo": 99,
+      "postNo": 85,
       "resources": [
         {
           "youtubeLink": "",
@@ -5857,7 +5269,7 @@
       "id": "post_t16_p86",
       "title": "Microservices vs Monolith & the CAP Theorem",
       "trackId": "15",
-      "postNo": 100,
+      "postNo": 86,
       "resources": [
         {
           "youtubeLink": "",
@@ -5916,7 +5328,7 @@
       "id": "post_t16_p87",
       "title": "Fault Tolerance, Distributed Systems, Rate Limiting & Idempotency",
       "trackId": "15",
-      "postNo": 101,
+      "postNo": 87,
       "resources": [
         {
           "youtubeLink": "",
@@ -5975,7 +5387,7 @@
       "id": "post_t16_p88",
       "title": "Designing a URL Shortener From Scratch",
       "trackId": "15",
-      "postNo": 102,
+      "postNo": 88,
       "resources": [
         {
           "youtubeLink": "",
@@ -6034,7 +5446,7 @@
       "id": "post_t16_p89",
       "title": "Designing Instagram: A System Design Breakdown",
       "trackId": "15",
-      "postNo": 103,
+      "postNo": 89,
       "resources": [
         {
           "youtubeLink": "",
@@ -6093,7 +5505,7 @@
       "id": "post_t16_p90",
       "title": "Designing WhatsApp: How Real-Time Messaging Scales",
       "trackId": "15",
-      "postNo": 104,
+      "postNo": 90,
       "resources": [
         {
           "youtubeLink": "",
@@ -6152,7 +5564,7 @@
       "id": "post_t16_p91",
       "title": "Designing YouTube: Video at Massive Scale",
       "trackId": "15",
-      "postNo": 105,
+      "postNo": 91,
       "resources": [
         {
           "youtubeLink": "",
@@ -6211,7 +5623,7 @@
       "id": "post_t16_p92",
       "title": "Designing Uber: Real-Time Location & Matching",
       "trackId": "15",
-      "postNo": 106,
+      "postNo": 92,
       "resources": [
         {
           "youtubeLink": "",
@@ -6270,7 +5682,7 @@
       "id": "post_t16_p93",
       "title": "Designing Netflix: Streaming at Global Scale",
       "trackId": "15",
-      "postNo": 107,
+      "postNo": 93,
       "resources": [
         {
           "youtubeLink": "",
@@ -6329,7 +5741,7 @@
       "id": "post_t16_p94",
       "title": "Designing a Payment System: Handling Money Safely",
       "trackId": "15",
-      "postNo": 108,
+      "postNo": 94,
       "resources": [
         {
           "youtubeLink": "",
@@ -6388,7 +5800,7 @@
       "id": "post_t17_p95",
       "title": "Why Python? (And the Fundamentals)",
       "trackId": "16",
-      "postNo": 109,
+      "postNo": 95,
       "resources": [
         {
           "youtubeLink": "",
@@ -6447,7 +5859,7 @@
       "id": "post_t17_p96",
       "title": "OOP, Modules & File Handling in Python",
       "trackId": "16",
-      "postNo": 110,
+      "postNo": 96,
       "resources": [
         {
           "youtubeLink": "",
@@ -6506,7 +5918,7 @@
       "id": "post_t17_p97",
       "title": "Python for Automation: os, subprocess & APIs",
       "trackId": "16",
-      "postNo": 111,
+      "postNo": 97,
       "resources": [
         {
           "youtubeLink": "",
@@ -6565,7 +5977,7 @@
       "id": "post_t17_p98",
       "title": "Pandas, NumPy & Matplotlib: Python for Data",
       "trackId": "16",
-      "postNo": 112,
+      "postNo": 98,
       "resources": [
         {
           "youtubeLink": "",
@@ -6624,7 +6036,7 @@
       "id": "post_t17_p99",
       "title": "Why Your App's Database Is Wrong for Analytics (OLTP vs OLAP)",
       "trackId": "16",
-      "postNo": 113,
+      "postNo": 99,
       "resources": [
         {
           "youtubeLink": "",
@@ -6683,7 +6095,7 @@
       "id": "post_t17_p100",
       "title": "Data Warehouses, Data Lakes & Big Data Pipelines",
       "trackId": "16",
-      "postNo": 114,
+      "postNo": 100,
       "resources": [
         {
           "youtubeLink": "",
@@ -6742,7 +6154,7 @@
       "id": "post_t17_p101",
       "title": "Data Cleaning & Visualization With Python",
       "trackId": "16",
-      "postNo": 115,
+      "postNo": 101,
       "resources": [
         {
           "youtubeLink": "",
@@ -6801,7 +6213,7 @@
       "id": "post_t18_p102",
       "title": "Why Machine Learning? (AI vs ML vs Traditional Programming)",
       "trackId": "17",
-      "postNo": 116,
+      "postNo": 102,
       "resources": [
         {
           "youtubeLink": "",
@@ -6860,7 +6272,7 @@
       "id": "post_t18_p103",
       "title": "Datasets, Features, Labels & the Training Process",
       "trackId": "17",
-      "postNo": 117,
+      "postNo": 103,
       "resources": [
         {
           "youtubeLink": "",
@@ -6919,7 +6331,7 @@
       "id": "post_t18_p104",
       "title": "Supervised vs Unsupervised: Regression, Classification & Clustering",
       "trackId": "17",
-      "postNo": 118,
+      "postNo": 104,
       "resources": [
         {
           "youtubeLink": "",
@@ -6978,7 +6390,7 @@
       "id": "post_t18_p105",
       "title": "Overfitting, Underfitting & Feature Engineering",
       "trackId": "17",
-      "postNo": 119,
+      "postNo": 105,
       "resources": [
         {
           "youtubeLink": "",
@@ -7037,7 +6449,7 @@
       "id": "post_t18_p106",
       "title": "Evaluation Metrics: Precision, Recall, F1 & ROC-AUC",
       "trackId": "17",
-      "postNo": 120,
+      "postNo": 106,
       "resources": [
         {
           "youtubeLink": "",
@@ -7096,7 +6508,7 @@
       "id": "post_t18_p107",
       "title": "From ML to Neural Networks & Deep Learning",
       "trackId": "17",
-      "postNo": 121,
+      "postNo": 107,
       "resources": [
         {
           "youtubeLink": "",
@@ -7155,7 +6567,7 @@
       "id": "post_t19_p108",
       "title": "Neural Networks Explained: Neurons, Weights & Bias",
       "trackId": "18",
-      "postNo": 122,
+      "postNo": 108,
       "resources": [
         {
           "youtubeLink": "",
@@ -7214,7 +6626,7 @@
       "id": "post_t19_p109",
       "title": "Forward Propagation, Loss & Backpropagation",
       "trackId": "18",
-      "postNo": 123,
+      "postNo": 109,
       "resources": [
         {
           "youtubeLink": "",
@@ -7273,7 +6685,7 @@
       "id": "post_new_dl_activations",
       "title": "Activation Functions: Why Networks Need Non-Linearity",
       "trackId": "18",
-      "postNo": 124,
+      "postNo": 110,
       "resources": [],
       "assets": [],
       "slides": [
@@ -7325,7 +6737,7 @@
       "id": "post_new_dl_vanishing",
       "title": "Vanishing Gradients: Why Deep Networks Were Once Impossible to Train",
       "trackId": "18",
-      "postNo": 125,
+      "postNo": 111,
       "resources": [],
       "assets": [],
       "slides": [
@@ -7377,7 +6789,7 @@
       "id": "post_new_dl_traininfer",
       "title": "Training vs Inference: Why AI Needs So Much Compute",
       "trackId": "18",
-      "postNo": 126,
+      "postNo": 112,
       "resources": [],
       "assets": [],
       "slides": [
@@ -7429,7 +6841,7 @@
       "id": "post_t19_p110",
       "title": "CNNs, RNNs & the Rise of Transformers",
       "trackId": "18",
-      "postNo": 127,
+      "postNo": 113,
       "resources": [
         {
           "youtubeLink": "",
@@ -7488,7 +6900,7 @@
       "id": "post_t20_p111",
       "title": "What Is Generative AI & What Is an LLM?",
       "trackId": "19",
-      "postNo": 128,
+      "postNo": 114,
       "resources": [
         {
           "youtubeLink": "",
@@ -7547,7 +6959,7 @@
       "id": "post_new_ga_tokens",
       "title": "Tokens & Context Windows: How LLMs Actually Read Text",
       "trackId": "19",
-      "postNo": 129,
+      "postNo": 115,
       "resources": [],
       "assets": [],
       "slides": [
@@ -7599,7 +7011,7 @@
       "id": "post_t20_p112",
       "title": "Embeddings, Attention & Transformers Demystified",
       "trackId": "19",
-      "postNo": 130,
+      "postNo": 116,
       "resources": [
         {
           "youtubeLink": "",
@@ -7658,7 +7070,7 @@
       "id": "post_new_ga_sampling",
       "title": "Temperature & Sampling: Why the Same Prompt Gives Different Answers",
       "trackId": "19",
-      "postNo": 131,
+      "postNo": 117,
       "resources": [],
       "assets": [],
       "slides": [
@@ -7710,7 +7122,7 @@
       "id": "post_t20_p113",
       "title": "Prompting, System Prompts & Structured Outputs",
       "trackId": "19",
-      "postNo": 132,
+      "postNo": 118,
       "resources": [
         {
           "youtubeLink": "",
@@ -7769,7 +7181,7 @@
       "id": "post_new_ga_hallucination",
       "title": "Why LLMs Hallucinate (And What Actually Reduces It)",
       "trackId": "19",
-      "postNo": 133,
+      "postNo": 119,
       "resources": [],
       "assets": [],
       "slides": [
@@ -7821,7 +7233,7 @@
       "id": "post_t20_p114",
       "title": "Fine-Tuning, RAG & Vector Databases",
       "trackId": "19",
-      "postNo": 134,
+      "postNo": 120,
       "resources": [
         {
           "youtubeLink": "",
@@ -7880,7 +7292,7 @@
       "id": "post_t21_p115",
       "title": "Why Chatbots Aren't Agents (And What Actually Makes an Agent)",
       "trackId": "20",
-      "postNo": 135,
+      "postNo": 121,
       "resources": [
         {
           "youtubeLink": "",
@@ -7939,7 +7351,7 @@
       "id": "post_t21_p116",
       "title": "Tool Calling, Memory & Planning: How Agents Think",
       "trackId": "20",
-      "postNo": 136,
+      "postNo": 122,
       "resources": [
         {
           "youtubeLink": "",
@@ -7998,7 +7410,7 @@
       "id": "post_t21_p117",
       "title": "Agent Loops, Multi-Step Tasks & Real-World Agents",
       "trackId": "20",
-      "postNo": 137,
+      "postNo": 123,
       "resources": [
         {
           "youtubeLink": "",
@@ -8057,7 +7469,7 @@
       "id": "post_t21_p118",
       "title": "AI Workflows, Multi-Agent Systems & MCP",
       "trackId": "20",
-      "postNo": 138,
+      "postNo": 124,
       "resources": [
         {
           "youtubeLink": "",
@@ -8116,7 +7528,7 @@
       "id": "post_t21_p119",
       "title": "Evaluating & Securing Production AI Agents",
       "trackId": "20",
-      "postNo": 139,
+      "postNo": 125,
       "resources": [
         {
           "youtubeLink": "",
@@ -8175,7 +7587,7 @@
       "id": "post_t21_p120",
       "title": "Building Your First AI Agent (Then a Multi-Agent System)",
       "trackId": "20",
-      "postNo": 140,
+      "postNo": 126,
       "resources": [
         {
           "youtubeLink": "",
@@ -8234,7 +7646,7 @@
       "id": "post_t21_p121",
       "title": "The Entire Journey: From Computer to AI Agent",
       "trackId": "20",
-      "postNo": 141,
+      "postNo": 127,
       "resources": [
         {
           "youtubeLink": "",
