@@ -1,29 +1,8 @@
 {
   "slug": "swe-notebook",
   "name": "SWE Notebook",
-  "designSystem": {
-    "layoutCategories": {},
-    "typography": {
-      "headline": "Bold geometric sans-serif (e.g. Sora, Poppins Bold)",
-      "body": "Clean readable sans-serif (e.g. Inter, Poppins Regular)"
-    },
-    "iconography": "Consistent line-art icon style, uniform stroke width, one accent color per track drawn from trackPalettes.",
-    "externalAssetConvention": {
-      "purpose": "Flags slides whose visualDirective calls for a real photo, not an icon/diagram.",
-      "placeholderPattern": "assets/photos/track{TT}_post{PPP}_slide{SS}.jpg",
-      "rule": "Any slide without an externalAsset field uses the icon/diagram default."
-    },
-    "audioConvention": {
-      "purpose": "Each post carries a content-matched mood + search terms for picking a trending audio track at publish time.",
-      "rule": "Do not hardcode a specific trending track — trends are ephemeral. Use searchTerms in the platform's trending-audio picker."
-    },
-    "canvas": {
-      "width": 1080,
-      "height": 1350
-    }
+  "trackPalettes": {
   },
-  "visualGlossary": {},
-  "trackPalettes": {},
   "chapterCovers": [],
   "posts": []
 }

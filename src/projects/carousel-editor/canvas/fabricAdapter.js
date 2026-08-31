@@ -9,12 +9,12 @@ import {
 
 export const SELECTION_CONTROL_CONFIG = {
   transparentCorners: false,
-  cornerColor: "#2563eb",
+  cornerColor: "#3b82f6",
   cornerStrokeColor: "#ffffff",
-  cornerSize: 16,
+  cornerSize: 18,
   cornerStyle: "circle",
-  borderColor: "#2563eb",
-  borderScaleFactor: 2,
+  borderColor: "#3b82f6",
+  borderScaleFactor: 2.5,
   padding: 4,
   touchCornerSize: 32,
 };
@@ -166,7 +166,9 @@ export function createFabricObject(element, options = {}) {
       const elemFontSize = element.fontSize || (element.type === "headline" ? 92 : 64);
 
       const annotationStyles =
-        element.type === "headline"
+        element.styles && Object.keys(element.styles).length > 0
+          ? element.styles
+          : element.type === "headline"
           ? buildHeadlineStyles(rawText, element.accentColor || element._accent)
           : element.type === "text"
           ? buildBodyStyles(rawText, element.fill || element._primary)
@@ -179,6 +181,9 @@ export function createFabricObject(element, options = {}) {
         fontSize: elemFontSize,
         fontFamily: element.fontFamily || THEME.typography.headline.fontFamily || "Instrument Serif",
         fontWeight: element.fontWeight || "normal",
+        fontStyle: element.fontStyle || "normal",
+        underline: Boolean(element.underline),
+        textBackgroundColor: element.textBackgroundColor || "",
         fill: element.fill || "#000000",
         angle: element.rotation || 0,
         originX: element.originX || "left",
@@ -197,7 +202,9 @@ export function createFabricObject(element, options = {}) {
 
     case "image": {
       const imgElement = document.createElement("img");
-      imgElement.crossOrigin = "anonymous";
+      if (element.src && !element.src.startsWith("data:") && !element.src.startsWith("blob:")) {
+        imgElement.crossOrigin = "anonymous";
+      }
       imgElement.src = element.src;
 
       const fabricImg = new FabricImage(imgElement, {

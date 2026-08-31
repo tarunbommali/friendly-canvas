@@ -48,7 +48,7 @@ export const THEME = {
   typography: {
     headline: { fontSize: 92, fontFamily: "Instrument Serif", color: "#0f172a" },
     body: { fontSize: 64, fontFamily: "Georgia", color: "#475569" },
-    badge: { fontSize: 26, fontFamily: "Instrument Serif" },
+    badge: { fontSize: 26, fontFamily: "Playfair Display" },
     directive: { fontSize: 24, fontFamily: "Georgia", color: "#8e5c29" },
     footer: { fontSize: 24, fontFamily: "Georgia" },
   },

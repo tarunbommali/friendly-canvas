@@ -121,13 +121,17 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
     originX = "right";
   }
 
-  const updatedElements = slide.elements.map((el) => {
+  const activeElements = (slide.elements || []).filter((el) => !isBackgroundRect(el));
+  const updatedElements = activeElements.map((el) => {
     if (isChromeBadgeElement(el)) {
       return {
         ...el,
-        fill: config.primaryColor || el.fill,
         x: config.badgeX ?? alignX,
         y: config.badgeY ?? (safeArea.top + 24),
+        fontSize: config.badgeFontSize ?? el.fontSize ?? 20,
+        fontFamily: config.badgeFont || el.fontFamily || THEME.typography.badge?.fontFamily || "Playfair Display",
+        fill: config.badgeColor || config.primaryColor || el.fill,
+        text: config.badgeText !== undefined && config.badgeText !== "" ? config.badgeText : el.text,
         originX,
         textAlign,
       };
@@ -138,6 +142,7 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
         x: config.pageNumberX ?? safeArea.left,
         y: config.pageNumberY ?? (safeArea.bottom - 24),
         fontSize: config.pageNumberFontSize ?? THEME.typography.footer.fontSize,
+        fontFamily: config.pageNumberFont || el.fontFamily || THEME.typography.footer.fontFamily || "Georgia",
         fill: config.pageNumberColor || THEME.colors.footer,
       };
     }
@@ -157,18 +162,15 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
         fontSize: isFollow
           ? (config.followFontSize ?? 24)
           : (config.swipeFontSize ?? 24),
+        fontFamily: isFollow
+          ? (config.followFont || config.swipeFont || el.fontFamily || "Georgia")
+          : (config.swipeFont || el.fontFamily || "Georgia"),
         fill: isFollow
           ? config.followColor || THEME.colors.footer
           : config.swipeColor || THEME.colors.footer,
         text: isFollow
           ? config.followText || "Follow for more →"
           : config.swipeText || "Swipe →",
-      };
-    }
-    if (isBackgroundRect(el)) {
-      return {
-        ...el,
-        stroke: config.accentColor || el.stroke,
       };
     }
 
@@ -263,6 +265,11 @@ export const useCarouselStore = create((set, get) => ({
   clipboardElement: null,
   imageRegistry: {},
   globalLayoutConfig: { ...DEFAULT_GLOBAL_LAYOUT_CONFIG },
+  activeTextSelection: null,
+  fabricCanvas: null,
+
+  setActiveTextSelection: (selection) => set({ activeTextSelection: selection }),
+  setFabricCanvas: (canvas) => set({ fabricCanvas: canvas }),
 
   // Register a full image snapshot in the registry (exposed for external use if needed)
   registerImage: (elementId, snapshot) =>
@@ -354,9 +361,19 @@ export const useCarouselStore = create((set, get) => ({
 
   setDocument: (newDocument, { resetRegistry = false } = {}) => {
     get().pushHistory();
+    let cleanedDoc = newDocument;
+    if (cleanedDoc?.slides) {
+      cleanedDoc = {
+        ...cleanedDoc,
+        slides: cleanedDoc.slides.map((s) => ({
+          ...s,
+          elements: (s.elements || []).filter((el) => !isBackgroundRect(el)),
+        })),
+      };
+    }
     const baseRegistry = resetRegistry ? {} : get().imageRegistry;
-    const hydrated = hydrateRegistryFromDocument(newDocument, baseRegistry);
-    const restored = restoreImagesFromRegistry(newDocument, hydrated);
+    const hydrated = hydrateRegistryFromDocument(cleanedDoc, baseRegistry);
+    const restored = restoreImagesFromRegistry(cleanedDoc, hydrated);
     set({
       document: restored,
       imageRegistry: hydrated,
@@ -422,14 +439,19 @@ export const useCarouselStore = create((set, get) => ({
     }
   },
 
-  addSlide: () =>
+  addSlide: (insertIndex = null) =>
     set((state) => {
       const existing = state.document.slides;
       const newSlideId = `slide_${Date.now()}`;
       const badgeEl = existing[0]?.elements?.find(isChromeBadgeElement);
+      const targetIndex =
+        insertIndex !== null && insertIndex >= 0 && insertIndex <= existing.length
+          ? insertIndex
+          : existing.length;
+
       const composed = composeSlide([], {
         slideId: newSlideId,
-        pageIndex: existing.length + 1,
+        pageIndex: targetIndex + 1,
         totalPages: existing.length + 1,
         badgeText: badgeEl?.text || "SWE NOTEBOOK",
         backgroundColor: existing[0]?.backgroundColor || "#ffffff",
@@ -437,13 +459,63 @@ export const useCarouselStore = create((set, get) => ({
         textAlign: state.document.metadata?.textAlign || "left",
       });
 
-      const slides = syncChromePagination([...existing, composed]);
+      const updatedSlides = [...existing];
+      if (insertIndex !== null && insertIndex >= 0 && insertIndex <= existing.length) {
+        updatedSlides.splice(insertIndex, 0, composed);
+      } else {
+        updatedSlides.push(composed);
+      }
+
+      const slides = syncChromePagination(updatedSlides);
 
       return {
         document: {
           ...state.document,
           slides,
           activeSlideId: newSlideId,
+        },
+        selectedElementId: null,
+      };
+    }),
+
+  moveSlide: (slideId, direction) =>
+    set((state) => {
+      const slides = [...state.document.slides];
+      const index = slides.findIndex((s) => s.id === slideId);
+      if (index === -1) return state;
+      const targetIndex = direction === "up" ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= slides.length) return state;
+      const [moved] = slides.splice(index, 1);
+      slides.splice(targetIndex, 0, moved);
+      return {
+        document: {
+          ...state.document,
+          slides: syncChromePagination(slides),
+          activeSlideId: moved.id,
+        },
+        selectedElementId: null,
+      };
+    }),
+
+  reorderSlides: (sourceIndex, targetIndex) =>
+    set((state) => {
+      const slides = [...state.document.slides];
+      if (
+        sourceIndex < 0 ||
+        sourceIndex >= slides.length ||
+        targetIndex < 0 ||
+        targetIndex >= slides.length ||
+        sourceIndex === targetIndex
+      ) {
+        return state;
+      }
+      const [moved] = slides.splice(sourceIndex, 1);
+      slides.splice(targetIndex, 0, moved);
+      return {
+        document: {
+          ...state.document,
+          slides: syncChromePagination(slides),
+          activeSlideId: moved.id,
         },
         selectedElementId: null,
       };
@@ -747,19 +819,41 @@ export const useCarouselStore = create((set, get) => ({
     }));
   },
 
-  copySelectedElement: () => {
-    const { selectedElementId, document: doc } = get();
-    if (!selectedElementId || !doc) return;
-    for (const slide of doc.slides) {
-      const el = slide.elements.find((item) => item.id === selectedElementId);
-      if (el && !isChromeElement(el)) {
-        set({ clipboardElement: cloneDoc(el) });
-        return;
+  copySelectedElement: (elementToCopy = null) => {
+    const state = get();
+    let target = elementToCopy;
+    if (!target) {
+      const { selectedElementId, document: doc } = state;
+      if (!selectedElementId || !doc) return;
+      for (const slide of doc.slides) {
+        const el = slide.elements.find((item) => item.id === selectedElementId);
+        if (el && !isChromeElement(el)) {
+          target = el;
+          break;
+        }
+      }
+    }
+    if (target && !isChromeElement(target)) {
+      const cloned = cloneDoc(target);
+      cloned._sourceSlideId = state.document.activeSlideId;
+      set({ clipboardElement: cloned });
+
+      try {
+        if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(
+            JSON.stringify({
+              __friendly_canvas_element: true,
+              element: cloned,
+            })
+          );
+        }
+      } catch (err) {
+        // Ignore clipboard permission issues
       }
     }
   },
 
-  pasteClipboardElement: (pastedImageDataUrl, pastedText) => {
+  pasteClipboardElement: (pastedImageDataUrl, pastedText, elementToPaste = null) => {
     const state = get();
     const activeSlide = state.document.slides.find(
       (s) => s.id === state.document.activeSlideId
@@ -769,6 +863,22 @@ export const useCarouselStore = create((set, get) => ({
     const canvasWidth = state.document.metadata?.width || THEME.canvas.width;
     const canvasHeight = state.document.metadata?.height || THEME.canvas.height;
 
+    // 1. Direct or store-based element paste
+    const sourceEl = elementToPaste || state.clipboardElement;
+    if (!pastedImageDataUrl && !pastedText && sourceEl) {
+      const cloned = cloneDoc(sourceEl);
+      const isSameSlide = cloned._sourceSlideId === activeSlide.id;
+      cloned.id = createElementId(cloned.type || "el");
+      if (isSameSlide) {
+        cloned.x = (cloned.x || 0) + 24;
+        cloned.y = (cloned.y || 0) + 24;
+      }
+      delete cloned._sourceSlideId;
+      get().addElement(cloned);
+      return;
+    }
+
+    // 2. Image Data URL / Image Web URL paste
     if (pastedImageDataUrl) {
       const placeholder = activeSlide.elements.find(
         (el) =>
@@ -783,8 +893,9 @@ export const useCarouselStore = create((set, get) => ({
           strokeDashArray: null,
         });
       } else {
+        const newImageId = createElementId("image");
         get().addElement({
-          id: createElementId("image"),
+          id: newImageId,
           type: "image",
           src: pastedImageDataUrl,
           x: Math.round(canvasWidth / 2),
@@ -796,20 +907,58 @@ export const useCarouselStore = create((set, get) => ({
           rotation: 0,
           zIndex: 10,
         });
+
+        // Compute natural aspect ratio and update dimensions if possible
+        if (typeof window !== "undefined") {
+          const img = new Image();
+          img.onload = () => {
+            const natW = img.naturalWidth || 760;
+            const natH = img.naturalHeight || 480;
+            const maxW = Math.min(840, canvasWidth - 120);
+            const maxH = Math.min(760, canvasHeight - 280);
+            let w = natW;
+            let h = natH;
+            if (w > maxW || h > maxH) {
+              const scale = Math.min(maxW / w, maxH / h);
+              w = Math.round(w * scale);
+              h = Math.round(h * scale);
+            }
+            get().updateElement(newImageId, { width: w, height: h });
+          };
+          img.src = pastedImageDataUrl;
+        }
       }
       return;
     }
 
+    // 3. Fallback: if clipboardElement exists, prioritize pasting it
     if (state.clipboardElement) {
       const cloned = cloneDoc(state.clipboardElement);
+      const isSameSlide = cloned._sourceSlideId === activeSlide.id;
       cloned.id = createElementId(cloned.type || "el");
-      cloned.x = (cloned.x || 0) + 24;
-      cloned.y = (cloned.y || 0) + 24;
+      if (isSameSlide) {
+        cloned.x = (cloned.x || 0) + 24;
+        cloned.y = (cloned.y || 0) + 24;
+      }
+      delete cloned._sourceSlideId;
       get().addElement(cloned);
       return;
     }
 
+    // 4. Text or Serialized JSON Paste
     if (pastedText) {
+      const trimmed = pastedText.trim();
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (parsed && parsed.__friendly_canvas_element && parsed.element) {
+          const cloned = cloneDoc(parsed.element);
+          cloned.id = createElementId(cloned.type || "el");
+          delete cloned._sourceSlideId;
+          get().addElement(cloned);
+          return;
+        }
+      } catch {}
+
       get().addElement({
         id: createElementId("text"),
         type: "text",

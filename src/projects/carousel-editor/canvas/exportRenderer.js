@@ -142,7 +142,9 @@ export async function renderSlideToDataUrl(slide, metadata, multiplier = 2) {
         const elemFontSize = el.fontSize || (el.type === "headline" ? 92 : 64);
 
         const annotationStyles =
-          el.type === "headline"
+          el.styles && Object.keys(el.styles).length > 0
+            ? el.styles
+            : el.type === "headline"
             ? buildHeadlineStyles(rawText, el.accentColor || el._accent)
             : el.type === "text"
             ? buildBodyStyles(rawText, el.fill || el._primary)
@@ -154,6 +156,9 @@ export async function renderSlideToDataUrl(slide, metadata, multiplier = 2) {
           fontSize: elemFontSize,
           fontFamily: el.fontFamily || "Instrument Serif",
           fontWeight: el.fontWeight || "normal",
+          fontStyle: el.fontStyle || "normal",
+          underline: Boolean(el.underline),
+          textBackgroundColor: el.textBackgroundColor || "",
           fill: el.fill || "#000000",
           angle: el.rotation || 0,
           originX: el.originX || "left",

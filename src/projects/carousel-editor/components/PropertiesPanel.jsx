@@ -16,6 +16,10 @@ import {
   ChevronsDown,
   ArrowUp,
   ArrowDown,
+  Bold,
+  Italic,
+  Underline,
+  Highlighter,
 } from "lucide-react";
 import { getLayoutBounds } from "../theme/layoutBounds";
 import { isChromeElement } from "../theme/elementClassify";
@@ -44,8 +48,14 @@ export function PropertiesPanel() {
   );
   const nudgeElementLayer = useCarouselStore((state) => state.nudgeElementLayer);
   const globalLayoutConfig = useCarouselStore((state) => state.globalLayoutConfig);
+  const copySelectedElement = useCarouselStore((state) => state.copySelectedElement);
+  const pasteClipboardElement = useCarouselStore((state) => state.pasteClipboardElement);
+  const clipboardElement = useCarouselStore((state) => state.clipboardElement);
+  const activeTextSelection = useCarouselStore((state) => state.activeTextSelection);
+  const setActiveTextSelection = useCarouselStore((state) => state.setActiveTextSelection);
 
   const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [copiedElement, setCopiedElement] = useState(false);
 
   const canvasWidth = document.metadata.width || 1080;
   const canvasHeight = document.metadata.height || 1350;
@@ -141,6 +151,72 @@ export function PropertiesPanel() {
     });
   };
 
+  const applyTextProperty = (property, value) => {
+    if (!selectedElement) return;
+
+    const currentSelection = useCarouselStore.getState().activeTextSelection;
+    const canvas = useCarouselStore.getState().fabricCanvas;
+    let appliedToRange = false;
+
+    if (canvas) {
+      const activeObj =
+        canvas.getActiveObject() ||
+        canvas.getObjects().find(
+          (o) => (o.get?.("data")?.id || o.data?.id) === selectedElement.id
+        );
+
+      if (
+        activeObj &&
+        (activeObj.type === "textbox" ||
+          activeObj.type === "i-text" ||
+          activeObj.type === "text")
+      ) {
+        if (
+          currentSelection &&
+          currentSelection.elementId === selectedElement.id &&
+          currentSelection.selectionStart !== currentSelection.selectionEnd
+        ) {
+          if (typeof activeObj.setSelectionStyles === "function") {
+            activeObj.setSelectionStyles(
+              { [property]: value },
+              currentSelection.selectionStart,
+              currentSelection.selectionEnd
+            );
+            if (typeof activeObj.cleanStyle === "function") {
+              activeObj.cleanStyle(property);
+            }
+            canvas.requestRenderAll();
+            const updatedStyles = JSON.parse(
+              JSON.stringify(activeObj.styles || {})
+            );
+            updateElement(selectedElement.id, { styles: updatedStyles });
+            appliedToRange = true;
+          }
+        } else if (
+          activeObj.isEditing &&
+          typeof activeObj.selectionStart === "number" &&
+          typeof activeObj.selectionEnd === "number" &&
+          activeObj.selectionStart !== activeObj.selectionEnd
+        ) {
+          activeObj.setSelectionStyles({ [property]: value });
+          if (typeof activeObj.cleanStyle === "function") {
+            activeObj.cleanStyle(property);
+          }
+          canvas.requestRenderAll();
+          const updatedStyles = JSON.parse(
+            JSON.stringify(activeObj.styles || {})
+          );
+          updateElement(selectedElement.id, { styles: updatedStyles });
+          appliedToRange = true;
+        }
+      }
+    }
+
+    if (!appliedToRange) {
+      updateElement(selectedElement.id, { [property]: value });
+    }
+  };
+
   // If no element is selected, show Slide properties & Safe Area Specs
   if (!selectedElement) {
     return (
@@ -149,6 +225,29 @@ export function PropertiesPanel() {
           <Sliders className="w-4 h-4 text-cyan-400" />
           <span className="font-mono text-xs uppercase tracking-wider">Slide Properties</span>
         </div>
+
+        {/* Paste from Clipboard quick action */}
+        {clipboardElement && (
+          <div className="p-2.5 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-blue-300 flex items-center gap-1.5 truncate">
+                <Copy className="w-3 h-3 text-blue-400 shrink-0" />
+                <span className="capitalize truncate">{clipboardElement.type || "Element"} in clipboard</span>
+              </div>
+              <p className="text-[10px] text-slate-400 truncate mt-0.5">
+                Ready to paste on this slide
+              </p>
+            </div>
+            <button
+              onClick={() => pasteClipboardElement()}
+              className="px-2.5 py-1 text-[11px] font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-lg shadow-sm transition-colors shrink-0 flex items-center gap-1 cursor-pointer"
+              title="Paste copied element to this slide (Ctrl+V)"
+            >
+              <span>Paste</span>
+              <span className="text-[9px] opacity-70 font-mono">Ctrl+V</span>
+            </button>
+          </div>
+        )}
 
         {/* Background Color & Pattern */}
         <div className="space-y-3">
@@ -458,13 +557,35 @@ export function PropertiesPanel() {
           <Sliders className="w-4 h-4 text-blue-400" />
           <span className="capitalize">{selectedElement.type} Element</span>
         </div>
-        <button
-          onClick={() => deleteElement(selectedElement.id)}
-          className="p-1.5 text-red-400 hover:bg-red-950/50 rounded transition-colors"
-          title="Delete Element"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => {
+              copySelectedElement(selectedElement);
+              setCopiedElement(true);
+              setTimeout(() => setCopiedElement(false), 2000);
+            }}
+            className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 text-[11px] font-medium cursor-pointer ${
+              copiedElement
+                ? "bg-emerald-950 text-emerald-300 border border-emerald-500/40"
+                : "text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700"
+            }`}
+            title="Copy Element to Clipboard (Ctrl+C)"
+          >
+            {copiedElement ? (
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
+            ) : (
+              <Copy className="w-3.5 h-3.5 text-slate-300" />
+            )}
+            <span>{copiedElement ? "Copied!" : "Copy"}</span>
+          </button>
+          <button
+            onClick={() => deleteElement(selectedElement.id)}
+            className="p-1.5 text-red-400 hover:bg-red-950/50 rounded transition-colors cursor-pointer"
+            title="Delete Element (Delete / Backspace)"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* Image Element Properties */}
@@ -518,6 +639,21 @@ export function PropertiesPanel() {
               onChange={(e) =>
                 updateElement(selectedElement.id, { text: e.target.value })
               }
+              onSelect={(e) => {
+                const start = e.target.selectionStart;
+                const end = e.target.selectionEnd;
+                if (typeof start === "number" && typeof end === "number" && start !== end) {
+                  const min = Math.min(start, end);
+                  const max = Math.max(start, end);
+                  const selectedText = (selectedElement.text || "").slice(min, max);
+                  setActiveTextSelection({
+                    elementId: selectedElement.id,
+                    selectionStart: min,
+                    selectionEnd: max,
+                    selectedText,
+                  });
+                }
+              }}
               placeholder="Enter text (press Enter for new line)..."
               className="w-full bg-slate-950 border border-slate-800 rounded p-2 text-slate-200 focus:border-blue-500 focus:outline-none font-sans text-xs"
             />
@@ -548,23 +684,103 @@ export function PropertiesPanel() {
                   selectedElement.fontFamily ||
                   (selectedElement.type === "headline" || selectedElement.id?.includes("head")
                     ? "Instrument Serif"
+                    : selectedElement.type === "badge" || selectedElement.id?.includes("badge")
+                    ? "Playfair Display"
                     : "Georgia")
                 }
                 onChange={(e) =>
-                  updateElement(selectedElement.id, {
-                    fontFamily: e.target.value,
-                  })
+                  updateElement(selectedElement.id, { fontFamily: e.target.value })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200"
+                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-sans"
               >
                 <option value="Instrument Serif">Instrument Serif (Default)</option>
-                <option value="Inter">Inter (Sans)</option>
                 <option value="Georgia">Georgia (Serif)</option>
+                <option value="Inter">Inter (Sans)</option>
+                <option value="JetBrains Mono">JetBrains Mono (Mono)</option>
                 <option value="Playfair Display">Playfair Display</option>
                 <option value="Roboto">Roboto</option>
                 <option value="Arial">Arial</option>
-                <option value="Courier New">Monospace</option>
               </select>
+            </div>
+          </div>
+
+          {/* Text Style & Formatting Toolbar (Bold, Italic, Underline) */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-slate-400 font-medium">
+                Text Style & Decoration
+              </label>
+              {activeTextSelection &&
+                activeTextSelection.elementId === selectedElement.id &&
+                activeTextSelection.selectedText && (
+                  <span
+                    className="text-[10px] px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-500/30 flex items-center gap-1 font-mono truncate max-w-[130px]"
+                    title={`Selected: "${activeTextSelection.selectedText}"`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 animate-pulse" />
+                    <span className="truncate">"{activeTextSelection.selectedText}"</span>
+                  </span>
+                )}
+            </div>
+            <div className="grid grid-cols-3 gap-1.5 bg-slate-950 border border-slate-800 rounded p-1">
+              <button
+                type="button"
+                onClick={() => {
+                  const nextWeight =
+                    selectedElement.fontWeight === "bold" ||
+                    selectedElement.fontWeight === "700" ||
+                    selectedElement.fontWeight === "800"
+                      ? "normal"
+                      : "bold";
+                  applyTextProperty("fontWeight", nextWeight);
+                }}
+                className={`py-1.5 rounded flex items-center justify-center gap-1 text-xs font-bold transition-colors cursor-pointer ${
+                  selectedElement.fontWeight === "bold" ||
+                  selectedElement.fontWeight === "700" ||
+                  selectedElement.fontWeight === "800"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                }`}
+                title="Bold (Selection or Element)"
+              >
+                <Bold className="w-3.5 h-3.5" />
+                <span>Bold</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const nextStyle =
+                    selectedElement.fontStyle === "italic" ? "normal" : "italic";
+                  applyTextProperty("fontStyle", nextStyle);
+                }}
+                className={`py-1.5 rounded flex items-center justify-center gap-1 text-xs italic transition-colors cursor-pointer ${
+                  selectedElement.fontStyle === "italic"
+                    ? "bg-blue-600 text-white font-bold shadow-sm"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                }`}
+                title="Italic (Selection or Element)"
+              >
+                <Italic className="w-3.5 h-3.5" />
+                <span>Italic</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const nextUnderline = !Boolean(selectedElement.underline);
+                  applyTextProperty("underline", nextUnderline);
+                }}
+                className={`py-1.5 rounded flex items-center justify-center gap-1 text-xs underline transition-colors cursor-pointer ${
+                  selectedElement.underline
+                    ? "bg-blue-600 text-white font-bold shadow-sm"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                }`}
+                title="Underline (Selection or Element)"
+              >
+                <Underline className="w-3.5 h-3.5" />
+                <span>Underline</span>
+              </button>
             </div>
           </div>
 
@@ -573,13 +789,11 @@ export function PropertiesPanel() {
               Font Weight
             </label>
             <select
-              value={String(selectedElement.fontWeight || "normal")}
+              value={selectedElement.fontWeight || "normal"}
               onChange={(e) =>
-                updateElement(selectedElement.id, {
-                  fontWeight: e.target.value,
-                })
+                applyTextProperty("fontWeight", e.target.value)
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200"
+              className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 cursor-pointer"
             >
               <option value="normal">Regular</option>
               <option value="500">Medium</option>
@@ -604,7 +818,7 @@ export function PropertiesPanel() {
                     width: layoutBounds.contentZone.width,
                   })
                 }
-                className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors ${
+                className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors cursor-pointer ${
                   (selectedElement.textAlign || "left") === "left"
                     ? "bg-blue-600 text-white font-bold"
                     : "text-slate-400 hover:text-slate-200"
@@ -622,7 +836,7 @@ export function PropertiesPanel() {
                     width: layoutBounds.contentZone.width,
                   })
                 }
-                className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors ${
+                className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors cursor-pointer ${
                   selectedElement.textAlign === "center"
                     ? "bg-blue-600 text-white font-bold"
                     : "text-slate-400 hover:text-slate-200"
@@ -640,7 +854,7 @@ export function PropertiesPanel() {
                     width: layoutBounds.contentZone.width,
                   })
                 }
-                className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors ${
+                className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors cursor-pointer ${
                   selectedElement.textAlign === "right"
                     ? "bg-blue-600 text-white font-bold"
                     : "text-slate-400 hover:text-slate-200"
@@ -651,28 +865,122 @@ export function PropertiesPanel() {
             </div>
           </div>
 
+          {/* Text Color */}
           <div>
-            <label className="block text-slate-400 font-medium mb-1">
-              Text Color
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-slate-400 font-medium">
+                Text Color
+              </label>
+              {activeTextSelection &&
+                activeTextSelection.elementId === selectedElement.id &&
+                activeTextSelection.selectedText && (
+                  <span
+                    className="text-[10px] px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-500/30 flex items-center gap-1 font-mono truncate max-w-[130px]"
+                    title={`Selected: "${activeTextSelection.selectedText}"`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 animate-pulse" />
+                    <span className="truncate">"{activeTextSelection.selectedText}"</span>
+                  </span>
+                )}
+            </div>
             <div className="flex items-center gap-2">
               <input
                 type="color"
                 value={selectedElement.fill || "#000000"}
-                onChange={(e) =>
-                  updateElement(selectedElement.id, { fill: e.target.value })
-                }
+                onChange={(e) => applyTextProperty("fill", e.target.value)}
                 className="w-7 h-7 rounded border border-slate-700 bg-transparent cursor-pointer"
               />
               <input
                 type="text"
                 value={selectedElement.fill || "#000000"}
-                onChange={(e) =>
-                  updateElement(selectedElement.id, { fill: e.target.value })
-                }
-                className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 font-mono text-slate-200"
+                onChange={(e) => applyTextProperty("fill", e.target.value)}
+                className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 font-mono text-slate-200 text-xs"
               />
             </div>
+          </div>
+
+          {/* Text Highlight / Background Color */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-slate-400 font-medium flex items-center gap-1.5">
+                <Highlighter className="w-3.5 h-3.5 text-amber-400" />
+                <span>Text Background / Highlight</span>
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={selectedElement.textBackgroundColor || "#fff176"}
+                onChange={(e) =>
+                  applyTextProperty("textBackgroundColor", e.target.value)
+                }
+                className="w-7 h-7 rounded border border-slate-700 bg-transparent cursor-pointer"
+              />
+              <input
+                type="text"
+                value={selectedElement.textBackgroundColor || ""}
+                placeholder="Transparent (no highlight)"
+                onChange={(e) =>
+                  applyTextProperty("textBackgroundColor", e.target.value)
+                }
+                className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 font-mono text-slate-200 text-xs placeholder:text-slate-600"
+              />
+              {selectedElement.textBackgroundColor && (
+                <button
+                  type="button"
+                  onClick={() => applyTextProperty("textBackgroundColor", "")}
+                  className="text-[10px] text-slate-400 hover:text-slate-200 px-1.5 py-1 bg-slate-800 hover:bg-slate-700 rounded border border-slate-700 cursor-pointer shrink-0"
+                  title="Remove Highlight"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
+            {/* Quick Highlight Preset Palettes */}
+            <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+              <span className="text-[10px] text-slate-500 font-mono mr-0.5">Presets:</span>
+              {[
+                { name: "Yellow", color: "#FFF176" },
+                { name: "Sepia / Coral", color: "#FAD4C0" },
+                { name: "Lime", color: "#D8F5A2" },
+                { name: "Soft Cyan", color: "#BFE8FF" },
+                { name: "Lavender", color: "#F5C6EA" },
+              ].map((swatch) => (
+                <button
+                  key={swatch.color}
+                  type="button"
+                  onClick={() => applyTextProperty("textBackgroundColor", swatch.color)}
+                  style={{ backgroundColor: swatch.color }}
+                  title={`${swatch.name} (${swatch.color})`}
+                  className="w-5 h-5 rounded-md border border-slate-700/60 hover:scale-110 transition-transform cursor-pointer shadow-sm"
+                />
+              ))}
+              <button
+                type="button"
+                onClick={() => applyTextProperty("textBackgroundColor", "")}
+                className="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 border border-slate-700 transition-colors cursor-pointer"
+                title="Remove text background"
+              >
+                None
+              </button>
+            </div>
+
+            {activeTextSelection &&
+              activeTextSelection.elementId === selectedElement.id &&
+              activeTextSelection.selectedText && (
+                <div className="flex items-center justify-between mt-2 text-[11px] text-blue-300 bg-blue-950/40 p-1.5 rounded-lg border border-blue-500/20">
+                  <span className="truncate">Applying to selected text</span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTextSelection(null)}
+                    className="text-slate-400 hover:text-slate-200 text-[10px] underline cursor-pointer shrink-0 ml-1"
+                  >
+                    Clear selection
+                  </button>
+                </div>
+              )}
           </div>
         </div>
       )}

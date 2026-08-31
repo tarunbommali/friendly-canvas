@@ -7,6 +7,7 @@ import {
   isBodyElement,
   isDirectiveTextElement,
   isDirectiveRectElement,
+  isBackgroundRect,
 } from "./elementClassify";
 import { wrapTextToLines } from "../canvas/textAnnotations";
 
@@ -207,24 +208,8 @@ export function composeSlide(
 ) {
   let elements = autoLayout ? autoLayoutContent(contentElements) : [...contentElements];
 
-  const hasBg = elements.some((el) => el.id?.includes("_bg") || el.id === "rect_bg");
-  if (!hasBg) {
-    elements.unshift({
-      id: `rect_${slideId}_bg`,
-      type: "rect",
-      x: THEME.canvas.width / 2,
-      y: THEME.canvas.height / 2,
-      width: THEME.safeArea.width,
-      height: THEME.safeArea.height,
-      originX: "center",
-      originY: "center",
-      fill: THEME.colors.cardBg,
-      stroke: THEME.colors.cardBorder,
-      strokeWidth: 2,
-      rotation: 0,
-      zIndex: 1,
-    });
-  }
+  // Remove any default background rect elements completely
+  elements = elements.filter((el) => !isBackgroundRect(el));
 
   const nonChromeElements = elements.filter((el) => !isChromeElement(el));
 

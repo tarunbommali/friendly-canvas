@@ -183,6 +183,33 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
     });
 
     fabricRef.current = canvas;
+    useCarouselStore.getState().setFabricCanvas(canvas);
+
+    const onTextSelectionChanged = () => {
+      const activeObj = canvas.getActiveObject();
+      if (
+        activeObj &&
+        (activeObj.type === "textbox" ||
+          activeObj.type === "i-text" ||
+          activeObj.type === "text")
+      ) {
+        const start = activeObj.selectionStart;
+        const end = activeObj.selectionEnd;
+        const id = activeObj.get?.("data")?.id || activeObj.data?.id;
+        if (id && typeof start === "number" && typeof end === "number" && start !== end) {
+          const min = Math.min(start, end);
+          const max = Math.max(start, end);
+          const selectedText = (activeObj.text || "").slice(min, max);
+          useCarouselStore.getState().setActiveTextSelection({
+            elementId: id,
+            selectionStart: min,
+            selectionEnd: max,
+            selectedText,
+          });
+          return;
+        }
+      }
+    };
 
     const onSelectionCreated = (event) => {
       if (isRenderingRef.current) return;
@@ -201,7 +228,12 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
         }
       }
       const id = obj?.get?.("data")?.id || obj?.data?.id;
-      if (id) selectElement(id);
+      if (id) {
+        selectElement(id);
+        if (id !== useCarouselStore.getState().activeTextSelection?.elementId) {
+          useCarouselStore.getState().setActiveTextSelection(null);
+        }
+      }
     };
 
     const onSelectionUpdated = (event) => {
@@ -217,12 +249,18 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
         if (obj?.data?.isChrome) return;
       }
       const id = obj?.get?.("data")?.id || obj?.data?.id;
-      if (id) selectElement(id);
+      if (id) {
+        selectElement(id);
+        if (id !== useCarouselStore.getState().activeTextSelection?.elementId) {
+          useCarouselStore.getState().setActiveTextSelection(null);
+        }
+      }
     };
 
     const onSelectionCleared = () => {
       if (isRenderingRef.current) return;
       selectElement(null);
+      useCarouselStore.getState().setActiveTextSelection(null);
     };
 
     const onObjectModified = (event) => {
@@ -337,17 +375,23 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
       const target = event.target;
       const id = target?.get?.("data")?.id || target?.data?.id;
       if (id && target.text !== undefined) {
-        updateElement(id, {
+        const updates = {
           text: target.text,
           width: Math.round(target.width * (target.scaleX || 1)),
           fontSize: Math.round(target.fontSize * (target.scaleY || 1)),
-        });
+        };
+        if (target.styles && Object.keys(target.styles).length > 0) {
+          updates.styles = JSON.parse(JSON.stringify(target.styles));
+        }
+        updateElement(id, updates);
       }
     };
 
     canvas.on("mouse:dblclick", onDoubleClick);
     canvas.on("text:editing:entered", onEditingEntered);
     canvas.on("text:editing:exited", onEditingExited);
+    canvas.on("text:selection:changed", onTextSelectionChanged);
+    canvas.on("mouse:up", onTextSelectionChanged);
     canvas.on("selection:created", onSelectionCreated);
     canvas.on("selection:updated", onSelectionUpdated);
     canvas.on("selection:cleared", onSelectionCleared);
@@ -359,13 +403,17 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
     });
 
     return () => {
+      useCarouselStore.getState().setFabricCanvas(null);
       canvas.off("mouse:dblclick", onDoubleClick);
       canvas.off("text:editing:entered", onEditingEntered);
       canvas.off("text:editing:exited", onEditingExited);
+      canvas.off("text:selection:changed", onTextSelectionChanged);
+      canvas.off("mouse:up", onTextSelectionChanged);
       canvas.off("selection:created", onSelectionCreated);
       canvas.off("selection:updated", onSelectionUpdated);
       canvas.off("selection:cleared", onSelectionCleared);
       canvas.off("object:modified", onObjectModified);
+      canvas.off("text:changed", onTextChanged);
       if (snapEngineRef.current) {
         try {
           if (typeof snapEngineRef.current.detach === "function") {
@@ -444,7 +492,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
 
         {showSafeAreaGuides && (
           <div
-            className="absolute border-2 border-dashed border-cyan-400/50 pointer-events-none rounded-2xl flex flex-col justify-between p-2 z-30"
+            className="absolute border-[3px] border-dashed border-cyan-500/80 pointer-events-none rounded-2xl flex flex-col justify-between p-2 z-30 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
             style={{
               top: `${layoutBounds.safeArea.top}px`,
               left: `${layoutBounds.safeArea.left}px`,
@@ -452,7 +500,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
               height: `${layoutBounds.safeArea.height}px`,
             }}
           >
-            <div className="flex justify-between items-center text-[10px] font-mono text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded w-max border border-cyan-500/30">
+            <div className="flex justify-between items-center text-xs font-mono text-cyan-200 font-bold bg-cyan-950/90 px-2.5 py-1 rounded-md w-max border border-cyan-400/50 shadow-md">
               <span>
                 SAFE AREA (Top/Bottom: {layoutBounds.safeArea.top}px, L/R:{" "}
                 {layoutBounds.safeArea.left}px)
@@ -461,7 +509,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
 
             {/* Inner Content Zone Boundary with 4-Column Grid Guides */}
             <div
-              className="absolute border border-dashed border-amber-400/60 pointer-events-none rounded-xl overflow-hidden"
+              className="absolute border-2 border-dashed border-amber-500/80 pointer-events-none rounded-xl overflow-hidden shadow-[0_0_10px_rgba(245,158,11,0.1)]"
               style={{
                 top: `${layoutBounds.contentZone.top - layoutBounds.safeArea.top}px`,
                 left: `${layoutBounds.contentZone.left - layoutBounds.safeArea.left}px`,
@@ -469,21 +517,21 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
                 height: `${layoutBounds.contentZone.height}px`,
               }}
             >
-              <span className="absolute top-1 left-2 text-[9px] font-mono font-bold text-amber-300 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-500/30">
+              <span className="absolute top-1 left-2 text-[11px] font-mono font-bold text-amber-200 bg-amber-950/90 px-2 py-0.5 rounded border border-amber-400/50 shadow-md">
                 CONTENT ZONE (Top: {layoutBounds.contentZone.top}px, Bottom:{" "}
                 {layoutBounds.contentZone.bottom}px)
               </span>
 
               {/* 4 Column Grid Overlay Lines (Clean Outlines, No Color Fill Obscuring Text) */}
-              <div className="w-full h-full grid grid-cols-4 gap-4 px-2 opacity-25 pointer-events-none">
-                <div className="border-x border-amber-400/40 h-full" />
-                <div className="border-x border-amber-400/40 h-full" />
-                <div className="border-x border-amber-400/40 h-full" />
-                <div className="border-x border-amber-400/40 h-full" />
+              <div className="w-full h-full grid grid-cols-4 gap-4 px-2 opacity-40 pointer-events-none">
+                <div className="border-x border-amber-400/60 h-full" />
+                <div className="border-x border-amber-400/60 h-full" />
+                <div className="border-x border-amber-400/60 h-full" />
+                <div className="border-x border-amber-400/60 h-full" />
               </div>
             </div>
 
-            <div className="flex justify-between items-center text-[10px] font-mono text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded w-max self-end border border-cyan-500/30">
+            <div className="flex justify-between items-center text-xs font-mono text-cyan-200 font-bold bg-cyan-950/90 px-2.5 py-1 rounded-md w-max self-end border border-cyan-400/50 shadow-md">
               <span>
                 Safe Area ({layoutBounds.safeArea.width}x
                 {layoutBounds.safeArea.height})
