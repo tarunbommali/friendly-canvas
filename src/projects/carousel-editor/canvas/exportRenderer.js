@@ -85,6 +85,22 @@ export async function renderSlideToDataUrl(slide, metadata, multiplier = 2) {
             fabricImg.scaleToHeight(el.height);
           }
 
+          const radius = Number(el.borderRadius ?? el.rx ?? el.rounded ?? 0);
+          if (radius > 0) {
+            const scaleX = fabricImg.scaleX || 1;
+            const scaleY = fabricImg.scaleY || 1;
+            fabricImg.clipPath = new Rect({
+              width: fabricImg.width,
+              height: fabricImg.height,
+              rx: radius / scaleX,
+              ry: radius / scaleY,
+              originX: "center",
+              originY: "center",
+              left: 0,
+              top: 0,
+            });
+          }
+
           fabric.add(fabricImg);
           resolve();
         };

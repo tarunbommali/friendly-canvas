@@ -595,14 +595,23 @@ export function PropertiesPanel() {
             <label className="block text-slate-400 font-medium mb-1">
               Image Preview
             </label>
-            <div className="w-full aspect-video rounded-lg overflow-hidden border border-slate-800 bg-slate-950 flex items-center justify-center p-1">
+            <div
+              className="w-full aspect-video rounded-lg overflow-hidden border border-slate-800 bg-slate-950 flex items-center justify-center p-1"
+            >
               <img
                 src={selectedElement.src}
                 alt="Selected element"
-                className="max-h-full max-w-full object-contain rounded"
+                style={{
+                  borderRadius: `${Math.min(
+                    48,
+                    (selectedElement.borderRadius ?? selectedElement.rx ?? 0) / 2
+                  )}px`,
+                }}
+                className="max-h-full max-w-full object-contain transition-all"
               />
             </div>
           </div>
+
           <div>
             <label className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg border border-slate-700 flex items-center justify-center gap-1.5 cursor-pointer transition-colors w-full">
               <ImageIcon className="w-3.5 h-3.5 text-purple-400" />
@@ -622,6 +631,85 @@ export function PropertiesPanel() {
                 className="hidden"
               />
             </label>
+          </div>
+
+          {/* Corner Radius / Rounded Option */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-slate-400 font-medium">
+                Rounded Corners (Radius)
+              </label>
+              <span className="font-mono text-slate-300 text-[11px]">
+                {selectedElement.borderRadius ?? selectedElement.rx ?? 0}px
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min="0"
+                max="120"
+                step="2"
+                value={selectedElement.borderRadius ?? selectedElement.rx ?? 0}
+                onChange={(e) =>
+                  updateElement(selectedElement.id, {
+                    borderRadius: Number(e.target.value),
+                    rx: Number(e.target.value),
+                    ry: Number(e.target.value),
+                  })
+                }
+                className="flex-1 accent-blue-500 cursor-pointer"
+              />
+              <input
+                type="number"
+                min="0"
+                max="999"
+                value={selectedElement.borderRadius ?? selectedElement.rx ?? 0}
+                onChange={(e) =>
+                  updateElement(selectedElement.id, {
+                    borderRadius: Math.max(0, Number(e.target.value)),
+                    rx: Math.max(0, Number(e.target.value)),
+                    ry: Math.max(0, Number(e.target.value)),
+                  })
+                }
+                className="w-14 bg-slate-950 border border-slate-800 rounded p-1 text-slate-200 font-mono text-xs text-center"
+              />
+            </div>
+
+            {/* Quick Rounded Presets */}
+            <div className="grid grid-cols-4 gap-1 mt-2">
+              {[
+                { label: "Square", value: 0 },
+                { label: "12px", value: 12 },
+                { label: "24px", value: 24 },
+                { label: "Pill / Full", value: 99 },
+              ].map((preset) => {
+                const current = selectedElement.borderRadius ?? selectedElement.rx ?? 0;
+                const isSelected =
+                  preset.value === 99
+                    ? current >= 80
+                    : current === preset.value;
+                return (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() =>
+                      updateElement(selectedElement.id, {
+                        borderRadius: preset.value,
+                        rx: preset.value,
+                        ry: preset.value,
+                      })
+                    }
+                    className={`py-1 rounded text-[11px] font-medium border transition-colors cursor-pointer text-center ${
+                      isSelected
+                        ? "bg-blue-600 border-blue-500 text-white shadow-sm"
+                        : "bg-slate-950/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

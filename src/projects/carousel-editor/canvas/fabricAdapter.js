@@ -108,12 +108,28 @@ function applyImageSize(fabricImg, element, imgElement) {
       scaleX: element.width / natW,
       scaleY: element.height / natH,
     });
-    return;
-  }
-  if (element.width) {
+  } else if (element.width) {
     fabricImg.scaleToWidth(element.width);
   } else if (element.height) {
     fabricImg.scaleToHeight(element.height);
+  }
+
+  const radius = Number(element.borderRadius ?? element.rx ?? element.rounded ?? 0);
+  if (radius > 0) {
+    const scaleX = fabricImg.scaleX || 1;
+    const scaleY = fabricImg.scaleY || 1;
+    fabricImg.clipPath = new Rect({
+      width: fabricImg.width,
+      height: fabricImg.height,
+      rx: radius / scaleX,
+      ry: radius / scaleY,
+      originX: "center",
+      originY: "center",
+      left: 0,
+      top: 0,
+    });
+  } else {
+    fabricImg.clipPath = null;
   }
 }
 
