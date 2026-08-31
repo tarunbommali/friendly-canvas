@@ -6,60 +6,6 @@
     "height": 1350
   },
   "trackPalettes": {
-    "01": {
-      "name": "Track 1 — Why Computers Exist",
-      "palette": "Sepia",
-      "primary": "#8B5E3C",
-      "accent": "#D9C7A3"
-    },
-    "02": {
-      "name": "Track 2 — How a Computer Actually Works",
-      "palette": "Tech Blue",
-      "primary": "#1E5FA8",
-      "accent": "#A9D0F5"
-    },
-    "03": {
-      "name": "Track 3 — How Software Became Possible",
-      "palette": "Lavender",
-      "primary": "#5B4A8A",
-      "accent": "#C8BFDF"
-    },
-    "04": {
-      "name": "Track 4 — Operating Systems",
-      "palette": "Teal",
-      "primary": "#1B6B6B",
-      "accent": "#A8D8D8"
-    },
-    "05": {
-      "name": "Track 5 — Programming",
-      "palette": "Emerald",
-      "primary": "#1F8A5F",
-      "accent": "#B6E6CE"
-    },
-    "06": {
-      "name": "Track 6 — Problem Solving & DSA",
-      "palette": "Amber",
-      "primary": "#C05621",
-      "accent": "#FBD38D"
-    },
-    "07": {
-      "name": "Track 7 — Software Engineering",
-      "palette": "Indigo",
-      "primary": "#4A3F8C",
-      "accent": "#C9C2EC"
-    },
-    "08": {
-      "name": "Track 8 — How the Web Works",
-      "palette": "Cyan",
-      "primary": "#0E8FA0",
-      "accent": "#A9E7EE"
-    },
-    "09": {
-      "name": "Track 9 — Web Development",
-      "palette": "Coral",
-      "primary": "#C84B31",
-      "accent": "#FAD4C0"
-    },
     "10": {
       "name": "Track 10 — Frameworks & Backend",
       "palette": "Mint",
@@ -125,6 +71,60 @@
       "palette": "Futuristic Purple",
       "primary": "#5B2C91",
       "accent": "#C9A9F0"
+    },
+    "01": {
+      "name": "Track 1 — Why Computers Exist",
+      "palette": "Sepia",
+      "primary": "#8B5E3C",
+      "accent": "#D9C7A3"
+    },
+    "02": {
+      "name": "Track 2 — How a Computer Actually Works",
+      "palette": "Tech Blue",
+      "primary": "#1E5FA8",
+      "accent": "#A9D0F5"
+    },
+    "03": {
+      "name": "Track 3 — How Software Became Possible",
+      "palette": "Lavender",
+      "primary": "#5B4A8A",
+      "accent": "#C8BFDF"
+    },
+    "04": {
+      "name": "Track 4 — Operating Systems",
+      "palette": "Teal",
+      "primary": "#1B6B6B",
+      "accent": "#A8D8D8"
+    },
+    "05": {
+      "name": "Track 5 — Programming",
+      "palette": "Emerald",
+      "primary": "#1F8A5F",
+      "accent": "#B6E6CE"
+    },
+    "06": {
+      "name": "Track 6 — Problem Solving & DSA",
+      "palette": "Amber",
+      "primary": "#C05621",
+      "accent": "#FBD38D"
+    },
+    "07": {
+      "name": "Track 7 — Software Engineering",
+      "palette": "Indigo",
+      "primary": "#4A3F8C",
+      "accent": "#C9C2EC"
+    },
+    "08": {
+      "name": "Track 8 — How the Web Works",
+      "palette": "Cyan",
+      "primary": "#0E8FA0",
+      "accent": "#A9E7EE"
+    },
+    "09": {
+      "name": "Track 9 — Web Development",
+      "palette": "Coral",
+      "primary": "#C84B31",
+      "accent": "#FAD4C0"
     }
   },
   "chapterCovers": [
@@ -1862,43 +1862,52 @@
           "id": "slide_t06_p28_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "Inserting one row at the front of a 200,000-item array froze the whole app",
-          "text": "The data structure, not the code, was the problem."
+          "headline": "Arrays",
+          "text": "Think of a movie theater: seat 47 is seat 47, no scanning seats 1-46 to find it. That's an array — a fixed-size, ordered block of memory where every item sits at a numbered position, so reading any item is instant (O(1)), no matter the size."
         },
         {
           "id": "slide_t06_p28_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "Arrays, strings, and linked lists store sequences — with different trade-offs",
-          "text": "An array holds items in a contiguous block; a string is an array of characters; a linked list chains items through pointers, each pointing to the next."
+          "headline": "Strings",
+          "text": "A string is just an array of characters treated as text — same rules apply: fast to read by position, but its size is locked in from the moment it's created."
         },
         {
           "id": "slide_t06_p28_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Arrays give instant index access; linked lists give instant insertion",
-          "text": "Reading array[5] is one step; inserting at the front means shifting everything. A linked list can't jump to index 5, but rewiring two pointers inserts anywhere instantly."
+          "headline": "Linked Lists",
+          "text": "Like a treasure hunt where each clue only reveals the next one: a linked list is a chain of nodes, each holding a value and a pointer to the next. Inserting is just two pointer updates — instant, even in a list of 10 million. The tradeoff: to find anything, you start at the beginning and follow the chain, one step at a time.",
+          "vibe": "step-by-step diagram, left-to-right, numbered steps"
         },
         {
           "id": "slide_t06_p28_s04",
           "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Arrays: fast reads, slow inserts. Linked lists: fast inserts, slow reads.",
-          "text": "Pick by your dominant operation — random access favours arrays, frequent insertion or deletion in the middle favours linked lists."
+          "layout": "real-world",
+          "headline": "where you'll actually see this",
+          "text": "you'll run into arrays, strings & linked lists: where everyone starts on your first real project — probably before you feel ready for it."
         },
         {
           "id": "slide_t06_p28_s05",
           "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Arrays are fast to read and slow to reshape; linked lists are the exact opposite",
-          "text": "The right structure is the one that matches your most common operation."
+          "layout": "real-world",
+          "headline": "Why It Matters",
+          "text": "\"Arrays, Strings & Linked Lists: Where Everyone Starts\" isn't a side note — everything later in this series builds on it. Skip it, and the next posts get harder to follow."
         },
         {
           "id": "slide_t06_p28_s06",
           "slideNo": 6,
+          "layout": "recap-close",
+          "headline": "the one thing to screenshot",
+          "text": "arrays, strings & linked lists: where everyone starts is the kind of thing that clicks once, then you see it everywhere. save this post for when you need to explain it."
+        },
+        {
+          "id": "slide_t06_p28_s07",
+          "slideNo": 7,
           "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Stacks, Queues & Hash Tables Explained"
+          "headline": "next in the series",
+          "text": "Stacks, Queues & Hash Tables Explained",
+          "cta": "save this before you forget it, and send it to whoever keeps saying \"arrays, strings & linked lists: where everyone starts is too hard to understand\""
         }
       ]
     },
@@ -1921,43 +1930,52 @@
           "id": "slide_t06_p29_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "Undo, task queues, and instant lookups all lean on three structures you can learn in a day",
-          "text": "Stacks, queues, and hash tables."
+          "headline": "Stack",
+          "text": "Picture a stack of plates — you only ever add or remove from the top, never the middle or bottom. That's Last-In-First-Out. It's why Ctrl+Z works, why your browser's back button peels off the most recent page first, and how the call stack tracks which function returns next."
         },
         {
           "id": "slide_t06_p29_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "Stacks are last-in-first-out; queues are first-in-first-out; hash tables map keys to values",
-          "text": "A stack adds and removes from one end; a queue adds at one end and removes from the other; a hash table jumps straight to a value using its key."
+          "headline": "Queue",
+          "text": "A queue is a line at a coffee shop — first person in line, first one served, no cutting. Enqueue adds to the back, dequeue removes from the front. It's how print jobs line up and how web servers process thousands of incoming requests in order."
         },
         {
           "id": "slide_t06_p29_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Each fits a shape of problem exactly",
-          "text": "Undo and recursion use a stack; ordered task processing uses a queue; 'find X by name instantly' uses a hash table's near-constant-time lookup."
+          "headline": "Hash Tables",
+          "text": "Search 'mom' in your contacts and her number appears instantly — that's a hash table. A hash function turns the key into a number that points straight to a memory slot, so lookup is O(1) whether you have 10 contacts or 10 million. The cost: more memory, and occasional collisions when two keys land on the same slot.",
+          "vibe": "step-by-step diagram, left-to-right, numbered steps"
         },
         {
           "id": "slide_t06_p29_s04",
           "slideNo": 4,
-          "layout": "comparison",
-          "headline": "Hash tables give O(1) lookups but no order and possible collisions",
-          "text": "They trade the ordering and predictability of a list for blazing-fast key access — as long as the hash spreads keys evenly."
+          "layout": "real-world",
+          "headline": "where you'll actually see this",
+          "text": "you'll run into stacks, queues & hash tables explained on your first real project — probably before you feel ready for it."
         },
         {
           "id": "slide_t06_p29_s05",
           "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Stacks reverse, queues preserve order, hash tables find instantly — match the tool to the access pattern",
-          "text": "The structure encodes the behaviour you need."
+          "layout": "real-world",
+          "headline": "Why It Matters",
+          "text": "\"Stacks, Queues & Hash Tables Explained\" isn't a side note — everything later in this series builds on it. Skip it, and the next posts get harder to follow."
         },
         {
           "id": "slide_t06_p29_s06",
           "slideNo": 6,
+          "layout": "recap-close",
+          "headline": "the one thing to screenshot",
+          "text": "stacks, queues & hash tables explained is the kind of thing that clicks once, then you see it everywhere. save this post for when you need to explain it."
+        },
+        {
+          "id": "slide_t06_p29_s07",
+          "slideNo": 7,
           "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Trees, Heaps & Graphs: Where DSA Gets Real"
+          "headline": "next in the series",
+          "text": "Trees, Heaps & Graphs: Where DSA Gets Real",
+          "cta": "save this before you forget it, and send it to whoever keeps saying \"stacks, queues & hash tables explained is too hard to understand\""
         }
       ]
     },
@@ -1980,43 +1998,52 @@
           "id": "slide_t06_p30_s01",
           "slideNo": 1,
           "layout": "hook-open",
-          "headline": "A nested comment thread, a priority list, a map of friendships — flat structures can't model these",
-          "text": "You need trees, heaps, and graphs."
+          "headline": "Trees",
+          "text": "Open your file explorer: one root at the top, branching into folders, then files — every path flows one direction, root to leaves, with no cycles. That's a tree. HTML's DOM, comment threads, and decision trees all follow the same branching shape."
         },
         {
           "id": "slide_t06_p30_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "Trees are hierarchies, heaps are priority-ordered trees, graphs are networks",
-          "text": "A tree branches from a root with no cycles; a heap keeps the highest (or lowest) priority item at the top; a graph is nodes connected by edges, cycles allowed."
+          "headline": "Heaps",
+          "text": "Like an ER: the heart attack patient gets seen before the headache, no matter who arrived first. A heap keeps the highest-priority item at the top at all times, reorganizing itself on every insert or removal — which is exactly how OS task schedulers and GPS route recalculation work."
         },
         {
           "id": "slide_t06_p30_s03",
           "slideNo": 3,
           "layout": "process-flow",
-          "headline": "Each models a relationship a list can't",
-          "text": "File systems and DOM are trees; 'always get the highest priority next' is a heap; social networks, maps, and dependencies are graphs."
+          "headline": "Graphs",
+          "text": "Facebook is one giant graph — you're a node, friendships are edges. Google Maps is another — cities are nodes, roads are edges, and 'get directions' is just a search across it. Graphs can be directed (Twitter follows) or undirected (Facebook friends), stored as an adjacency matrix (fast lookups) or adjacency list (more memory-efficient), and explored with DFS or BFS.",
+          "vibe": "step-by-step diagram, left-to-right, numbered steps"
         },
         {
           "id": "slide_t06_p30_s04",
           "slideNo": 4,
-          "layout": "comparison",
-          "headline": "More expressive structures cost more to traverse and reason about",
-          "text": "A graph can model almost anything, but questions like 'shortest path' or 'is there a cycle' become real algorithmic work, not a simple loop."
+          "layout": "real-world",
+          "headline": "where you'll actually see this",
+          "text": "you'll run into trees, heaps & graphs: where dsa gets real on your first real project — probably before you feel ready for it."
         },
         {
           "id": "slide_t06_p30_s05",
           "slideNo": 5,
-          "layout": "recap-close",
-          "headline": "Trees branch, heaps prioritise, graphs connect — this is where structure starts modelling the real world",
-          "text": "The shape of your data mirrors the shape of your problem."
+          "layout": "real-world",
+          "headline": "Why It Matters",
+          "text": "\"Trees, Heaps & Graphs: Where DSA Gets Real\" isn't a side note — everything later in this series builds on it. Skip it, and the next posts get harder to follow."
         },
         {
           "id": "slide_t06_p30_s06",
           "slideNo": 6,
+          "layout": "recap-close",
+          "headline": "the one thing to screenshot",
+          "text": "trees, heaps & graphs: where dsa gets real is the kind of thing that clicks once, then you see it everywhere. save this post for when you need to explain it."
+        },
+        {
+          "id": "slide_t06_p30_s07",
+          "slideNo": 7,
           "layout": "next-up",
-          "headline": "Coming next",
-          "text": "Searching & Sorting: The Algorithms Behind Everything"
+          "headline": "next in the series",
+          "text": "Searching & Sorting: The Algorithms Behind Everything",
+          "cta": "save this before you forget it, and send it to whoever keeps saying \"trees, heaps & graphs: where dsa gets real is too hard to understand\""
         }
       ]
     },
