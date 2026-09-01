@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useCarouselStore } from "../store/carouselStore";
 import { renderSlideToDataUrl } from "../canvas/exportRenderer";
+import { routes } from "../../../shared/config/routes";
 import {
   Type,
   Square,
@@ -26,6 +27,10 @@ import { THEME } from "../theme/theme";
 import { createElementId } from "../theme/elementClassify";
 
 export function Toolbar({ onOpenSettings, currentPost }) {
+  const { projectSlug } = useParams();
+  const activeSlug = projectSlug || currentPost?.projectId || currentPost?.projectSlug || 'swe-notebook';
+  const backToHomeUrl = routes.contentHub ? routes.contentHub(activeSlug) : `/${activeSlug}/content`;
+
   const imageInputRef = useRef(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
@@ -198,7 +203,7 @@ export function Toolbar({ onOpenSettings, currentPost }) {
       {/* Left: Back + Title */}
       <div className="flex items-center gap-3 shrink-0">
         <Link
-          to="/"
+          to={backToHomeUrl}
           className="p-1 hover:bg-white/5 rounded text-slate-400 hover:text-white transition-colors"
           title="Back to Home"
         >
