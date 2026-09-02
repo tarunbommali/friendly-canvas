@@ -1,35 +1,40 @@
-import { useNavigate } from 'react-router-dom'
-import CarouselLogoBadge from '../../../workspace/CarouselLogoBadge'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AlertCircle, ArrowLeft, Home } from 'lucide-react';
 
 export default function NotFoundPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="p-10 md:p-14 rounded-3xl bg-[#1a1e2a] border border-white/10 flex flex-col items-center text-center gap-4 max-w-lg shadow-2xl">
-        <CarouselLogoBadge size={48} />
-        <h1 className="font-mono font-black text-6xl text-yellow-400 leading-none m-0">
+    <div className="flex items-center justify-center min-h-[70vh] p-6 font-sans">
+      <div className="p-8 md:p-12 rounded-2xl bg-white dark:bg-[#151821] border border-[#e2e8f0] dark:border-white/10 flex flex-col items-center text-center gap-4 max-w-md shadow-sm">
+        <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-200 dark:border-blue-700">
+          <AlertCircle className="w-6 h-6" />
+        </div>
+        <h1 className="font-mono font-bold text-4xl text-gray-900 dark:text-slate-100 leading-none">
           404
         </h1>
-        <h2 className="font-serif font-bold text-2xl text-white m-0">Page Not Found</h2>
-        <p className="text-xs md:text-sm text-slate-400 max-w-sm m-0">
-          The track or post you're looking for doesn't exist in the SWE Notebook series.
+        <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">Page Not Found</h2>
+        <p className="text-xs text-gray-500 dark:text-slate-400 max-w-sm leading-relaxed">
+          The curriculum track, post, or resource you are looking for does not exist or has been relocated.
         </p>
-        <div className="flex items-center gap-3 pt-3">
+        <div className="flex items-center gap-3 pt-2">
           <button
-            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md transition-colors"
+            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer"
             onClick={() => navigate('/')}
           >
-            🏠 Go to Overview
+            <Home className="w-3.5 h-3.5" />
+            <span>Workspace Home</span>
           </button>
           <button
-            className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 font-semibold text-xs transition-colors"
-            onClick={() => navigate('/track/1')}
+            className="px-4 py-2 rounded-lg bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-800 border border-gray-200 dark:border-white/10 text-gray-700 dark:text-slate-300 font-semibold text-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+            onClick={() => navigate('/swe-notebook/content')}
           >
-            📚 Go to Track 1
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Curriculum Tracks</span>
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

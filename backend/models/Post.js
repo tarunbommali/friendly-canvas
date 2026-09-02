@@ -17,30 +17,52 @@ const resourceSchema = new Schema(
   { _id: false }
 );
 
-const slideSchema = new Schema(
+const canvasDocumentSchema = new Schema(
   {
-    externalId: { type: String, required: true }, // "slide_t01_p01_s01"
-    slideNo: { type: Number, required: true },
-    layout: { type: String, enum: SLIDE_LAYOUTS, required: true },
-    headline: { type: String, required: true },
-    text: { type: String, required: true },
+    version: { type: Number, default: 1 },
+    width: { type: Number, default: 1080 },
+    height: { type: Number, default: 1350 },
+    aspectRatio: { type: String, default: '4:5' },
+    bgPattern: { type: String, default: 'solid' },
+    textAlign: { type: String, default: 'left' },
+    objects: { type: [Schema.Types.Mixed], default: [] },
+    background: { type: Schema.Types.Mixed, default: { type: 'color', value: '#121212' } },
   },
   { _id: false }
 );
 
+const slideSchema = new Schema(
+  {
+    externalId: { type: String, default: () => `slide_${Date.now()}` },
+    slideNo: { type: Number, required: true },
+    layout: { type: String, default: 'concept-explain' },
+    headline: { type: String, default: '' },
+    text: { type: String, default: '' },
+    imagePrompt: { type: String, default: '' },
+    visualDirective: { type: Schema.Types.Mixed, default: '' },
+    assets: { type: [String], default: [] },
+    canvas: { type: canvasDocumentSchema, default: () => ({}) },
+  },
+  { timestamps: true }
+);
+
 const postSchema = new Schema(
   {
-    externalId: { type: String, required: true, unique: true }, // "post_t01_p01"
-    title: { type: String, required: true },
-    postNo: { type: Number, required: true, unique: true },
+    project: { type: Schema.Types.ObjectId, ref: 'Project', required: true, index: true },
     track: { type: Schema.Types.ObjectId, ref: 'Track', required: true, index: true },
+    externalId: { type: String, required: true },
+    title: { type: String, required: true },
+    postNo: { type: Number, required: true },
+    sortOrder: { type: Number, required: true, default: 0 },
     resources: [resourceSchema],
-    assets: [String],
+    assets: { type: [String], default: [] },
     slides: [slideSchema],
   },
   { timestamps: true }
 );
 
-postSchema.index({ track: 1, postNo: 1 });
+postSchema.index({ track: 1, postNo: 1 }, { unique: true });
+postSchema.index({ track: 1, sortOrder: 1 });
+postSchema.index({ project: 1, sortOrder: 1 });
 
 module.exports = model('Post', postSchema);

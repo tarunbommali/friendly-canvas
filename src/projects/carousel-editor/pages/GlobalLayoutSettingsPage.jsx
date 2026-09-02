@@ -129,7 +129,7 @@ export function GlobalLayoutSettingsPage() {
     } else if (postId) {
       navigate(`/design/${postId}`);
     } else {
-      navigate(-1);
+      navigate('/canvas-editor');
     }
   };
 

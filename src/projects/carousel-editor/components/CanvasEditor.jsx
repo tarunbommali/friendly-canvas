@@ -477,10 +477,10 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full flex items-center justify-center overflow-hidden bg-slate-950 p-4"
+      className="relative w-full h-full flex items-center justify-center overflow-hidden bg-transparent p-4"
     >
       <div
-        className="transition-transform duration-150 ease-out shadow-2xl rounded-xl border border-slate-700 bg-white flex items-center justify-center flex-shrink-0 relative"
+        className="transition-transform duration-150 ease-out shadow-2xl rounded-2xl border border-[#cbd5e1] bg-white flex items-center justify-center flex-shrink-0 relative ring-1 ring-black/5"
         style={{
           width: `${canvasWidth}px`,
           height: `${canvasHeight}px`,
@@ -492,7 +492,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
 
         {showSafeAreaGuides && (
           <div
-            className="absolute border-[3px] border-dashed border-cyan-500/80 pointer-events-none rounded-2xl flex flex-col justify-between p-2 z-30 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+            className="absolute border-[3px] border-dashed border-blue-500/80 pointer-events-none rounded-2xl flex flex-col justify-between p-2 z-30 shadow-[0_0_15px_rgba(37,99,235,0.15)]"
             style={{
               top: `${layoutBounds.safeArea.top}px`,
               left: `${layoutBounds.safeArea.left}px`,
@@ -500,7 +500,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
               height: `${layoutBounds.safeArea.height}px`,
             }}
           >
-            <div className="flex justify-between items-center text-xs font-mono text-cyan-200 font-bold bg-cyan-950/90 px-2.5 py-1 rounded-md w-max border border-cyan-400/50 shadow-md">
+            <div className="flex justify-between items-center text-xs font-mono text-blue-700 font-bold bg-blue-50/95 px-2.5 py-1 rounded-md w-max border border-blue-300 shadow-sm backdrop-blur-xs">
               <span>
                 SAFE AREA (Top/Bottom: {layoutBounds.safeArea.top}px, L/R:{" "}
                 {layoutBounds.safeArea.left}px)
@@ -517,7 +517,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
                 height: `${layoutBounds.contentZone.height}px`,
               }}
             >
-              <span className="absolute top-1 left-2 text-[11px] font-mono font-bold text-amber-200 bg-amber-950/90 px-2 py-0.5 rounded border border-amber-400/50 shadow-md">
+              <span className="absolute top-1 left-2 text-[11px] font-mono font-bold text-amber-800 bg-amber-50/95 px-2 py-0.5 rounded border border-amber-300 shadow-sm backdrop-blur-xs">
                 CONTENT ZONE (Top: {layoutBounds.contentZone.top}px, Bottom:{" "}
                 {layoutBounds.contentZone.bottom}px)
               </span>
@@ -531,7 +531,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
               </div>
             </div>
 
-            <div className="flex justify-between items-center text-xs font-mono text-cyan-200 font-bold bg-cyan-950/90 px-2.5 py-1 rounded-md w-max self-end border border-cyan-400/50 shadow-md">
+            <div className="flex justify-between items-center text-xs font-mono text-blue-700 font-bold bg-blue-50/95 px-2.5 py-1 rounded-md w-max self-end border border-blue-300 shadow-sm backdrop-blur-xs">
               <span>
                 Safe Area ({layoutBounds.safeArea.width}x
                 {layoutBounds.safeArea.height})

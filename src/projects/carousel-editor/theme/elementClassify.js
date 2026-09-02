@@ -49,6 +49,7 @@ export function isBodyElement(el) {
   if (!el || isChromeElement(el) || isImageElement(el) || isPlaceholderElement(el)) {
     return false;
   }
+  if (el.type === "body") return true;
   const id = typeof el.id === "string" ? el.id : "";
   if (id.includes("body") || id.startsWith("el_body_")) return true;
   return (

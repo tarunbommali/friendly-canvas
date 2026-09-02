@@ -25,6 +25,18 @@ import {
   hydrateRegistryFromDocument,
   snapshotSlideImages,
 } from "./imageRegistry";
+import { contentApi } from "../../../infrastructure/api/contentApi";
+
+let canvasSaveTimer = null;
+function debounceCanvasSave(postId, slideId, canvasData) {
+  if (!postId || !slideId || !canvasData) return;
+  if (canvasSaveTimer) clearTimeout(canvasSaveTimer);
+  canvasSaveTimer = setTimeout(() => {
+    contentApi.updateSlideCanvas(postId, slideId, canvasData).catch((err) => {
+      console.debug("Background canvas auto-save skipped or offline:", err.message);
+    });
+  }, 600);
+}
 
 const HISTORY_LIMIT = 30;
 
@@ -267,7 +279,9 @@ export const useCarouselStore = create((set, get) => ({
   globalLayoutConfig: { ...DEFAULT_GLOBAL_LAYOUT_CONFIG },
   activeTextSelection: null,
   fabricCanvas: null,
+  activeContext: null,
 
+  setPostContext: (ctx) => set({ activeContext: ctx }),
   setActiveTextSelection: (selection) => set({ activeTextSelection: selection }),
   setFabricCanvas: (canvas) => set({ fabricCanvas: canvas }),
 
@@ -791,6 +805,19 @@ export const useCarouselStore = create((set, get) => ({
           ...(imageRegistry[id] || {}),
           ...pickImageSnapshot(matched),
         };
+      }
+
+      const activeSlide = slides.find((s) => s.id === state.document.activeSlideId);
+      if (activeSlide && state.activeContext?.postId) {
+        debounceCanvasSave(state.activeContext.postId, activeSlide.id, {
+          version: 1,
+          width: state.document.metadata?.width || 1080,
+          height: state.document.metadata?.height || 1350,
+          aspectRatio: state.document.metadata?.aspectRatio || '4:5',
+          bgPattern: activeSlide.bgPattern || 'solid',
+          objects: activeSlide.elements || [],
+          background: { type: 'color', value: activeSlide.backgroundColor || '#ffffff' },
+        });
       }
 
       return {

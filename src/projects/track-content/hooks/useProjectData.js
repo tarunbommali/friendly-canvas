@@ -1,19 +1,19 @@
-import { useState, useMemo, useCallback } from 'react'
-import data from '../../../shared/data/data.json'
-import { slideOverridesRepo } from '../../../infrastructure/persistence/localStorageRepository'
+import { useState, useMemo, useCallback } from 'react';
+import data from '../../../shared/data/data.json';
+import { contentApi } from '../../../infrastructure/api/contentApi';
 
 export function useProjectData(projectSlug = 'swe-notebook') {
-  const [overrides, setOverrides] = useState(() => slideOverridesRepo.get() || {})
+  const [overrides, setOverrides] = useState({});
 
   const project = useMemo(() => {
-    const rawTrackPalettes = data.trackPalettes || {}
-    const trackPalettes = {}
+    const rawTrackPalettes = data.trackPalettes || {};
+    const trackPalettes = {};
 
     Object.entries(rawTrackPalettes).forEach(([trackId, val]) => {
-      trackPalettes[trackId] = val
-      trackPalettes[String(parseInt(trackId, 10))] = val
-      if (val.name) trackPalettes[val.name] = val
-    })
+      trackPalettes[trackId] = val;
+      trackPalettes[String(parseInt(trackId, 10))] = val;
+      if (val.name) trackPalettes[val.name] = val;
+    });
 
     return {
       id: 'swe-notebook',
@@ -47,44 +47,44 @@ export function useProjectData(projectSlug = 'swe-notebook') {
           },
         },
       },
-    }
-  }, [])
+    };
+  }, []);
 
   const tracks = useMemo(() => {
-    const rawPalettes = data.trackPalettes || {}
-    const rawPosts = data.posts || []
+    const rawPalettes = data.trackPalettes || {};
+    const rawPosts = data.posts || [];
 
     const trackEntries = Object.entries(rawPalettes)
       .map(([trackId, p]) => {
-        const match = p.name?.match(/\d+/)
-        const trackNo = match ? parseInt(match[0], 10) : parseInt(trackId, 10)
-        return { trackId: String(trackNo).padStart(2, '0'), trackNo, title: p.name, palette: p }
+        const match = p.name?.match(/\d+/);
+        const trackNo = match ? parseInt(match[0], 10) : parseInt(trackId, 10);
+        return { trackId: String(trackNo).padStart(2, '0'), trackNo, title: p.name, palette: p };
       })
-      .sort((a, b) => a.trackNo - b.trackNo)
+      .sort((a, b) => a.trackNo - b.trackNo);
 
     return trackEntries.map(({ trackId, trackNo, title: trackName, palette }) => {
-      const matchingPosts = rawPosts.filter((p) => p.trackId === trackId)
+      const matchingPosts = rawPosts.filter((p) => p.trackId === trackId);
 
       const posts = matchingPosts.map((p, pIdx) => {
-        const postNo = p.postNo || pIdx + 1
-        const postId = String(postNo)
-        const rawSlides = p.slides || []
+        const postNo = p.postNo || pIdx + 1;
+        const postId = String(postNo);
+        const rawSlides = p.slides || [];
 
         const slides = rawSlides.map((s, sIdx) => {
-          const slideNo = s.slideNo || sIdx + 1
+          const slideNo = s.slideNo || sIdx + 1;
           const slideId =
-            s.id || `slide_t${trackId}_p${String(postNo).padStart(2, '0')}_s${String(slideNo).padStart(2, '0')}`
-          const legacyKey = `${trackName}|${postNo}|${slideNo}`
-          const slideOverride = overrides[slideId] || overrides[legacyKey] || {}
-          // layout can be a flat string ("hook-open") or an object with .id
-          const layoutId = slideOverride.Layout || slideOverride.layout
-            || (typeof s.layout === 'string' ? s.layout : s.layout?.id)
-            || 'concept-explain'
-          // slideType is the semantic type label (hook, problem, explanation…)
-          // fall back to layoutId only if slideType is absent
-          const slideType = s.slideType || layoutId
-          const audio = p.metadata?.suggestedAudio || {}
-          const audioTitle = typeof audio === 'string' ? audio : audio.mood || 'Lo-fi Tech Beats / Deep Focus Ambient'
+            s.id || `slide_t${trackId}_p${String(postNo).padStart(2, '0')}_s${String(slideNo).padStart(2, '0')}`;
+          const legacyKey = `${trackName}|${postNo}|${slideNo}`;
+          const slideOverride = overrides[slideId] || overrides[legacyKey] || {};
+          const layoutId =
+            slideOverride.Layout ||
+            slideOverride.layout ||
+            (typeof s.layout === 'string' ? s.layout : s.layout?.id) ||
+            'concept-explain';
+          const slideType = s.slideType || layoutId;
+          const audio = p.metadata?.suggestedAudio || {};
+          const audioTitle =
+            typeof audio === 'string' ? audio : audio.mood || 'Lo-fi Tech Beats / Deep Focus Ambient';
 
           return {
             id: slideId,
@@ -92,17 +92,38 @@ export function useProjectData(projectSlug = 'swe-notebook') {
             order: slideNo,
             slideNo,
             slideType,
-            // archetypeKey now shows the semantic slideType (hook, problem, etc.)
             archetypeKey: slideType,
             layout: layoutId,
-            // flat fields forwarded so downstream components can read them directly
             headline: slideOverride.title ?? slideOverride.SlideTitle ?? s.headline ?? s.title ?? `Slide ${slideNo}`,
             text: slideOverride.body ?? slideOverride.Content ?? s.text ?? s.body ?? '',
-            visualDirective: slideOverride.visualDirective ?? slideOverride.VisualDirective ?? s.visualDirective ?? s.descriptionVisual ?? '',
+            visualDirective:
+              slideOverride.visualDirective ??
+              slideOverride.VisualDirective ??
+              s.visualDirective ??
+              s.descriptionVisual ??
+              '',
             content: {
-              title: slideOverride.title ?? slideOverride.SlideTitle ?? s.headline ?? s.title ?? s.content?.title ?? `Slide ${slideNo}`,
-              body: slideOverride.body ?? slideOverride.Content ?? s.text ?? s.body ?? s.content?.body ?? '',
-              visualDirective: slideOverride.visualDirective ?? slideOverride.VisualDirective ?? s.visualDirective ?? s.descriptionVisual ?? s.content?.visualDirective ?? '',
+              title:
+                slideOverride.title ??
+                slideOverride.SlideTitle ??
+                s.headline ??
+                s.title ??
+                s.content?.title ??
+                `Slide ${slideNo}`,
+              body:
+                slideOverride.body ??
+                slideOverride.Content ??
+                s.text ??
+                s.body ??
+                s.content?.body ??
+                '',
+              visualDirective:
+                slideOverride.visualDirective ??
+                slideOverride.VisualDirective ??
+                s.visualDirective ??
+                s.descriptionVisual ??
+                s.content?.visualDirective ??
+                '',
             },
             elements: s.elements || [],
             slideConfig: s.config || { width: 1080, height: 1350, background: '#F8F7F4' },
@@ -117,8 +138,8 @@ export function useProjectData(projectSlug = 'swe-notebook') {
               searchTerms: audio.searchTerms || [],
               notes: audio.note,
             },
-          }
-        })
+          };
+        });
 
         return {
           id: postId,
@@ -132,8 +153,8 @@ export function useProjectData(projectSlug = 'swe-notebook') {
           palette,
           slides,
           metadata: p.metadata || { description: '', hashtags: [], suggestedAudio: '' },
-        }
-      })
+        };
+      });
 
       return {
         id: trackId,
@@ -145,31 +166,47 @@ export function useProjectData(projectSlug = 'swe-notebook') {
         postCount: posts.length,
         palette,
         posts,
+      };
+    });
+  }, [overrides]);
+
+  const updateSlideContent = useCallback(
+    (postId, slideId, contentUpdates, trackName, postNo, slideNo) => {
+      setOverrides((prev) => {
+        const existingSlideId = prev[slideId] || {};
+        const pascalUpdates = {};
+        if (contentUpdates.title !== undefined) pascalUpdates.SlideTitle = contentUpdates.title;
+        if (contentUpdates.body !== undefined) pascalUpdates.Content = contentUpdates.body;
+        if (contentUpdates.visualDirective !== undefined)
+          pascalUpdates.VisualDirective = contentUpdates.visualDirective;
+
+        const updatedObj = { ...existingSlideId, ...contentUpdates, ...pascalUpdates };
+        const nextOverrides = { ...prev, [slideId]: updatedObj };
+
+        if (trackName && postNo && slideNo) {
+          const legacyKey = `${trackName}|${postNo}|${slideNo}`;
+          const existingLegacy = prev[legacyKey] || {};
+          nextOverrides[legacyKey] = { ...existingLegacy, ...updatedObj };
+        }
+
+        return nextOverrides;
+      });
+
+      // Background API sync
+      if (postId && slideId) {
+        contentApi
+          .updateSlide(postId, slideId, {
+            headline: contentUpdates.title,
+            text: contentUpdates.body,
+            visualDirective: contentUpdates.visualDirective,
+          })
+          .catch((err) => {
+            console.debug('Background slide sync not available or offline:', err.message);
+          });
       }
-    })
-  }, [overrides])
+    },
+    []
+  );
 
-  const updateSlideContent = useCallback((postId, slideId, contentUpdates, trackName, postNo, slideNo) => {
-    setOverrides((prev) => {
-      const existingSlideId = prev[slideId] || {}
-      const pascalUpdates = {}
-      if (contentUpdates.title !== undefined) pascalUpdates.SlideTitle = contentUpdates.title
-      if (contentUpdates.body !== undefined) pascalUpdates.Content = contentUpdates.body
-      if (contentUpdates.visualDirective !== undefined) pascalUpdates.VisualDirective = contentUpdates.visualDirective
-
-      const updatedObj = { ...existingSlideId, ...contentUpdates, ...pascalUpdates }
-      const nextOverrides = { ...prev, [slideId]: updatedObj }
-
-      if (trackName && postNo && slideNo) {
-        const legacyKey = `${trackName}|${postNo}|${slideNo}`
-        const existingLegacy = prev[legacyKey] || {}
-        nextOverrides[legacyKey] = { ...existingLegacy, ...updatedObj }
-      }
-
-      slideOverridesRepo.set(nextOverrides)
-      return nextOverrides
-    })
-  }, [])
-
-  return { project, tracks, updateSlideContent }
+  return { project, tracks, updateSlideContent };
 }

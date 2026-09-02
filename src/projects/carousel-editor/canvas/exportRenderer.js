@@ -150,27 +150,35 @@ export async function renderSlideToDataUrl(slide, metadata, multiplier = 2) {
         });
       } else if (
         el.type === "headline" ||
+        el.type === "body" ||
         el.type === "text" ||
         el.type === "badge"
       ) {
         const rawText = el.text || el.content || "";
         const elemWidth = el.width || THEME.contentZone.width;
-        const elemFontSize = el.fontSize || (el.type === "headline" ? 92 : 64);
+        const elemFontSize =
+          el.fontSize || (el.type === "headline" ? 92 : el.type === "body" ? 48 : 64);
 
         const annotationStyles =
           el.styles && Object.keys(el.styles).length > 0
             ? el.styles
             : el.type === "headline"
             ? buildHeadlineStyles(rawText, el.accentColor || el._accent)
-            : el.type === "text"
+            : el.type === "text" || el.type === "body"
             ? buildBodyStyles(rawText, el.fill || el._primary)
             : {};
+
+        const defaultFont =
+          el.fontFamily ||
+          (el.type === "headline"
+            ? "Instrument Serif"
+            : "Inter");
 
         fabricObj = new Textbox(rawText, {
           left: el.x, top: el.y,
           width: elemWidth,
           fontSize: elemFontSize,
-          fontFamily: el.fontFamily || "Instrument Serif",
+          fontFamily: defaultFont,
           fontWeight: el.fontWeight || "normal",
           fontStyle: el.fontStyle || "normal",
           underline: Boolean(el.underline),

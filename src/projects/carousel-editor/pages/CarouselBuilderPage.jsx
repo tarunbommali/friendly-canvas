@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCarouselStore } from "../store/carouselStore";
 import { CanvasEditor } from "../components/CanvasEditor";
@@ -9,8 +9,8 @@ import { useCollectionData } from "../../../shared/hooks/useCollectionData";
 import { useEditorKeyboardShortcuts } from "../hooks/useEditorKeyboardShortcuts";
 import { THEME } from "../theme/theme";
 import { composeSlide } from "../theme/compose";
-import { wrapTextToLines } from "../canvas/textAnnotations";
 import { generateSlideImagePrompt } from "../../../shared/utils/promptGenerators";
+import { X } from "lucide-react";
 
 function convertPostToCarouselDoc(post, themeConfig = {}) {
   if (!post) return null;
@@ -57,31 +57,24 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       fontSize: themeConfig.headlineFontSize || 92,
       fontFamily: headlineFont,
       fill: themeConfig.headlineColor || THEME.colors.textPrimary,
-      // Pass track accent so textAnnotations can highlight the last word
-      _accent: themeConfig.accentColor || primaryColor,
+      _accent: themeConfig.accentColor || THEME.colors.highlight,
       originX,
       textAlign,
       rotation: 0,
       zIndex: 3,
     });
 
-    // Body Content below Title filling full safeArea contentZone width (800px)
+    // Body Text with auto-calculated dynamic Y offset to prevent overlaps
     const rawBody = slide.text || slide.body || slide.Content || (typeof slide.content === 'object' ? slide.content?.body : '') || "";
     if (rawBody) {
-      // Calculate dynamic headline height to place body cleanly below it without extra whitespace or overlap
-      const hSize = themeConfig.headlineFontSize || 92;
-      const headlineLines = wrapTextToLines(rawTitle, hSize, contentWidth).length || 1;
-      const headlineHeight = headlineLines * hSize * 1.15;
-      const dynamicBodyY = Math.round(THEME.contentZone.y + headlineHeight + 28);
+      const titleLineCount = Math.min(3, Math.ceil(rawTitle.length / 28) || 1);
+      const dynamicBodyY = THEME.contentZone.y + (titleLineCount * 110) + 20;
 
-      // Automatically wrap semicolons into clean newlines for description lists
-      const formattedBody = rawBody.includes(";")
-        ? rawBody.replace(/;\s*/g, ";\n")
-        : rawBody;
+      const formattedBody = rawBody.replace(/—\s*/g, '—\n');
 
       contentElements.push({
-        id: `text_${slideId}_body`,
-        type: "text",
+        id: `el_body_${slideId}`,
+        type: "body",
         x: textX,
         y: dynamicBodyY,
         width: contentWidth,
@@ -89,7 +82,6 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
         fontSize: themeConfig.bodyFontSize || 64,
         fontFamily: bodyFont,
         fill: themeConfig.bodyColor || THEME.colors.textSecondary,
-        // Pass track primary so textAnnotations can underline important words
         _primary: primaryColor,
         originX,
         textAlign,
@@ -98,7 +90,7 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       });
     }
 
-    // Visual Directive Image Placeholder Card (centered container at x: 540, y: 794 matching screenshot specs)
+    // Visual Directive Image Placeholder Card
     const rawVisual = slide.descriptionVisual || slide.visualDirective || slide.VisualDirective || (typeof slide.content === 'object' ? slide.content?.visualDirective : '') || "";
     if (rawVisual) {
       contentElements.push({
@@ -120,7 +112,6 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       });
     }
 
-    // Compose content elements with standard theme chrome identity layer
     const composed = composeSlide(contentElements, {
       badgeText,
       pageIndex: slideNo,
@@ -187,30 +178,38 @@ export function CarouselBuilderPage() {
   const { designs, collectionIdMap, trackPalettes } = useCollectionData();
 
   const setDocument = useCarouselStore((state) => state.setDocument);
+  const [mobileDrawer, setMobileDrawer] = useState(null); // 'slides' | 'properties' | null
 
   const currentPost = useMemo(() => {
     if (!designs || designs.length === 0) return null;
+    const numTrack = parseInt(trackId, 10);
+    const numPost = parseInt(postId, 10);
+
     if (postId && trackId) {
       const p = designs.find(
         (d) =>
-          String(d.trackId) === String(trackId) &&
-          (d.id === postId ||
-            String(d.postNo) === String(postId) ||
-            String(d.designNo) === String(postId))
+          (String(d.trackId) === String(trackId) || parseInt(d.trackId, 10) === numTrack) &&
+          (String(d.id) === String(postId) ||
+            parseInt(d.postNo, 10) === numPost ||
+            parseInt(d.designNo, 10) === numPost)
       );
       if (p) return p;
     }
     if (postId) {
       const p = designs.find(
         (d) =>
-          d.id === postId ||
-          String(d.postNo) === String(postId) ||
-          String(d.designNo) === String(postId)
+          String(d.id) === String(postId) ||
+          parseInt(d.postNo, 10) === numPost ||
+          parseInt(d.designNo, 10) === numPost
       );
       if (p) return p;
     }
     if (trackId) {
-      return designs.find((d) => String(d.trackId) === String(trackId)) || null;
+      return (
+        designs.find(
+          (d) => String(d.trackId) === String(trackId) || parseInt(d.trackId, 10) === numTrack
+        ) || null
+      );
     }
     return null;
   }, [designs, postId, trackId]);
@@ -227,20 +226,89 @@ export function CarouselBuilderPage() {
     }
   };
 
-  // Track last loaded post id to avoid re-loading the same post on every render.
-  // Zustand actions (setDocument) are stable — never put them in dep arrays.
   const loadedPostIdRef = useRef(null);
+
+  // Initialize clean blank canvas when opening standalone editor (/canvas-editor)
+  useEffect(() => {
+    if (!postId && !trackId) {
+      if (loadedPostIdRef.current === 'blank_canvas_session') return;
+      loadedPostIdRef.current = 'blank_canvas_session';
+
+      useCarouselStore.getState().setPostContext({
+        postId: null,
+        trackId: null,
+        projectSlug: null,
+      });
+
+      const blankStarterDoc = {
+        schemaVersion: 1,
+        metadata: {
+          title: "Blank Canvas Project",
+          width: THEME.canvas.width,
+          height: THEME.canvas.height,
+          aspectRatio: "4:5",
+          bgPattern: "solid",
+          textAlign: "left",
+        },
+        activeSlideId: "slide_1",
+        slides: [
+          composeSlide(
+            [
+              {
+                id: "el_head_slide_1",
+                type: "headline",
+                x: THEME.contentZone.x,
+                y: THEME.contentZone.y,
+                width: THEME.contentZone.width,
+                text: "Your Headline Here",
+                fontSize: 88,
+                fontFamily: "Instrument Serif",
+                fill: "#0f172a",
+                originX: "left",
+                textAlign: "left",
+                rotation: 0,
+                zIndex: 3,
+              },
+              {
+                id: "el_body_slide_1",
+                type: "body",
+                x: THEME.contentZone.x,
+                y: THEME.contentZone.y + 140,
+                width: THEME.contentZone.width,
+                text: "Start designing slides with custom typography, shapes, colors, and high-res export.",
+                fontSize: 48,
+                fontFamily: "Inter",
+                fill: "#475569",
+                originX: "left",
+                textAlign: "left",
+                rotation: 0,
+                zIndex: 4,
+              },
+            ],
+            {
+              badgeText: "CANVAS STUDIO",
+              pageIndex: 1,
+              totalPages: 1,
+              slideId: "slide_1",
+              accent: "#2563eb",
+              backgroundColor: "#ffffff",
+              textAlign: "left",
+            }
+          ),
+        ],
+      };
+
+      setDocument(blankStarterDoc, { resetRegistry: true });
+    }
+  }, [postId, trackId, setDocument]);
 
   // Dynamically load post slides when opening a specific design/post
   useEffect(() => {
     if (!currentPost) return;
-    // Bail out early if we already loaded this exact post to prevent
-    // the "Maximum update depth exceeded" infinite-loop.
     const postKey = currentPost.id || currentPost.postId || currentPost.postNo;
     if (loadedPostIdRef.current === postKey) return;
     loadedPostIdRef.current = postKey;
 
-    // Fetch Track Color Palette from collectionIdMap or trackPalettes
     const palette =
       collectionIdMap[currentPost.trackId] ||
       trackPalettes[currentPost.collectionName] ||
@@ -265,21 +333,97 @@ export function CarouselBuilderPage() {
 
     const convertedDoc = convertPostToCarouselDoc(currentPost, initialThemeConfig);
     if (convertedDoc) {
+      useCarouselStore.getState().setPostContext({
+        postId: currentPost.id || currentPost.postId || currentPost.postNo,
+        trackId: currentPost.trackId || trackId,
+        projectSlug,
+      });
       setDocument(convertedDoc, { resetRegistry: true });
       useCarouselStore.getState().applyGlobalLayoutConfigToAllSlides();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPost]);
+  }, [currentPost, postId, trackId, projectSlug]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#0f1117] text-slate-100 overflow-hidden font-sans select-none min-h-0">
-      <Toolbar onOpenSettings={handleOpenSettingsPage} currentPost={currentPost} />
-      <div className="flex-1 flex min-h-0 min-w-0 overflow-hidden">
-        <SlideThumbnails />
-        <main className="flex-1 min-w-0 min-h-0 canvas-checkerboard p-4 flex items-center justify-center overflow-hidden relative">
+    <div className="flex flex-col h-full w-full bg-slate-100 dark:bg-[#0f1117] text-gray-900 dark:text-slate-100 overflow-hidden font-sans select-none min-h-0 relative">
+      <Toolbar
+        currentPost={currentPost}
+        mobileDrawer={mobileDrawer}
+        onToggleMobileDrawer={(drawer) =>
+          setMobileDrawer(mobileDrawer === drawer ? null : drawer)
+        }
+      />
+
+      <div className="flex-1 flex min-h-0 min-w-0 overflow-hidden relative">
+        {/* Desktop Left Sidebar: Slide Thumbnails */}
+        <div className="hidden lg:flex shrink-0 h-full">
+          <SlideThumbnails />
+        </div>
+
+        {/* Center Canvas Viewport */}
+        <main className="flex-1 min-w-0 min-h-0 canvas-checkerboard p-2 md:p-6 flex items-center justify-center overflow-hidden relative">
           <CanvasEditor />
         </main>
-        <PropertiesPanel />
+
+        {/* Desktop Right Sidebar: Properties Panel */}
+        <div className="hidden lg:flex shrink-0 h-full">
+          <PropertiesPanel />
+        </div>
+
+        {/* Mobile Slide Thumbnails Drawer */}
+        {mobileDrawer === "slides" && (
+          <div className="lg:hidden fixed inset-0 z-50 flex">
+            <div
+              className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+              onClick={() => setMobileDrawer(null)}
+            />
+            <div className="relative z-10 w-72 max-w-[85vw] bg-white dark:bg-[#151821] h-full shadow-2xl flex flex-col border-r border-[#e2e8f0] dark:border-white/10 animate-slide-in-left">
+              <div className="p-3 border-b border-[#e2e8f0] dark:border-white/10 flex items-center justify-between">
+                <span className="text-xs font-bold text-gray-900 dark:text-slate-200 font-mono uppercase tracking-wider">
+                  Slide Deck ({currentPost?.slides?.length || 0})
+                </span>
+                <button
+                  onClick={() => setMobileDrawer(null)}
+                  className="p-1 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div
+                className="flex-1 overflow-hidden"
+                onClick={() => setMobileDrawer(null)}
+              >
+                <SlideThumbnails />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Properties Panel Drawer */}
+        {mobileDrawer === "properties" && (
+          <div className="lg:hidden fixed inset-0 z-50 flex justify-end">
+            <div
+              className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+              onClick={() => setMobileDrawer(null)}
+            />
+            <div className="relative z-10 w-80 max-w-[88vw] bg-white dark:bg-[#151821] h-full shadow-2xl flex flex-col border-l border-[#e2e8f0] dark:border-white/10 animate-slide-in-right">
+              <div className="p-3 border-b border-[#e2e8f0] dark:border-white/10 flex items-center justify-between">
+                <span className="text-xs font-bold text-gray-900 dark:text-slate-200 font-mono uppercase tracking-wider">
+                  Slide Properties
+                </span>
+                <button
+                  onClick={() => setMobileDrawer(null)}
+                  className="p-1 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                <PropertiesPanel />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

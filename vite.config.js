@@ -37,6 +37,13 @@ export default defineConfig({
     },
   ],
   server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
     hmr: {
       // Suppress Vite 8 ErrorOverlay bug: "split is not a function"
       // triggered when err.id is non-string. HMR itself still works.

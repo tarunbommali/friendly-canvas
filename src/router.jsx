@@ -1,27 +1,34 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 // App Shell Workspace Layout
-import WorkspaceLayout from './workspace/WorkspaceLayout'
+import WorkspaceLayout from './workspace/WorkspaceLayout';
+
+// Workspace Hub Pages (Corporate Modern Stitch Integration)
+import WorkspaceDashboardPage from './workspace/pages/WorkspaceDashboardPage';
+import MemberManagementPage from './workspace/pages/MemberManagementPage';
+import RoleMatrixPage from './workspace/pages/RoleMatrixPage';
+import AuthLoginPage from './workspace/pages/AuthLoginPage';
 
 // Track Content Domain
-import HomePage from './projects/track-content/pages/HomePage'
-import TrackPage from './projects/track-content/pages/TrackPage'
-import PostPage from './projects/track-content/pages/PostPage'
-import SearchPage from './projects/track-content/pages/SearchPage'
-import DesignSystemPage from './projects/track-content/pages/DesignSystemPage'
-import ContentManagementPage from './projects/track-content/pages/ContentManagementPage'
-import NotFoundPage from './projects/track-content/pages/NotFoundPage'
-import TrackRoute from './projects/track-content/routes/TrackRoute'
-import PostRoute from './projects/track-content/routes/PostRoute'
+import ProjectOverviewPage from './projects/track-content/pages/ProjectOverviewPage';
+import TrackDetailPage from './projects/track-content/pages/TrackDetailPage';
+import ContentManagementPage from './projects/track-content/pages/ContentManagementPage';
+import DesignSystemPage from './projects/track-content/pages/DesignSystemPage';
+import NotFoundPage from './projects/track-content/pages/NotFoundPage';
 
-// Carousel Editor Domain
-import CarouselBuilderPage from './projects/carousel-editor/pages/CarouselBuilderPage'
-import GlobalLayoutSettingsPage from './projects/carousel-editor/pages/GlobalLayoutSettingsPage'
+// Carousel Canvas Editor Domain
+import CarouselBuilderPage from './projects/carousel-editor/pages/CarouselBuilderPage';
+import GlobalLayoutSettingsPage from './projects/carousel-editor/pages/GlobalLayoutSettingsPage';
 
 // Shared Error Boundary
-import ErrorBoundary from './shared/components/ErrorBoundary'
+import ErrorBoundary from './shared/components/ErrorBoundary';
 
 export const router = createBrowserRouter([
+  {
+    path: '/login',
+    element: <AuthLoginPage />,
+    errorElement: <ErrorBoundary />,
+  },
   {
     path: '/',
     element: <WorkspaceLayout />,
@@ -29,9 +36,32 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: <WorkspaceDashboardPage />,
       },
-      // Carousel Canvas Editor Routes
+      {
+        path: 'members',
+        element: <MemberManagementPage />,
+      },
+      {
+        path: 'roles',
+        element: <RoleMatrixPage />,
+      },
+      {
+        path: 'canvas-editor',
+        element: <CarouselBuilderPage />,
+        errorElement: <ErrorBoundary />,
+      },
+      {
+        path: 'settings',
+        element: <GlobalLayoutSettingsPage />,
+        errorElement: <ErrorBoundary />,
+      },
+      {
+        path: ':projectSlug/settings',
+        element: <GlobalLayoutSettingsPage />,
+        errorElement: <ErrorBoundary />,
+      },
+      // Canvas Studio Routes
       {
         path: 'design/track/:trackId/post/:postId',
         element: <CarouselBuilderPage />,
@@ -53,105 +83,25 @@ export const router = createBrowserRouter([
         errorElement: <ErrorBoundary />,
       },
       {
-        path: 'post-builder',
-        element: <Navigate to="/design/track/01/post/1" replace />,
-      },
-      {
-        path: 'search',
-        element: <SearchPage />,
-      },
-      {
         path: ':projectSlug/carousel-design',
         element: <DesignSystemPage />,
       },
-      {
-        path: ':projectSlug/create-post',
-        element: <Navigate to="/swe-notebook/content" replace />,
-      },
-      {
-        path: 'create-post',
-        element: <Navigate to="/swe-notebook/content" replace />,
-      },
+      // Track Content Hierarchy Routes
       {
         path: ':projectSlug/content',
         errorElement: <ErrorBoundary />,
         children: [
           {
             index: true,
-            element: <ContentManagementPage />,
+            element: <ProjectOverviewPage />,
           },
           {
             path: 'track/:trackId',
-            element: <ContentManagementPage />,
+            element: <TrackDetailPage />,
           },
           {
             path: 'track/:trackId/post/:postId',
             element: <ContentManagementPage />,
-          },
-        ],
-      },
-      {
-        path: 'content',
-        element: <Navigate to="/swe-notebook/content" replace />,
-      },
-      // Track Domain Routes (Slug-aware & Non-Slug)
-      {
-        path: ':projectSlug/track/:trackId',
-        element: <TrackRoute />,
-        errorElement: <ErrorBoundary />,
-        children: [
-          {
-            index: true,
-            element: <TrackPage />,
-          },
-          {
-            path: 'post/:postId',
-            errorElement: <ErrorBoundary />,
-            children: [
-              {
-                element: <PostRoute />,
-                children: [
-                  {
-                    index: true,
-                    element: <PostPage />,
-                  },
-                ],
-              },
-              {
-                path: 'edit',
-                element: <CarouselBuilderPage />,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        path: 'track/:trackId',
-        element: <TrackRoute />,
-        errorElement: <ErrorBoundary />,
-        children: [
-          {
-            index: true,
-            element: <TrackPage />,
-          },
-          {
-            path: 'post/:postId',
-            errorElement: <ErrorBoundary />,
-            children: [
-              {
-                element: <PostRoute />,
-                children: [
-                  {
-                    index: true,
-                    element: <PostPage />,
-                  },
-                ],
-              },
-              {
-                path: 'edit',
-                element: <CarouselBuilderPage />,
-              },
-            ],
           },
         ],
       },
@@ -161,6 +111,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-])
+]);
 
-export default router
+export default router;

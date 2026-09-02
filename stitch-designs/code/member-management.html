@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Friendly Canvas - Member Management</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#505f76",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "tertiary": "#943700",
+                        "outline": "#737686",
+                        "on-primary-container": "#eeefff",
+                        "secondary-fixed": "#d3e4fe",
+                        "inverse-surface": "#2d3133",
+                        "on-surface-variant": "#434655",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "on-secondary-container": "#54647a",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-tint": "#0053db",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-background": "#191c1e",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed": "#360f00",
+                        "tertiary-fixed": "#ffdbcd",
+                        "surface": "#f7f9fb",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#eceef0",
+                        "surface-bright": "#f7f9fb",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "error": "#ba1a1a",
+                        "primary": "#004ac6",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-container": "#d0e1fb",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#00174b",
+                        "inverse-primary": "#b4c5ff",
+                        "on-surface": "#191c1e",
+                        "on-tertiary-container": "#ffede6",
+                        "primary-container": "#2563eb",
+                        "on-secondary-fixed": "#0b1c30",
+                        "background": "#f7f9fb",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#bc4800"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "40px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "property_panel_width": "320px",
+                        "sidebar_width": "280px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "label-mono": ["JetBrains Mono"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-mono": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden">
+<!-- SideNavBar (from JSON) -->
+<nav class="bg-surface-container-lowest dark:bg-inverse-surface border-r border-outline-variant dark:border-outline fixed left-0 top-0 h-full w-[280px] flex flex-col p-md z-50">
+<!-- Header -->
+<div class="flex items-center gap-sm mb-lg">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden flex-shrink-0">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a female user with a clean white background, soft studio lighting, professional corporate attire, clear sharp focus, bright and inviting aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpU2-gf_Q5k6MBhbeYZzRxeLfKv5br5dDK9hLz3wO_lv8eGiLBOGIkyDHEmTAgQApjQWTFcdFzxvVhDlmbx5u7p5MCYyzzRFq_nNxirl-JdeKO2_Vx2ynuB_mevYneBT_wZ98rcxvHGc5GUy5FPps4vpmL1eB5ArtVgKdlCDMMLTnGExE8y80eIBRDIH79KEpBWA-U9JOl36siXwr_-Kmpc30DRDArpRO6QKJ-rTCtySaTpKdadek-7A"/>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-md font-headline-md text-primary dark:text-inverse-primary font-bold tracking-tight leading-tight">Friendly Canvas</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Admin Workspace</span>
+</div>
+</div>
+<!-- CTA -->
+<button class="bg-primary text-on-primary font-title-sm text-title-sm rounded py-2 px-4 mb-lg w-full flex justify-center items-center gap-xs hover:bg-primary/90 transition-colors duration-200">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+            New Project
+        </button>
+<!-- Main Navigation -->
+<ul class="flex flex-col gap-xs flex-1">
+<!-- Workspace Tab (Inactive) -->
+<li>
+<a class="flex items-center gap-sm px-3 py-2 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-variant transition-colors duration-200 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-outline">grid_view</span>
+                    Workspace
+                </a>
+</li>
+<!-- Projects Tab (Inactive) -->
+<li>
+<a class="flex items-center gap-sm px-3 py-2 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-variant transition-colors duration-200 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-outline">folder</span>
+                    Projects
+                </a>
+</li>
+<!-- Settings Tab (Active) -->
+<li>
+<a class="flex items-center gap-sm px-3 py-2 bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary font-bold rounded-lg transition-colors duration-200 text-body-md" href="#">
+<span class="material-symbols-outlined text-primary">settings</span>
+                    Settings
+                </a>
+</li>
+</ul>
+<!-- Footer Navigation -->
+<ul class="flex flex-col gap-xs mt-auto pt-lg border-t border-outline-variant/30">
+<li>
+<a class="flex items-center gap-sm px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-outline">contact_support</span>
+                    Support
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-outline">help_outline</span>
+                    Help
+                </a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Canvas -->
+<main class="ml-[280px] flex-1 flex flex-col h-full bg-surface">
+<!-- Page Header & Tabs -->
+<header class="bg-surface-container-lowest border-b border-outline-variant pt-xl px-xl shrink-0">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-lg">Workspace Settings</h1>
+<!-- Navigation Tabs -->
+<nav class="flex gap-lg border-b-2 border-transparent">
+<a class="pb-3 font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary/50" href="#">General</a>
+<a class="pb-3 font-title-sm text-title-sm text-primary border-b-2 border-primary" href="#">Members</a>
+<a class="pb-3 font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary/50" href="#">Billing</a>
+<a class="pb-3 font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary/50" href="#">API</a>
+</nav>
+</header>
+<!-- Content Area -->
+<div class="flex-1 overflow-auto p-xl">
+<div class="max-w-[1080px] mx-auto space-y-xl">
+<!-- Action Bar -->
+<div class="flex justify-between items-center">
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow" placeholder="Search members..." type="text"/>
+</div>
+<div class="flex gap-md items-center">
+<a class="font-body-sm text-body-sm text-secondary hover:text-primary transition-colors flex items-center gap-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">info</span>
+                            View Permissions
+                        </a>
+<button class="bg-primary text-on-primary font-title-sm text-title-sm px-4 py-2 rounded hover:bg-primary/90 transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+                            Invite Member
+                        </button>
+</div>
+</div>
+<!-- Active Members Section -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="px-lg py-md border-b border-outline-variant bg-surface/50">
+<h2 class="font-title-sm text-title-sm text-on-surface">Active Members (3)</h2>
+</div>
+<!-- Table Header -->
+<div class="grid grid-cols-12 gap-4 px-lg py-3 border-b border-outline-variant/50 bg-surface-container-lowest font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
+<div class="col-span-5">Member</div>
+<div class="col-span-3">Role</div>
+<div class="col-span-2">Status</div>
+<div class="col-span-2 text-right">Actions</div>
+</div>
+<!-- Member Rows -->
+<div class="divide-y divide-outline-variant/30">
+<!-- Row 1 (Admin) -->
+<div class="grid grid-cols-12 gap-4 px-lg py-md items-center hover:bg-surface-container-low/50 transition-colors group">
+<div class="col-span-5 flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden flex-shrink-0">
+<img alt="Sarah Jenkins" class="w-full h-full object-cover" data-alt="A professional portrait of a male executive, 40s, wearing glasses, soft warm lighting, corporate office background out of focus, high quality and professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6V5Uv9j-nkqswUTljtbSz6UbbKiP28Cn8w6tP7gjFmCl_zdULDS_wKzSRgX4xyE1mQMAAuGHyZyMjtDXdh6bw7KyDm45a9S0XaBqfyM_axBHTVAVFoyQpUSADCJlMBnp9OhhocgRX9hc-boHtnp-5RCnaLXMmlhMU2V_sKPRYWI7GMP2KUXmHg9Vyqx8OKmRjN49yK1hITVkVWrqZHnEse2Ff5FYj0Z1SoUq8PcAHjclD-v33T-yWKg"/>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Sarah Jenkins (You)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">sarah.j@friendlycanvas.com</span>
+</div>
+</div>
+<div class="col-span-3 flex items-center">
+<span class="px-2 py-1 rounded bg-secondary-container text-on-secondary-container font-label-mono text-label-mono inline-block">Admin</span>
+</div>
+<div class="col-span-2 flex items-center">
+<div class="flex items-center gap-xs text-primary">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-body-sm text-body-sm">Active</span>
+</div>
+</div>
+<div class="col-span-2 flex items-center justify-end">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100 p-2 rounded hover:bg-surface-variant/50">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Row 2 (Editor) -->
+<div class="grid grid-cols-12 gap-4 px-lg py-md items-center hover:bg-surface-container-low/50 transition-colors group">
+<div class="col-span-5 flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden flex-shrink-0">
+<img alt="Marcus Chen" class="w-full h-full object-cover" data-alt="A professional portrait of a young female designer, 20s, casual creative attire, bright studio lighting, white background, high quality and clean professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKYKRIgIoyfkPEs5STsUxTmWbgsZDG8u4AtEhKkbSawngbB7foHYtJZV9Y0897gkIUdSAVnvYg_9b8YxfQcICKRal7wnoCixCP_ChbS_McxDxfUz2wsoHRl-yhvbOOLvyh1POY9p_cPL9hHVtmxIYWq9CrH_xC-lM0nHE_7ZJIcXTaFd2VWVFP9jQ8dAm5vfS10WUdrN4dUHGPnEga5TOjQL_u1VZ3kV2nZniZZN9lYNj0m9ivRQ4duw"/>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Marcus Chen</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">marcus.c@friendlycanvas.com</span>
+</div>
+</div>
+<div class="col-span-3 flex items-center">
+<select class="bg-transparent border border-transparent hover:border-outline-variant focus:border-primary rounded py-1 pl-2 pr-8 font-body-md text-body-md text-on-surface focus:ring-0 cursor-pointer -ml-2 appearance-none">
+<option value="admin">Admin</option>
+<option selected="" value="editor">Editor</option>
+<option value="viewer">Viewer</option>
+</select>
+</div>
+<div class="col-span-2 flex items-center">
+<div class="flex items-center gap-xs text-primary">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-body-sm text-body-sm">Active</span>
+</div>
+</div>
+<div class="col-span-2 flex items-center justify-end">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100 p-2 rounded hover:bg-surface-variant/50">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Pending Invites Section -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden border-dashed">
+<div class="px-lg py-md border-b border-outline-variant/50 bg-surface/30">
+<h2 class="font-title-sm text-title-sm text-on-surface-variant">Pending Invites (1)</h2>
+</div>
+<div class="divide-y divide-outline-variant/30 opacity-70 hover:opacity-100 transition-opacity">
+<!-- Pending Row 1 -->
+<div class="grid grid-cols-12 gap-4 px-lg py-md items-center group">
+<div class="col-span-5 flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border border-dashed border-outline-variant flex items-center justify-center flex-shrink-0 bg-surface-container-low text-outline">
+<span class="material-symbols-outlined font-light">mail</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">alex.w@external.com</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Invited 2 days ago</span>
+</div>
+</div>
+<div class="col-span-3 flex items-center">
+<span class="px-2 py-1 rounded bg-surface-variant text-on-surface-variant font-label-mono text-label-mono inline-block">Viewer</span>
+</div>
+<div class="col-span-2 flex items-center">
+<div class="flex items-center gap-xs text-outline">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="font-body-sm text-body-sm">Pending</span>
+</div>
+</div>
+<div class="col-span-2 flex items-center justify-end gap-sm">
+<button class="text-body-sm font-title-sm text-primary hover:text-primary-fixed transition-colors">Resend</button>
+<button class="text-on-surface-variant hover:text-error transition-colors p-2 rounded hover:bg-error-container/20">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</body></html>

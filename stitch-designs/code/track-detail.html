@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Track Details - Friendly Canvas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-low": "#f2f4f6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-tertiary-container": "#ffede6",
+                        "inverse-surface": "#2d3133",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434655",
+                        "tertiary-container": "#bc4800",
+                        "surface-dim": "#d8dadc",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-fixed": "#00174b",
+                        "on-tertiary-fixed": "#360f00",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "primary-fixed": "#dbe1ff",
+                        "on-surface": "#191c1e",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#eeefff",
+                        "surface": "#f7f9fb",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e6e8ea",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-error": "#ffffff",
+                        "primary": "#004ac6",
+                        "surface-tint": "#0053db",
+                        "tertiary": "#943700",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-primary": "#b4c5ff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#2563eb",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-background": "#191c1e",
+                        "outline": "#737686",
+                        "on-secondary-container": "#54647a",
+                        "secondary-container": "#d0e1fb",
+                        "secondary": "#505f76",
+                        "background": "#f7f9fb",
+                        "secondary-fixed": "#d3e4fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "base": "4px",
+                        "sidebar_width": "280px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "xl": "40px",
+                        "property_panel_width": "320px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-mono": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-mono": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface flex h-screen overflow-hidden font-body-md">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-[280px] bg-surface-container-lowest border-r border-outline-variant flex flex-col p-md z-50">
+<div class="flex items-center space-x-3 mb-8">
+<img alt="User Profile" class="w-8 h-8 rounded" data-alt="A clean, minimalist workspace icon set against a stark white background. The icon features crisp geometric shapes intersecting elegantly, using deep slate blues and a vibrant indigo accent. The overall mood is highly professional, precise, and subtly modern, reflecting a premium enterprise aesthetic. Soft, diffuse lighting ensures no harsh shadows are cast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgxh2lievtp2KVGyJAXqsNDUNuaOb7Sdy4IK-rE46TOCwx3OxNKeqJMU7u2xh_aMWU5fH-yxnQbaX2DWtOHrVF-95bwNbbBFpAtSOfVOhfaGUCNqKyrFsomot5III-NVYme8X4q9mXHZUT65tcUkp_zjHQmQA-ZBfNsHUOS3adhmq7-qjLIM97NgAoJzozMGOaBWlfgLheQyBzxfc5JIimXJd8yFm_UALyLikxk8zG2moRETQQJ4Iw3w"/>
+<div>
+<h1 class="font-headline-md text-headline-md text-primary font-bold">Friendly Canvas</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Admin Workspace</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-body-md text-body-md rounded h-10 mb-8 hover:bg-surface-tint transition-colors duration-200 flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>New Project</span>
+</button>
+<div class="flex-grow space-y-1">
+<a class="flex items-center space-x-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span>Workspace</span>
+</a>
+<a class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-secondary-container text-on-secondary-container font-bold transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder</span>
+<span>Projects</span>
+</a>
+<a class="flex items-center space-x-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</div>
+<div class="pt-4 border-t border-outline-variant space-y-1">
+<a class="flex items-center space-x-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span>Support</span>
+</a>
+<a class="flex items-center space-x-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span>Help</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="ml-[280px] flex-1 flex flex-col h-full bg-surface">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-lg h-16 w-full z-40 bg-surface border-b border-outline-variant">
+<div class="flex items-center space-x-6">
+<!-- Search could go here if needed based on JSON, omitting for track focus -->
+<nav class="flex space-x-6">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all duration-150 py-5" href="#">Workspace</a>
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary py-5" href="#">Editor</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<div class="flex items-center text-on-surface-variant space-x-2 border-r border-outline-variant pr-4">
+<button class="p-2 hover:text-primary hover:bg-surface-container-low rounded-full transition-colors"><span class="material-symbols-outlined">undo</span></button>
+<button class="p-2 hover:text-primary hover:bg-surface-container-low rounded-full transition-colors"><span class="material-symbols-outlined">redo</span></button>
+<button class="p-2 hover:text-primary hover:bg-surface-container-low rounded-full transition-colors"><span class="material-symbols-outlined">zoom_in</span></button>
+<button class="p-2 hover:text-primary hover:bg-surface-container-low rounded-full transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+</div>
+<button class="font-body-md text-body-md text-secondary hover:text-primary transition-colors">Save</button>
+<button class="bg-primary text-on-primary font-body-md text-body-md rounded px-4 py-2 hover:bg-surface-tint transition-colors">Export</button>
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-outline-variant ml-2" data-alt="A small, circular avatar portrait of a professional individual in a corporate setting. The lighting is soft and flattering, highlighting a clean, neutral background that perfectly complements a minimalist user interface design. The aesthetic is corporate modern, fitting seamlessly into an enterprise workspace application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkWqxyYGQty5Bjkp71dOy2rg-TtBN92d0grignpuNhwrZfn-zM0iQ8kT8wD1LGnP12d6dDOkNEySuVAwVSQslnTaDidYSYNxbAqTqzCeRigbr-1f6VgUtsD0iWTzxnyaUu6ynGghp95kcixubK-CFKQbQvptMJ8ierRN0avT27GKUxJhxHDqhU3biNTbuLT0UZFjVGLRYBqQ7ao300RrveNXe0yI-rmYQ31PNAUgH1Xy3CVbpfYXLxDw"/>
+</div>
+</header>
+<!-- Canvas/Page Content -->
+<main class="flex-1 overflow-y-auto p-lg">
+<!-- Breadcrumbs -->
+<nav class="flex text-on-surface-variant font-label-mono text-label-mono mb-8 uppercase space-x-2">
+<a class="hover:text-primary" href="#">Projects</a>
+<span>/</span>
+<a class="hover:text-primary" href="#">SWE Engineering</a>
+<span>/</span>
+<a class="hover:text-primary" href="#">Tracks</a>
+<span>/</span>
+<span class="text-on-surface">01 Why Computers Exist</span>
+</nav>
+<!-- Track Header -->
+<div class="flex justify-between items-end mb-8 pb-6 border-b border-outline-variant">
+<div>
+<div class="flex items-center space-x-3 mb-2">
+<span class="bg-surface-container-highest text-on-surface px-2 py-1 rounded font-label-mono text-label-mono">TRACK 01</span>
+<div class="flex space-x-4 font-body-sm text-body-sm text-on-surface-variant">
+<span>8 Posts</span>
+<span>•</span>
+<span>54 Slides</span>
+</div>
+</div>
+<h2 class="font-display-lg text-display-lg text-on-surface">Why Computers Exist</h2>
+</div>
+<button class="bg-primary text-on-primary font-body-md text-body-md rounded px-4 py-2 hover:bg-surface-tint transition-colors flex items-center space-x-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>New Post</span>
+</button>
+</div>
+<!-- Post List -->
+<div class="max-w-4xl space-y-3" id="post-list">
+<!-- Post Item 1 (Ready) -->
+<div class="group bg-surface-container-lowest border border-outline-variant rounded-lg p-4 flex items-center justify-between hover:border-outline transition-colors cursor-move">
+<div class="flex items-center space-x-4 flex-1">
+<span class="material-symbols-outlined text-outline group-hover:text-on-surface-variant transition-colors cursor-grab">drag_indicator</span>
+<div class="w-12 h-12 bg-surface-container-low rounded border border-outline-variant flex items-center justify-center text-on-surface-variant font-label-mono text-label-mono">01</div>
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-1">Why do computers exist?</h3>
+<div class="flex items-center space-x-3 font-body-sm text-body-sm text-on-surface-variant">
+<span>6 Slides</span>
+<span>•</span>
+<span class="text-green-700 bg-green-100 dark:text-green-300 dark:bg-green-900/30 px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider">Ready</span>
+</div>
+</div>
+</div>
+<div class="flex items-center space-x-4 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded transition-colors" title="Duplicate">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container/50 rounded transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<a class="ml-4 flex items-center space-x-1 text-primary hover:text-surface-tint font-body-sm text-body-sm font-semibold transition-colors" href="#">
+<span>Open</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- Post Item 2 (Draft) -->
+<div class="group bg-surface-container-lowest border border-outline-variant rounded-lg p-4 flex items-center justify-between hover:border-outline transition-colors cursor-move">
+<div class="flex items-center space-x-4 flex-1">
+<span class="material-symbols-outlined text-outline group-hover:text-on-surface-variant transition-colors cursor-grab">drag_indicator</span>
+<div class="w-12 h-12 bg-surface-container-low rounded border border-outline-variant flex items-center justify-center text-on-surface-variant font-label-mono text-label-mono">02</div>
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-1">The concept of computation</h3>
+<div class="flex items-center space-x-3 font-body-sm text-body-sm text-on-surface-variant">
+<span>12 Slides</span>
+<span>•</span>
+<span class="text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider">Draft</span>
+</div>
+</div>
+</div>
+<div class="flex items-center space-x-4 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded transition-colors" title="Duplicate">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container/50 rounded transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<a class="ml-4 flex items-center space-x-1 text-primary hover:text-surface-tint font-body-sm text-body-sm font-semibold transition-colors" href="#">
+<span>Open</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</main>
+</div>
+</body></html>

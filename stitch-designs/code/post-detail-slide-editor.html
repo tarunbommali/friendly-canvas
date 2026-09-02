@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post Detail - Friendly Canvas</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-low": "#f2f4f6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-tertiary-container": "#ffede6",
+                        "inverse-surface": "#2d3133",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434655",
+                        "tertiary-container": "#bc4800",
+                        "surface-dim": "#d8dadc",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-fixed": "#00174b",
+                        "on-tertiary-fixed": "#360f00",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "primary-fixed": "#dbe1ff",
+                        "on-surface": "#191c1e",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#eeefff",
+                        "surface": "#f7f9fb",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e6e8ea",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-error": "#ffffff",
+                        "primary": "#004ac6",
+                        "surface-tint": "#0053db",
+                        "tertiary": "#943700",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-primary": "#b4c5ff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#2563eb",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-background": "#191c1e",
+                        "outline": "#737686",
+                        "on-secondary-container": "#54647a",
+                        "secondary-container": "#d0e1fb",
+                        "secondary": "#505f76",
+                        "background": "#f7f9fb",
+                        "secondary-fixed": "#d3e4fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "base": "4px",
+                        "sidebar_width": "280px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "xl": "40px",
+                        "property_panel_width": "320px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-mono": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-mono": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c3c6d7;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #737686;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-full flex flex-col font-body-md antialiased overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline flat no shadows flex justify-between items-center px-lg h-16 w-full z-40 shrink-0 transition-all duration-150">
+<div class="flex items-center gap-lg">
+<span class="font-headline-md text-headline-md font-bold text-on-surface dark:text-inverse-on-surface">Friendly Canvas</span>
+<nav class="hidden md:flex items-center gap-sm h-full">
+<a class="h-16 flex items-center px-sm font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Workspace</a>
+<a class="h-16 flex items-center px-sm font-label-caps text-label-caps text-primary dark:text-inverse-primary border-b-2 border-primary transition-colors" href="#">Editor</a>
+</nav>
+</div>
+<div class="flex items-center gap-sm">
+<div class="flex items-center gap-xs mr-sm border-r border-outline-variant pr-sm">
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Undo">
+<span class="material-symbols-outlined text-[20px]" data-icon="undo">undo</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Redo">
+<span class="material-symbols-outlined text-[20px]" data-icon="redo">redo</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Zoom In">
+<span class="material-symbols-outlined text-[20px]" data-icon="zoom_in">zoom_in</span>
+</button>
+</div>
+<button class="px-sm py-[6px] text-on-surface-variant hover:bg-surface-container-high rounded font-label-caps text-label-caps transition-colors">Save</button>
+<button class="px-md py-[6px] bg-primary text-on-primary rounded font-label-caps text-label-caps hover:bg-on-primary-fixed transition-colors">Export</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full ml-sm hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<img alt="User Avatar" class="w-8 h-8 rounded-full ml-xs object-cover" data-alt="A small circular user avatar showing a professional headshot of a person with a warm smile against a neutral light grey background. Corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3_Bs1ueAO6_OR6kTr_pVV8rGNMSkclfg1sJ8OyDbehtaVTNTPNsPJuklef_rMm-ThzvYg95MvoTxInCmHp-puadZK5WlxrVHHv0G6XYXY91xoCTkZpXvnHQnM6mt8CF40kBNtSt6bD0ydKOwouUQBOfYaK3hXwyCzeSACEvdp7C7Nw4jfuZ0obTrwvnWfWxqAdnj3Ss4VuVbacT801zeyYMFqkJ6Si8wcJSBZd03WM-R4MJM5dR0FFQ"/>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex overflow-hidden">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-lowest dark:bg-inverse-surface border-r border-outline-variant dark:border-outline flat no shadows flex flex-col h-full w-[280px] p-md shrink-0 transition-colors duration-200">
+<div class="mb-lg px-sm">
+<h2 class="font-title-sm text-title-sm text-on-surface font-semibold truncate">Friendly Canvas</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate mt-xs">Admin Workspace</p>
+</div>
+<button class="w-full flex items-center justify-center gap-sm bg-primary text-on-primary py-sm px-md rounded-lg font-label-caps text-label-caps mb-lg hover:bg-on-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Project
+            </button>
+<nav class="flex-1 flex flex-col gap-xs overflow-y-auto">
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-variant rounded-lg transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+                    Workspace
+                </a>
+<a class="flex items-center gap-sm px-sm py-sm bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary font-bold rounded-lg transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="folder">folder</span>
+                    Projects
+                </a>
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-variant rounded-lg transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+</nav>
+<div class="mt-auto pt-md border-t border-outline-variant flex flex-col gap-xs">
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="contact_support">contact_support</span>
+                    Support
+                </a>
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="help_outline">help_outline</span>
+                    Help
+                </a>
+</div>
+</aside>
+<!-- Editor Context -->
+<div class="flex-1 flex flex-col bg-[#09090b] text-[#f4f4f5] overflow-hidden">
+<!-- Context Header -->
+<div class="h-14 border-b border-[#27272A] bg-[#09090b] flex items-center justify-between px-md shrink-0">
+<div class="flex flex-col">
+<div class="flex items-center gap-xs text-[#a1a1aa] font-label-mono text-label-mono">
+<a class="hover:text-white transition-colors" href="#">Projects</a>
+<span>/</span>
+<a class="hover:text-white transition-colors" href="#">Track 01</a>
+<span>/</span>
+<span class="text-[#f4f4f5]">Post 03</span>
+</div>
+<h1 class="font-title-sm text-title-sm font-semibold truncate mt-[2px]">Why do computers exist?</h1>
+</div>
+<div class="flex items-center gap-sm">
+<button class="flex items-center gap-xs px-sm py-[6px] text-[#a1a1aa] hover:text-white hover:bg-[#27272A] rounded transition-colors font-label-caps text-label-caps border border-[#27272A]">
+<span class="material-symbols-outlined text-[16px]">add</span>
+                        Add Slide
+                    </button>
+<button class="flex items-center gap-xs px-md py-[6px] bg-primary text-white rounded font-label-caps text-label-caps hover:bg-surface-tint transition-colors">
+                        Open Canvas
+                        <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+</div>
+</div>
+<!-- Editor Split Layout -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Left Pane: Slide List -->
+<div class="w-[240px] border-r border-[#27272A] bg-[#09090b] flex flex-col shrink-0 overflow-y-auto">
+<div class="p-sm flex flex-col gap-xs">
+<!-- Slide Item (Active) -->
+<div class="group relative flex items-center gap-sm p-sm bg-[#27272A] rounded-lg border border-primary cursor-pointer">
+<div class="flex flex-col items-center justify-center text-[#52525b] group-hover:text-[#a1a1aa] cursor-grab">
+<span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+</div>
+<div class="relative w-12 h-16 rounded overflow-hidden bg-[#18181b] border border-[#3f3f46] shrink-0">
+<div class="w-full h-full bg-cover bg-center" data-alt="A minimalist tech illustration representing the concept of early computing, using geometric shapes in stark white and primary blue against a deep black background. Technical minimalism aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCuPBNIP6eNYOUqtq9w2v0MnPTEvNhF6QgmouOOPbgv8KjQaVyJjUeShp1eL6MejmlGOlRZZXUNCB4hEMA0BZKw9Zu04qMjGl4A3tbH8n4yLlkkVLJril_1wK1ALmjcEHmH8PBFXeb-qZcoXqTf-3easyaTWAl17_e-9c4xmUdPUVankQZ-cHRxvvAz9Znuq15DNwLxG5VwTIadOMf_5FW_c6AIO8D6YmaTIkwl2FpWEV_Pk3rEpC8_aA')"></div>
+<span class="absolute top-[2px] left-[2px] bg-black/60 px-[4px] rounded-[2px] font-label-mono text-[9px] text-white">01</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-mono text-label-mono text-white truncate">The Hook</p>
+<p class="text-[10px] text-[#a1a1aa] mt-[2px]">Hook Layout</p>
+</div>
+</div>
+<!-- Slide Item -->
+<div class="group relative flex items-center gap-sm p-sm hover:bg-[#18181b] rounded-lg border border-transparent hover:border-[#27272A] cursor-pointer transition-colors">
+<div class="flex flex-col items-center justify-center text-[#3f3f46] group-hover:text-[#52525b] cursor-grab opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+</div>
+<div class="relative w-12 h-16 rounded overflow-hidden bg-[#18181b] border border-[#27272A] shrink-0 group-hover:border-[#3f3f46] transition-colors">
+<div class="w-full h-full bg-cover bg-center" data-alt="A sleek diagram showing the flow of data through a processor, depicted with sharp, clean lines in a high-contrast dark mode environment. Small electric blue accents highlight data nodes. Technical minimalism." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDzenGYaSlrFQ-I1To4r01cKFGxf_Cpu0oetwSDTmToyxvbRgw3X65zGHkhaA50l2Bb4R0BsJCKGSXRKPFmsFyTmRFP9g2cNC8daUCUFSrUI_ZgcFVvinRhXcxBfy2iqffOS9P4BXFTwXx4BVEGTdkBqs_D4vb8DJnf6H28MubqxlCdSniAKsjAatMir0rJERJniVxRdB7-_TnyKRPsgNVzdad0-1JjU6GRBEOwHxbdEOBGjhvQ-UtgeA')"></div>
+<span class="absolute top-[2px] left-[2px] bg-black/60 px-[4px] rounded-[2px] font-label-mono text-[9px] text-[#a1a1aa]">02</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-mono text-label-mono text-[#a1a1aa] group-hover:text-white transition-colors truncate">Core Concept</p>
+<p class="text-[10px] text-[#71717a] mt-[2px]">Concept Layout</p>
+</div>
+</div>
+<!-- Slide Item -->
+<div class="group relative flex items-center gap-sm p-sm hover:bg-[#18181b] rounded-lg border border-transparent hover:border-[#27272A] cursor-pointer transition-colors">
+<div class="flex flex-col items-center justify-center text-[#3f3f46] group-hover:text-[#52525b] cursor-grab opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+</div>
+<div class="relative w-12 h-16 rounded overflow-hidden bg-[#18181b] border border-[#27272A] shrink-0 group-hover:border-[#3f3f46] transition-colors">
+<div class="w-full h-full bg-cover bg-center opacity-50" data-alt="An abstract visualization of binary code arranged in a circular pattern, glowing faintly against a deep charcoal background. Professional, understated technical art." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDMahoBN09DIuq_aV1RU8Ery-UJ0qGu1I_tRo3EgazpSuSyd5RaGxL58_6QQFILYHrMgOpcP-1HpAOiUtwhe-_k-SrH-XjSlybIfK2_LJf2ceUlVnmVyG1jpsG_N2eZRJ_6Flu63hAgUbSO8rqRrociSaPVx3vrAzIlftcwbfxMWK-ZIKfrAettVBcM42LGPg58rTodBt5bP69Dhu6VOSV8Ztz1Ha2DWwjoRo82GwybIoQf0mz15PIKMA')"></div>
+<span class="absolute top-[2px] left-[2px] bg-black/60 px-[4px] rounded-[2px] font-label-mono text-[9px] text-[#a1a1aa]">03</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-mono text-label-mono text-[#a1a1aa] group-hover:text-white transition-colors truncate">Data Flow</p>
+<p class="text-[10px] text-[#71717a] mt-[2px]">Process Layout</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Center Pane: Preview Canvas -->
+<div class="flex-1 bg-[#18181b] flex items-center justify-center p-md relative overflow-hidden">
+<!-- Canvas Safe Area / Preview -->
+<div class="relative w-full max-w-[400px] aspect-[1080/1350] bg-[#09090b] rounded shadow-2xl border border-[#27272A] flex flex-col p-8 overflow-hidden transform scale-95 transition-transform">
+<!-- Simulated Canvas Content (Active Slide) -->
+<div class="flex-1 flex flex-col justify-center">
+<h2 class="font-display-lg text-[28px] font-bold text-white leading-tight tracking-tight">The real reason<br/>computers exist.</h2>
+<p class="font-body-md text-[#a1a1aa] mt-4 max-w-[85%]">It's not about math. It's about organizing human chaos into predictable systems.</p>
+</div>
+<div class="h-32 w-full mt-8 rounded-lg bg-[#27272A] relative overflow-hidden">
+<div class="w-full h-full bg-cover bg-center opacity-80" data-alt="A stylized, high-contrast dark mode graphic showing abstract shapes organizing themselves from a chaotic jumble into a neat grid. Primary blue accents." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBw3aBzxZvZ0Hd_kK02HlhZUAN6TJNs1uYk3GV6Gew4ycW8W9lx5SANe6zLFzjBC7BgsLxDSxtxUzvxiCdOmZ2gRfmbNnOBffnHk3t0FrbtHQcHj0wUy9OUr7oST386CeGn3mUUC4briiN0XqvYtnJmXNKneNKLQ-68aITYsfdgCFYHNu2iUGUh7EydS4b6PyzuDXkFaV_aAd0Enk8IcdIEmiwQe5pc3OymuQ-Qh09WXE66npxI226lzg')"></div>
+</div>
+<!-- Editor Controls Overlay (Handles) -->
+<div class="absolute inset-4 border border-primary pointer-events-none hidden md:block opacity-50">
+<div class="absolute -top-1 -left-1 w-2 h-2 bg-white border border-primary"></div>
+<div class="absolute -top-1 -right-1 w-2 h-2 bg-white border border-primary"></div>
+<div class="absolute -bottom-1 -left-1 w-2 h-2 bg-white border border-primary"></div>
+<div class="absolute -bottom-1 -right-1 w-2 h-2 bg-white border border-primary"></div>
+</div>
+</div>
+</div>
+<!-- Right Pane: Slide Editor (Properties) -->
+<div class="w-[320px] border-l border-[#27272A] bg-[#09090b] flex flex-col shrink-0">
+<!-- Editor Toolbar -->
+<div class="flex items-center justify-between p-sm border-b border-[#27272A]">
+<span class="font-label-caps text-label-caps text-[#a1a1aa]">Slide 01 Properties</span>
+<div class="flex items-center gap-xs text-[#10b981] font-label-mono text-[10px]">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                            Saved
+                        </div>
+</div>
+<div class="flex-1 overflow-y-auto p-sm flex flex-col gap-md">
+<!-- Layout Selector -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-[10px] text-[#71717a]">Layout Template</label>
+<select class="w-full bg-[#18181b] border border-[#27272A] rounded px-sm py-sm text-[#f4f4f5] font-label-mono text-label-mono focus:border-primary focus:ring-0 focus:outline-none appearance-none cursor-pointer">
+<option selected="" value="hook">Hook (Title + Sub)</option>
+<option value="concept">Concept (Split View)</option>
+<option value="process">Process (Steps)</option>
+<option value="quote">Quote Block</option>
+</select>
+</div>
+<!-- Headline Input -->
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-end">
+<label class="font-label-caps text-[10px] text-[#71717a]">Headline</label>
+<span class="font-label-mono text-[10px] text-[#a1a1aa]">36/60</span>
+</div>
+<textarea class="w-full bg-[#18181b] border border-[#27272A] rounded px-sm py-sm text-[#f4f4f5] font-label-mono text-label-mono focus:border-primary focus:ring-0 focus:outline-none resize-none placeholder-[#52525b]" rows="2">The real reason computers exist.</textarea>
+</div>
+<!-- Body Copy -->
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-end">
+<label class="font-label-caps text-[10px] text-[#71717a]">Body Copy</label>
+<span class="font-label-mono text-[10px] text-[#a1a1aa]">84/200</span>
+</div>
+<textarea class="w-full bg-[#18181b] border border-[#27272A] rounded px-sm py-sm text-[#f4f4f5] font-label-mono text-label-mono focus:border-primary focus:ring-0 focus:outline-none resize-none placeholder-[#52525b]" rows="4">It's not about math. It's about organizing human chaos into predictable systems.</textarea>
+</div>
+<!-- Visual Directive -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-[10px] text-[#71717a]">Visual Directive (Prompt/Notes)</label>
+<textarea class="w-full bg-[#18181b] border border-[#27272A] rounded px-sm py-sm text-[#a1a1aa] font-label-mono text-label-mono focus:border-primary focus:ring-0 focus:outline-none resize-none placeholder-[#52525b]" rows="3">Show abstract shapes organizing from chaos to grid.</textarea>
+</div>
+<!-- Asset Thumbnail Placeholder -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-[10px] text-[#71717a]">Attached Asset</label>
+<div class="w-full h-24 bg-[#18181b] border border-[#27272A] border-dashed rounded flex flex-col items-center justify-center cursor-pointer hover:border-[#52525b] transition-colors group">
+<span class="material-symbols-outlined text-[#52525b] group-hover:text-[#a1a1aa] mb-1">add_photo_alternate</span>
+<span class="font-label-mono text-[10px] text-[#52525b] group-hover:text-[#a1a1aa]">Drop image or generate</span>
+</div>
+</div>
+</div>
+<!-- Footer Metadata -->
+<div class="p-sm border-t border-[#27272A] flex justify-between items-center text-[10px] font-label-mono text-[#71717a]">
+<span>Character count: 120</span>
+<span>Last saved: 1m ago</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Friendly Canvas - Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-low": "#f2f4f6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-tertiary-container": "#ffede6",
+                        "inverse-surface": "#2d3133",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434655",
+                        "tertiary-container": "#bc4800",
+                        "surface-dim": "#d8dadc",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-fixed": "#00174b",
+                        "on-tertiary-fixed": "#360f00",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "primary-fixed": "#dbe1ff",
+                        "on-surface": "#191c1e",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#eeefff",
+                        "surface": "#f7f9fb",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e6e8ea",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-error": "#ffffff",
+                        "primary": "#004ac6",
+                        "surface-tint": "#0053db",
+                        "tertiary": "#943700",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-primary": "#b4c5ff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#2563eb",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-background": "#191c1e",
+                        "outline": "#737686",
+                        "on-secondary-container": "#54647a",
+                        "secondary-container": "#d0e1fb",
+                        "secondary": "#505f76",
+                        "background": "#f7f9fb",
+                        "secondary-fixed": "#d3e4fe",
+                        "zinc-950": "#09090b",
+                        "zinc-900": "#18181b",
+                        "zinc-800": "#27272a",
+                        "zinc-700": "#3f3f46",
+                        "zinc-600": "#52525b",
+                        "zinc-500": "#71717a",
+                        "zinc-400": "#a1a1aa",
+                        "zinc-300": "#d4d4d8",
+                        "zinc-200": "#e4e4e7",
+                        "zinc-100": "#f4f4f5",
+                        "zinc-50": "#fafafa"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "base": "4px",
+                        "sidebar_width": "280px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "xl": "40px",
+                        "property_panel_width": "320px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-mono": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-mono": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom Scrollbar for dark theme */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #18181b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #52525b; }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-300 font-body-md h-screen w-screen overflow-hidden flex flex-col selection:bg-primary-container selection:text-white">
+<!-- Top Toolbar (TopAppBar logic applied to Editor context) -->
+<header class="flex justify-between items-center px-lg h-16 w-full z-40 bg-zinc-900 border-b border-zinc-800 shrink-0">
+<!-- Left: Breadcrumb / Back -->
+<div class="flex items-center gap-4">
+<button class="p-2 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex items-center gap-2 text-zinc-400 font-body-sm">
+<span class="hover:text-zinc-100 cursor-pointer">Projects</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="hover:text-zinc-100 cursor-pointer">Q3 Marketing Deck</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-zinc-100 font-medium">Slide 03</span>
+</div>
+</div>
+<!-- Center: Editor Tools -->
+<div class="flex items-center gap-2">
+<div class="flex items-center bg-zinc-950 rounded border border-zinc-800 p-1">
+<button class="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors" title="Undo">
+<span class="material-symbols-outlined text-[18px]" data-icon="undo">undo</span>
+</button>
+<button class="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors" title="Redo">
+<span class="material-symbols-outlined text-[18px]" data-icon="redo">redo</span>
+</button>
+</div>
+<div class="h-6 w-px bg-zinc-800 mx-2"></div>
+<div class="flex items-center gap-1 bg-zinc-950 rounded border border-zinc-800 px-2 py-1">
+<button class="text-zinc-400 hover:text-zinc-100 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="remove">remove</span>
+</button>
+<span class="font-label-mono text-zinc-300 w-12 text-center text-xs">75%</span>
+<button class="text-zinc-400 hover:text-zinc-100 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+</button>
+</div>
+<button class="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors ml-2" title="Zoom to Fit">
+<span class="material-symbols-outlined text-[18px]" data-icon="zoom_in_map">zoom_in_map</span>
+</button>
+</div>
+<!-- Right: Actions & Status -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5 text-zinc-500 font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-green-500/80">cloud_done</span>
+                Saved
+            </div>
+<div class="flex items-center gap-2">
+<button class="h-8 px-4 flex items-center justify-center rounded border border-zinc-700 hover:border-zinc-500 text-zinc-300 hover:text-zinc-100 bg-zinc-900 transition-colors font-body-sm">
+                    Preview
+                </button>
+<button class="h-8 px-4 flex items-center justify-center rounded bg-primary-container text-white hover:bg-blue-500 transition-colors font-body-sm font-medium">
+                    Export
+                </button>
+<div class="ml-2 w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 overflow-hidden shrink-0 flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="A small, professional avatar headshot of a user in a dark mode UI context, sleek and minimalist. The image is a placeholder for a user profile picture, featuring a high-contrast, modern aesthetic suitable for a design tool interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCwjkrw2k4VNc-sIfw6KbG29_0wdZvQDOum4u04RRs_Sv9K-hhwtw_JmvOyzhLbgFQ4XKGke7_9m0XImFwQL2tZC-sXkzmEdKx7o3eNHEzSqtsFqr8zfGe5H19-PElHupjhOTe0YcwRRTutCq02vhQG7y9I4CNAv5Je7QwTaAgGMk1RNnHnx8tR5dnKHtFSW0D2M75sII3gMKFR3vm8k6jfCOEuNWvOuCSPATWwRjGrF8-f5wtOxtdjw"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Left Sidebar: Tools Panel -->
+<aside class="w-16 flex flex-col items-center py-4 bg-zinc-900 border-r border-zinc-800 shrink-0 gap-2 z-30">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-zinc-800 text-primary-fixed border border-zinc-700 transition-colors relative group" title="Select (V)">
+<span class="material-symbols-outlined text-[22px]" data-icon="arrow_selector_tool">arrow_selector_tool</span>
+<!-- Active indicator -->
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary-fixed rounded-r-full"></div>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors group" title="Text (T)">
+<span class="material-symbols-outlined text-[22px]" data-icon="text_fields">text_fields</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors group" title="Image (I)">
+<span class="material-symbols-outlined text-[22px]" data-icon="image">image</span>
+</button>
+<div class="w-8 h-px bg-zinc-800 my-1"></div>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors group" title="Rectangle (R)">
+<span class="material-symbols-outlined text-[22px]" data-icon="crop_square">crop_square</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors group" title="Ellipse (O)">
+<span class="material-symbols-outlined text-[22px]" data-icon="panorama_fish_eye">panorama_fish_eye</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors group" title="Line (L)">
+<span class="material-symbols-outlined text-[22px]" data-icon="horizontal_rule">horizontal_rule</span>
+</button>
+<div class="w-8 h-px bg-zinc-800 my-1"></div>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors group" title="Frame (F)">
+<span class="material-symbols-outlined text-[22px]" data-icon="crop">crop</span>
+</button>
+<div class="mt-auto">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300 transition-colors group" title="Settings">
+<span class="material-symbols-outlined text-[22px]" data-icon="settings">settings</span>
+</button>
+</div>
+</aside>
+<!-- Center: Canvas Area -->
+<main class="flex-1 relative overflow-hidden bg-zinc-950 flex flex-col">
+<!-- Scrollable Canvas Container -->
+<div class="flex-1 overflow-auto flex items-center justify-center p-md relative" id="canvas-container">
+<!-- Grid Background Pattern -->
+<div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: radial-gradient(#3f3f46 1px, transparent 1px); background-size: 24px 24px;"></div>
+<!-- The Canvas (Artboard) - 1080x1350 scaled to fit for preview purposes here -->
+<div class="bg-zinc-50 shadow-2xl relative transition-transform origin-center shrink-0 border border-zinc-800" style="width: 540px; height: 675px; transform: scale(0.9);">
+<!-- Canvas Content (Light mode context within the dark editor) -->
+<div class="absolute inset-0 p-12 flex flex-col bg-white">
+<!-- Header Text -->
+<div class="relative group cursor-pointer border border-transparent hover:border-blue-300 transition-colors p-2 -m-2 rounded">
+<h1 class="text-zinc-900 font-display-lg text-5xl font-bold leading-tight tracking-tight">
+                                Q3 Marketing <br/> Initiatives
+                            </h1>
+</div>
+<!-- Body Text -->
+<div class="mt-6 w-2/3 relative group cursor-pointer border border-transparent hover:border-blue-300 transition-colors p-2 -m-2 rounded">
+<p class="text-zinc-600 font-body-md text-lg leading-relaxed">
+                                Expanding our reach through targeted campaigns and interactive community engagement. Focusing on core demographics to drive Q4 retention.
+                            </p>
+</div>
+<!-- Active Selected Element (Graphic Placeholder) -->
+<div class="mt-12 flex-1 w-full bg-zinc-100 rounded-xl relative cursor-move border-2 border-primary-container overflow-hidden group">
+<!-- Image inside the placeholder -->
+<div class="w-full h-full bg-cover bg-center" data-alt="A vibrant, abstract 3D geometric composition featuring soft, rounded shapes in shades of blue and white, set against a pristine light background. The lighting is studio-quality, casting subtle shadows that emphasize depth. The aesthetic is modern, clean, and highly professional, perfect for a corporate marketing presentation slide in a digital design tool." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAYZHJD3rCTuIPeiGqKgyGqf35rr63FaUxVjGu3mC4Y9ld8YqIR45peN53xJj0OuPLzKFrHJQkOaiml6oDpOl6B4vno_tBjvGqmPK4mXrU4Xa_7dXHaLvx3RaWJF8XMAQ-AFIIzB7unmv3ET9RYfvpNud5KLUrZwV4OVPX3i-N-OTdEshgfoDZBJLC3OQQwEeqTVNK3M-w3t_aoV6YpvNyzJx5I8V-Mm7KC9EoMd3ujmYw08ZTKvY6f8A')"></div>
+<!-- Selection Handles -->
+<div class="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white border border-primary-container rounded-sm"></div>
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border border-primary-container rounded-sm"></div>
+<div class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white border border-primary-container rounded-sm"></div>
+<div class="absolute top-1/2 -translate-y-1/2 -left-1.5 w-3 h-3 bg-white border border-primary-container rounded-sm"></div>
+<div class="absolute top-1/2 -translate-y-1/2 -right-1.5 w-3 h-3 bg-white border border-primary-container rounded-sm"></div>
+<div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white border border-primary-container rounded-sm"></div>
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border border-primary-container rounded-sm"></div>
+<div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white border border-primary-container rounded-sm"></div>
+<!-- Alignment/Smart Guides visualization (Optional touch of realism) -->
+<div class="absolute -left-12 top-1/2 w-12 h-px bg-blue-500/50 border-t border-dashed border-blue-500"></div>
+</div>
+<!-- Footer / Slide Number -->
+<div class="absolute bottom-12 right-12 text-zinc-400 font-label-mono text-sm">
+                            03 / 12
+                        </div>
+</div>
+</div>
+</div>
+<!-- Bottom: Slide Navigator -->
+<div class="h-28 bg-zinc-900 border-t border-zinc-800 flex items-center px-4 overflow-x-auto gap-4 shrink-0 z-20 custom-scrollbar">
+<!-- Slide 1 -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer shrink-0">
+<div class="w-20 h-28 bg-zinc-800 rounded border border-zinc-700 group-hover:border-zinc-500 transition-colors overflow-hidden flex items-center justify-center relative">
+<div class="w-[80%] h-[80%] bg-white rounded-sm shadow-sm scale-75 origin-center"></div>
+</div>
+<span class="font-label-mono text-xs text-zinc-500 group-hover:text-zinc-300">01</span>
+</div>
+<!-- Slide 2 -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer shrink-0">
+<div class="w-20 h-28 bg-zinc-800 rounded border border-zinc-700 group-hover:border-zinc-500 transition-colors overflow-hidden flex items-center justify-center relative">
+<div class="w-[80%] h-[80%] bg-white rounded-sm shadow-sm scale-75 origin-center flex flex-col p-1 gap-1">
+<div class="w-full h-2 bg-zinc-200 rounded-sm"></div>
+<div class="w-3/4 h-2 bg-zinc-200 rounded-sm"></div>
+</div>
+</div>
+<span class="font-label-mono text-xs text-zinc-500 group-hover:text-zinc-300">02</span>
+</div>
+<!-- Slide 3 (Active) -->
+<div class="flex flex-col items-center gap-2 cursor-pointer shrink-0">
+<div class="w-20 h-28 bg-zinc-800 rounded border-2 border-primary-container overflow-hidden flex items-center justify-center relative shadow-[0_0_0_2px_rgba(37,99,235,0.2)]">
+<div class="w-[80%] h-[80%] bg-white rounded-sm shadow-sm scale-75 origin-center flex flex-col p-1 gap-1">
+<div class="w-full h-3 bg-zinc-200 rounded-sm"></div>
+<div class="w-full flex-1 bg-blue-100 rounded-sm"></div>
+</div>
+</div>
+<span class="font-label-mono text-xs text-primary-fixed font-medium">03</span>
+</div>
+<!-- Slide 4 -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer shrink-0">
+<div class="w-20 h-28 bg-zinc-800 rounded border border-zinc-700 group-hover:border-zinc-500 transition-colors overflow-hidden flex items-center justify-center relative">
+<div class="w-[80%] h-[80%] bg-white rounded-sm shadow-sm scale-75 origin-center flex p-1 gap-1">
+<div class="w-1/2 h-full bg-zinc-200 rounded-sm"></div>
+<div class="w-1/2 h-full bg-zinc-200 rounded-sm"></div>
+</div>
+</div>
+<span class="font-label-mono text-xs text-zinc-500 group-hover:text-zinc-300">04</span>
+</div>
+<!-- Add Slide -->
+<div class="flex flex-col items-center justify-center h-28 w-16 group cursor-pointer shrink-0 ml-2">
+<div class="w-10 h-10 rounded-full border border-dashed border-zinc-600 group-hover:border-zinc-400 group-hover:bg-zinc-800 flex items-center justify-center text-zinc-500 group-hover:text-zinc-300 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Right Sidebar: Properties Panel -->
+<aside class="w-property_panel_width bg-zinc-900 border-l border-zinc-800 flex flex-col shrink-0 z-30 h-full overflow-y-auto custom-scrollbar">
+<!-- Panel Header -->
+<div class="h-12 border-b border-zinc-800 flex items-center px-4 justify-between sticky top-0 bg-zinc-900 z-10">
+<span class="font-label-caps text-zinc-400 uppercase tracking-wider text-[11px] font-bold">Image Properties</span>
+<button class="text-zinc-500 hover:text-zinc-300">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+<div class="p-4 flex flex-col gap-6">
+<!-- Layout / Alignment -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between text-zinc-300 bg-zinc-950 rounded p-1 border border-zinc-800">
+<button class="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 flex-1 flex justify-center" title="Align Left">
+<span class="material-symbols-outlined text-[18px]" data-icon="align_horizontal_left">align_horizontal_left</span>
+</button>
+<button class="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 flex-1 flex justify-center" title="Align Center">
+<span class="material-symbols-outlined text-[18px]" data-icon="align_horizontal_center">align_horizontal_center</span>
+</button>
+<button class="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 flex-1 flex justify-center" title="Align Right">
+<span class="material-symbols-outlined text-[18px]" data-icon="align_horizontal_right">align_horizontal_right</span>
+</button>
+<div class="w-px h-4 bg-zinc-700 mx-1"></div>
+<button class="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 flex-1 flex justify-center" title="Align Top">
+<span class="material-symbols-outlined text-[18px]" data-icon="align_vertical_top">align_vertical_top</span>
+</button>
+<button class="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 flex-1 flex justify-center" title="Align Middle">
+<span class="material-symbols-outlined text-[18px]" data-icon="align_vertical_center">align_vertical_center</span>
+</button>
+<button class="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 flex-1 flex justify-center" title="Align Bottom">
+<span class="material-symbols-outlined text-[18px]" data-icon="align_vertical_bottom">align_vertical_bottom</span>
+</button>
+</div>
+</div>
+<!-- Position & Size -->
+<div class="flex flex-col gap-3">
+<span class="font-label-caps text-zinc-500 uppercase">Transform</span>
+<div class="grid grid-cols-2 gap-2">
+<!-- X -->
+<div class="flex items-center bg-zinc-950 border border-zinc-800 rounded px-2 h-8">
+<span class="text-zinc-500 font-label-mono text-[10px] w-4">X</span>
+<input class="bg-transparent border-none text-zinc-300 font-label-mono text-xs w-full focus:ring-0 p-0 text-right" type="text" value="120"/>
+</div>
+<!-- Y -->
+<div class="flex items-center bg-zinc-950 border border-zinc-800 rounded px-2 h-8">
+<span class="text-zinc-500 font-label-mono text-[10px] w-4">Y</span>
+<input class="bg-transparent border-none text-zinc-300 font-label-mono text-xs w-full focus:ring-0 p-0 text-right" type="text" value="450"/>
+</div>
+<!-- W -->
+<div class="flex items-center bg-zinc-950 border border-zinc-800 rounded px-2 h-8 relative">
+<span class="text-zinc-500 font-label-mono text-[10px] w-4">W</span>
+<input class="bg-transparent border-none text-zinc-300 font-label-mono text-xs w-full focus:ring-0 p-0 text-right pr-6" type="text" value="840"/>
+<!-- Link icon (constrained proportions) -->
+<div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center justify-center text-primary-fixed cursor-pointer">
+<span class="material-symbols-outlined text-[14px]" data-icon="link">link</span>
+</div>
+</div>
+<!-- H -->
+<div class="flex items-center bg-zinc-950 border border-zinc-800 rounded px-2 h-8">
+<span class="text-zinc-500 font-label-mono text-[10px] w-4">H</span>
+<input class="bg-transparent border-none text-zinc-300 font-label-mono text-xs w-full focus:ring-0 p-0 text-right" type="text" value="600"/>
+</div>
+<!-- Rotation -->
+<div class="flex items-center bg-zinc-950 border border-zinc-800 rounded px-2 h-8">
+<span class="material-symbols-outlined text-[14px] text-zinc-500 w-4" data-icon="rotate_right">rotate_right</span>
+<input class="bg-transparent border-none text-zinc-300 font-label-mono text-xs w-full focus:ring-0 p-0 text-right" type="text" value="0°"/>
+</div>
+<!-- Radius -->
+<div class="flex items-center bg-zinc-950 border border-zinc-800 rounded px-2 h-8">
+<span class="material-symbols-outlined text-[14px] text-zinc-500 w-4" data-icon="rounded_corner">rounded_corner</span>
+<input class="bg-transparent border-none text-zinc-300 font-label-mono text-xs w-full focus:ring-0 p-0 text-right" type="text" value="24"/>
+</div>
+</div>
+</div>
+<div class="h-px bg-zinc-800 w-full"></div>
+<!-- Fill / Image Source -->
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-zinc-500 uppercase">Image Fill</span>
+<button class="text-zinc-400 hover:text-zinc-200"><span class="material-symbols-outlined text-[16px]" data-icon="add">add</span></button>
+</div>
+<div class="flex items-center gap-2 group cursor-pointer">
+<div class="w-8 h-8 rounded border border-zinc-700 bg-zinc-800 overflow-hidden shrink-0 flex items-center justify-center relative">
+<div class="w-full h-full bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A small thumbnail of the abstract 3D geometric composition used in the main canvas, showing soft blue and white shapes. Used as a tiny preview icon in a properties panel of a design tool." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAXkBWKaE_HWm66_bhjOXZWe-EDTrgR0DODSZW_hwtpy9UCfCMWhp3d_rNVEuGZZ-hoIL9f2e4cCTEDyqBSHNJccCpxq2qBWWJxU2IQXHmFHyJDzph-GKVvTTXlRZK5BzRbJBc__L9n3-UBvHBMjLlLUv7dLJ_kgAd7kr-Y5ujWc7uIxZwHbql_FMmKkESO5773-leSwI5qDUKQ08pYyMhjlbXuiLcBNlwI5MAe4yaNUvthV3vy7rmlsw')"></div>
+</div>
+<div class="flex-1 bg-zinc-950 border border-zinc-800 rounded px-2 h-8 flex items-center justify-between group-hover:border-zinc-700 transition-colors">
+<span class="text-zinc-400 font-label-mono text-xs truncate">Q3_Hero_Graphic.png</span>
+<span class="material-symbols-outlined text-[14px] text-zinc-500" data-icon="expand_more">expand_more</span>
+</div>
+<button class="text-zinc-600 hover:text-zinc-300 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+<!-- Fit type -->
+<div class="flex bg-zinc-950 rounded border border-zinc-800 p-0.5 mt-1">
+<button class="flex-1 text-[11px] font-label-mono py-1 rounded bg-zinc-800 text-zinc-200 shadow-sm">Fill</button>
+<button class="flex-1 text-[11px] font-label-mono py-1 rounded text-zinc-500 hover:text-zinc-300">Fit</button>
+<button class="flex-1 text-[11px] font-label-mono py-1 rounded text-zinc-500 hover:text-zinc-300">Crop</button>
+</div>
+</div>
+<div class="h-px bg-zinc-800 w-full"></div>
+<!-- Stroke / Border -->
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-zinc-500 uppercase">Stroke</span>
+<button class="text-zinc-400 hover:text-zinc-200"><span class="material-symbols-outlined text-[16px]" data-icon="add">add</span></button>
+</div>
+</div>
+<!-- Effects -->
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-zinc-500 uppercase">Effects</span>
+<button class="text-zinc-400 hover:text-zinc-200"><span class="material-symbols-outlined text-[16px]" data-icon="add">add</span></button>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-zinc-500" data-icon="blur_on">blur_on</span>
+</div>
+<div class="flex-1 bg-zinc-950 border border-zinc-800 rounded px-2 h-8 flex items-center justify-between">
+<span class="text-zinc-300 font-body-sm text-xs">Drop Shadow</span>
+<span class="material-symbols-outlined text-[14px] text-zinc-500" data-icon="settings">settings</span>
+</div>
+<button class="text-zinc-600 hover:text-zinc-300 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="remove">remove</span>
+</button>
+</div>
+</div>
+<div class="h-px bg-zinc-800 w-full mt-4"></div>
+<!-- Export Section -->
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-zinc-500 uppercase">Export</span>
+<button class="text-zinc-400 hover:text-zinc-200"><span class="material-symbols-outlined text-[16px]" data-icon="add">add</span></button>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</body></html>

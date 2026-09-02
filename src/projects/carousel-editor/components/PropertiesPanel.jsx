@@ -24,7 +24,7 @@ import {
 import { getLayoutBounds } from "../theme/layoutBounds";
 import { isChromeElement } from "../theme/elementClassify";
 
-const TEXT_TYPES = new Set(["text", "headline", "badge"]);
+const TEXT_TYPES = new Set(["text", "headline", "badge", "body"]);
 
 export function PropertiesPanel() {
   const document = useCarouselStore((state) => state.document);
@@ -220,27 +220,27 @@ export function PropertiesPanel() {
   // If no element is selected, show Slide properties & Safe Area Specs
   if (!selectedElement) {
     return (
-      <div className="w-[280px] bg-[#151821] border-l border-white/5 p-3.5 h-full flex flex-col gap-4 text-xs text-slate-300 overflow-y-auto shrink-0 select-none">
-        <div className="flex items-center gap-2 text-slate-200 font-semibold border-b border-white/5 pb-2.5">
-          <Sliders className="w-4 h-4 text-cyan-400" />
+      <div className="w-80 bg-white dark:bg-[#151821] border-l border-[#e2e8f0] dark:border-white/10 p-4 h-full flex flex-col gap-4 text-xs text-gray-700 dark:text-slate-300 overflow-y-auto shrink-0 select-none font-sans shadow-2xs">
+        <div className="flex items-center gap-2 text-gray-900 dark:text-slate-100 font-bold border-b border-[#e2e8f0] dark:border-white/10 pb-3">
+          <Sliders className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           <span className="font-mono text-xs uppercase tracking-wider">Slide Properties</span>
         </div>
 
         {/* Paste from Clipboard quick action */}
         {clipboardElement && (
-          <div className="p-2.5 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-center justify-between gap-2">
+          <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700/50 flex items-center justify-between gap-2">
             <div className="min-w-0">
-              <div className="text-[11px] font-semibold text-blue-300 flex items-center gap-1.5 truncate">
-                <Copy className="w-3 h-3 text-blue-400 shrink-0" />
+              <div className="text-[11px] font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-1.5 truncate">
+                <Copy className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
                 <span className="capitalize truncate">{clipboardElement.type || "Element"} in clipboard</span>
               </div>
-              <p className="text-[10px] text-slate-400 truncate mt-0.5">
+              <p className="text-[10px] text-gray-500 dark:text-slate-400 truncate mt-0.5">
                 Ready to paste on this slide
               </p>
             </div>
             <button
               onClick={() => pasteClipboardElement()}
-              className="px-2.5 py-1 text-[11px] font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-lg shadow-sm transition-colors shrink-0 flex items-center gap-1 cursor-pointer"
+              className="px-2.5 py-1 text-[11px] font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-xs transition-colors shrink-0 flex items-center gap-1 cursor-pointer"
               title="Paste copied element to this slide (Ctrl+V)"
             >
               <span>Paste</span>
@@ -252,7 +252,7 @@ export function PropertiesPanel() {
         {/* Background Color & Pattern */}
         <div className="space-y-3">
           <div>
-            <label className="block text-slate-400 font-medium mb-1">
+            <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
               Background Color
             </label>
             <div className="flex items-center gap-2">
@@ -263,7 +263,7 @@ export function PropertiesPanel() {
                   activeSlide &&
                   updateSlideBackground(activeSlide.id, e.target.value)
                 }
-                className="w-8 h-8 rounded border border-slate-700 bg-transparent cursor-pointer"
+                className="w-8 h-8 rounded border border-gray-300 dark:border-slate-700 bg-transparent cursor-pointer p-0"
               />
               <input
                 type="text"
@@ -272,13 +272,13 @@ export function PropertiesPanel() {
                   activeSlide &&
                   updateSlideBackground(activeSlide.id, e.target.value)
                 }
-                className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1.5 font-mono text-slate-200"
+                className="flex-1 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded px-2.5 py-1.5 font-mono text-gray-800 dark:text-slate-200 text-xs focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-slate-400 font-medium mb-1">
+            <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
               Background Pattern
             </label>
             <select
@@ -287,24 +287,24 @@ export function PropertiesPanel() {
                 activeSlide &&
                 updateSlideBgPattern(activeSlide.id, e.target.value)
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-sans"
+              className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-sans text-xs focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none cursor-pointer"
             >
-              <option value="solid">Solid (Plain)</option>
-              <option value="paper">Warm Editorial Paper</option>
-              <option value="grid">Engineering Notebook Grid</option>
-              <option value="dots">Technical Dot Grid</option>
-              <option value="blueprint">Blueprint Grid</option>
-              <option value="texture">Tactile Grain Paper</option>
+              <option value="solid" className="dark:bg-slate-900">Solid (Plain)</option>
+              <option value="paper" className="dark:bg-slate-900">Warm Editorial Paper</option>
+              <option value="grid" className="dark:bg-slate-900">Engineering Notebook Grid</option>
+              <option value="dots" className="dark:bg-slate-900">Technical Dot Grid</option>
+              <option value="blueprint" className="dark:bg-slate-900">Blueprint Grid</option>
+              <option value="texture" className="dark:bg-slate-900">Tactile Grain Paper</option>
             </select>
           </div>
         </div>
 
         {/* AI Image Generation Prompt Card */}
         {(activeSlide?.imagePrompt || activeSlide?.visualDirective) && (
-          <div className="border-t border-white/10 pt-3 space-y-2">
+          <div className="border-t border-[#e2e8f0] dark:border-white/10 pt-3 space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <span className="font-semibold text-slate-200 flex items-center gap-1.5 text-xs shrink-0">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span className="font-semibold text-gray-800 dark:text-slate-200 flex items-center gap-1.5 text-xs shrink-0">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                 <span>AI Image Prompt</span>
               </span>
 
@@ -318,16 +318,16 @@ export function PropertiesPanel() {
                     setCopiedPrompt(true);
                     setTimeout(() => setCopiedPrompt(false), 2000);
                   }}
-                  className={`px-2 py-1 rounded text-[11px] font-medium flex items-center gap-1 transition-all ${
+                  className={`px-2 py-1 rounded text-[11px] font-medium flex items-center gap-1 transition-all cursor-pointer ${
                     copiedPrompt
-                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
-                      : "bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                      ? "bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700"
+                      : "bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-700/50"
                   }`}
                   title="Copy AI Prompt to Clipboard"
                 >
                   {copiedPrompt ? (
                     <>
-                      <Check className="w-3 h-3 text-emerald-400" />
+                      <Check className="w-3 h-3 text-emerald-600" />
                       <span>Copied!</span>
                     </>
                   ) : (
@@ -340,7 +340,7 @@ export function PropertiesPanel() {
 
                 {/* Upload Button */}
                 <label
-                  className="px-2 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 font-medium rounded border border-cyan-400/30 flex items-center gap-1 cursor-pointer transition-all text-[11px]"
+                  className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium rounded border border-blue-200 dark:border-blue-700/50 flex items-center gap-1 cursor-pointer transition-all text-[11px]"
                   title="Upload Image Asset"
                 >
                   <Upload className="w-3 h-3" />
@@ -391,13 +391,13 @@ export function PropertiesPanel() {
         )}
 
         {Array.isArray(activeSlide?.assetName) && activeSlide.assetName.length > 0 && (
-          <div className="border-t border-slate-800 pt-3 space-y-2">
-            <span className="font-semibold text-slate-300">Asset Names</span>
+          <div className="border-t border-[#e2e8f0] dark:border-white/10 pt-3 space-y-2">
+            <span className="font-semibold text-gray-700 dark:text-slate-300">Asset Names</span>
             <div className="flex flex-wrap gap-1.5">
               {activeSlide.assetName.map((name) => (
                 <span
                   key={name}
-                  className="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-700 text-[10px] font-mono text-slate-300"
+                  className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-white/10 text-[10px] font-mono text-gray-700 dark:text-slate-300"
                 >
                   {name}
                 </span>
@@ -407,17 +407,17 @@ export function PropertiesPanel() {
         )}
 
         {/* Editable Safe Area Margins Section */}
-        <div className="border-t border-slate-800 pt-3 space-y-2">
+        <div className="border-t border-[#e2e8f0] dark:border-white/10 pt-3 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="font-semibold text-slate-300 flex items-center gap-1.5">
-              <Grid className="w-3.5 h-3.5 text-cyan-400" /> Safe Area Margins
+            <span className="font-semibold text-gray-800 dark:text-slate-200 flex items-center gap-1.5">
+              <Grid className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" /> Safe Area Margins
             </span>
             <button
               onClick={toggleSafeAreaGuides}
-              className={`px-2 py-0.5 rounded text-[10px] font-mono border transition-colors ${
+              className={`px-2 py-0.5 rounded text-[10px] font-mono border transition-colors cursor-pointer ${
                 showSafeAreaGuides
-                  ? "bg-cyan-950 text-cyan-300 border-cyan-500/40"
-                  : "bg-slate-950 text-slate-400 border-slate-800"
+                  ? "bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700 font-bold"
+                  : "bg-gray-50 dark:bg-slate-900 text-gray-500 dark:text-slate-400 border-gray-200 dark:border-white/10"
               }`}
             >
               {showSafeAreaGuides ? "Guides ON" : "Guides OFF"}
@@ -426,7 +426,7 @@ export function PropertiesPanel() {
 
           <div className="grid grid-cols-2 gap-2 text-[11px]">
             <div>
-              <label className="block text-slate-500 mb-1">Top (px)</label>
+              <label className="block text-gray-500 dark:text-slate-400 mb-1">Top (px)</label>
               <input
                 type="number"
                 value={globalLayoutConfig?.safeAreaMarginTop ?? 80}
@@ -435,11 +435,11 @@ export function PropertiesPanel() {
                     safeAreaMarginTop: Number(e.target.value),
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-slate-500 mb-1">Bottom (px)</label>
+              <label className="block text-gray-500 dark:text-slate-400 mb-1">Bottom (px)</label>
               <input
                 type="number"
                 value={globalLayoutConfig?.safeAreaMarginBottom ?? 80}
@@ -448,11 +448,11 @@ export function PropertiesPanel() {
                     safeAreaMarginBottom: Number(e.target.value),
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-slate-500 mb-1">Left (px)</label>
+              <label className="block text-gray-500 dark:text-slate-400 mb-1">Left (px)</label>
               <input
                 type="number"
                 value={globalLayoutConfig?.safeAreaMarginLeft ?? 80}
@@ -461,11 +461,11 @@ export function PropertiesPanel() {
                     safeAreaMarginLeft: Number(e.target.value),
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-slate-500 mb-1">Right (px)</label>
+              <label className="block text-gray-500 dark:text-slate-400 mb-1">Right (px)</label>
               <input
                 type="number"
                 value={globalLayoutConfig?.safeAreaMarginRight ?? 80}
@@ -474,18 +474,18 @@ export function PropertiesPanel() {
                     safeAreaMarginRight: Number(e.target.value),
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
           </div>
         </div>
 
         {/* Editable Content Zone Bounds */}
-        <div className="border-t border-slate-800 pt-3 space-y-2">
-          <span className="font-semibold text-slate-300">Content Zone Bounds</span>
+        <div className="border-t border-[#e2e8f0] dark:border-white/10 pt-3 space-y-2">
+          <span className="font-semibold text-gray-800 dark:text-slate-200">Content Zone Bounds</span>
           <div className="grid grid-cols-2 gap-2 text-[11px]">
             <div>
-              <label className="block text-slate-500 mb-1">Top Clearance (px)</label>
+              <label className="block text-gray-500 dark:text-slate-400 mb-1">Top Clearance (px)</label>
               <input
                 type="number"
                 value={globalLayoutConfig?.contentTopClearance ?? 210}
@@ -494,11 +494,11 @@ export function PropertiesPanel() {
                     contentTopClearance: Number(e.target.value),
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-slate-500 mb-1">Bottom Clearance (px)</label>
+              <label className="block text-gray-500 dark:text-slate-400 mb-1">Bottom Clearance (px)</label>
               <input
                 type="number"
                 value={globalLayoutConfig?.contentBottomClearance ?? 1180}
@@ -507,11 +507,11 @@ export function PropertiesPanel() {
                     contentBottomClearance: Number(e.target.value),
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-slate-500 mb-1">Left Padding (px)</label>
+              <label className="block text-gray-500 dark:text-slate-400 mb-1">Left Padding (px)</label>
               <input
                 type="number"
                 value={globalLayoutConfig?.contentPaddingLeft ?? 0}
@@ -520,11 +520,11 @@ export function PropertiesPanel() {
                     contentPaddingLeft: Number(e.target.value),
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-slate-500 mb-1">Right Padding (px)</label>
+              <label className="block text-gray-500 dark:text-slate-400 mb-1">Right Padding (px)</label>
               <input
                 type="number"
                 value={globalLayoutConfig?.contentPaddingRight ?? 0}
@@ -533,17 +533,17 @@ export function PropertiesPanel() {
                     contentPaddingRight: Number(e.target.value),
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
           </div>
-          <div className="p-2 rounded bg-slate-950 border border-slate-800 flex justify-between text-[11px] font-mono mt-1">
-            <span className="text-slate-500">Draw Width:</span>
-            <span className="text-slate-300 font-bold">{layoutBounds.contentZone.width}px</span>
+          <div className="p-2 rounded bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 flex justify-between text-[11px] font-mono mt-1">
+            <span className="text-gray-500 dark:text-slate-400">Draw Width:</span>
+            <span className="text-gray-900 dark:text-slate-100 font-bold">{layoutBounds.contentZone.width}px</span>
           </div>
         </div>
 
-        <div className="mt-auto p-3 rounded-lg bg-slate-950/60 border border-slate-800 text-[11px] text-slate-500">
+        <div className="mt-auto p-3 rounded-lg bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 text-[11px] text-gray-500 dark:text-slate-400">
           Click any canvas element to inspect and modify its specific properties.
         </div>
       </div>
@@ -551,10 +551,10 @@ export function PropertiesPanel() {
   }
 
   return (
-    <div className="w-[280px] bg-[#151821] border-l border-white/5 p-3.5 h-full flex flex-col gap-4 text-xs text-slate-300 overflow-y-auto shrink-0 select-none">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div className="flex items-center gap-2 text-slate-200 font-semibold">
-          <Sliders className="w-4 h-4 text-blue-400" />
+    <div className="w-80 bg-white dark:bg-[#151821] border-l border-[#e2e8f0] dark:border-white/10 p-4 h-full flex flex-col gap-4 text-xs text-gray-700 dark:text-slate-300 overflow-y-auto shrink-0 select-none font-sans shadow-2xs">
+      <div className="flex items-center justify-between border-b border-[#e2e8f0] dark:border-white/10 pb-3">
+        <div className="flex items-center gap-2 text-gray-900 dark:text-slate-100 font-bold">
+          <Sliders className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           <span className="capitalize">{selectedElement.type} Element</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -566,21 +566,21 @@ export function PropertiesPanel() {
             }}
             className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 text-[11px] font-medium cursor-pointer ${
               copiedElement
-                ? "bg-emerald-950 text-emerald-300 border border-emerald-500/40"
-                : "text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700"
+                ? "bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700"
+                : "text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 border border-gray-200 dark:border-white/10"
             }`}
             title="Copy Element to Clipboard (Ctrl+C)"
           >
             {copiedElement ? (
-              <Check className="w-3.5 h-3.5 text-emerald-400" />
+              <Check className="w-3.5 h-3.5 text-emerald-600" />
             ) : (
-              <Copy className="w-3.5 h-3.5 text-slate-300" />
+              <Copy className="w-3.5 h-3.5 text-gray-500 dark:text-slate-400" />
             )}
             <span>{copiedElement ? "Copied!" : "Copy"}</span>
           </button>
           <button
             onClick={() => deleteElement(selectedElement.id)}
-            className="p-1.5 text-red-400 hover:bg-red-950/50 rounded transition-colors cursor-pointer"
+            className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 rounded border border-red-200 dark:border-red-900/40 transition-colors cursor-pointer"
             title="Delete Element (Delete / Backspace)"
           >
             <Trash2 className="w-4 h-4" />
@@ -592,11 +592,11 @@ export function PropertiesPanel() {
       {selectedElement.type === "image" && (
         <div className="space-y-3">
           <div>
-            <label className="block text-slate-400 font-medium mb-1">
+            <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
               Image Preview
             </label>
             <div
-              className="w-full aspect-video rounded-lg overflow-hidden border border-slate-800 bg-slate-950 flex items-center justify-center p-1"
+              className="w-full aspect-video rounded-lg overflow-hidden border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-slate-900 flex items-center justify-center p-1"
             >
               <img
                 src={selectedElement.src}
@@ -613,8 +613,8 @@ export function PropertiesPanel() {
           </div>
 
           <div>
-            <label className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg border border-slate-700 flex items-center justify-center gap-1.5 cursor-pointer transition-colors w-full">
-              <ImageIcon className="w-3.5 h-3.5 text-purple-400" />
+            <label className="px-3 py-1.5 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 text-xs font-semibold rounded-lg border border-gray-200 dark:border-white/10 flex items-center justify-center gap-1.5 cursor-pointer transition-colors w-full">
+              <ImageIcon className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
               <span>Replace Image</span>
               <input
                 type="file"
@@ -636,10 +636,10 @@ export function PropertiesPanel() {
           {/* Corner Radius / Rounded Option */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-slate-400 font-medium">
+              <label className="text-gray-600 dark:text-slate-400 font-semibold">
                 Rounded Corners (Radius)
               </label>
-              <span className="font-mono text-slate-300 text-[11px]">
+              <span className="font-mono text-gray-700 dark:text-slate-300 text-[11px] font-bold">
                 {selectedElement.borderRadius ?? selectedElement.rx ?? 0}px
               </span>
             </div>
@@ -657,7 +657,7 @@ export function PropertiesPanel() {
                     ry: Number(e.target.value),
                   })
                 }
-                className="flex-1 accent-blue-500 cursor-pointer"
+                className="flex-1 accent-blue-600 cursor-pointer"
               />
               <input
                 type="number"
@@ -671,7 +671,7 @@ export function PropertiesPanel() {
                     ry: Math.max(0, Number(e.target.value)),
                   })
                 }
-                className="w-14 bg-slate-950 border border-slate-800 rounded p-1 text-slate-200 font-mono text-xs text-center"
+                className="w-14 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1 text-gray-800 dark:text-slate-200 font-mono text-xs text-center focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500"
               />
             </div>
 
@@ -701,8 +701,8 @@ export function PropertiesPanel() {
                     }
                     className={`py-1 rounded text-[11px] font-medium border transition-colors cursor-pointer text-center ${
                       isSelected
-                        ? "bg-blue-600 border-blue-500 text-white shadow-sm"
-                        : "bg-slate-950/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                        ? "bg-blue-600 border-blue-600 text-white shadow-xs"
+                        : "bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800"
                     }`}
                   >
                     {preset.label}
@@ -718,7 +718,7 @@ export function PropertiesPanel() {
       {TEXT_TYPES.has(selectedElement.type) && (
         <div className="space-y-3">
           <div>
-            <label className="block text-slate-400 font-medium mb-1">
+            <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
               Text Content
             </label>
             <textarea
@@ -743,13 +743,13 @@ export function PropertiesPanel() {
                 }
               }}
               placeholder="Enter text (press Enter for new line)..."
-              className="w-full bg-slate-950 border border-slate-800 rounded p-2 text-slate-200 focus:border-blue-500 focus:outline-none font-sans text-xs"
+              className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-2 text-gray-800 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none font-sans text-xs"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-slate-400 font-medium mb-1">
+              <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
                 Font Size (px)
               </label>
               <input
@@ -760,11 +760,11 @@ export function PropertiesPanel() {
                     fontSize: Number(e.target.value),
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-slate-400 font-medium mb-1">
+              <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
                 Font Family
               </label>
               <select
@@ -779,15 +779,15 @@ export function PropertiesPanel() {
                 onChange={(e) =>
                   updateElement(selectedElement.id, { fontFamily: e.target.value })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-sans"
+                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-sans text-xs focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none cursor-pointer"
               >
-                <option value="Instrument Serif">Instrument Serif (Default)</option>
-                <option value="Georgia">Georgia (Serif)</option>
-                <option value="Inter">Inter (Sans)</option>
-                <option value="JetBrains Mono">JetBrains Mono (Mono)</option>
-                <option value="Playfair Display">Playfair Display</option>
-                <option value="Roboto">Roboto</option>
-                <option value="Arial">Arial</option>
+                <option value="Instrument Serif" className="dark:bg-slate-900">Instrument Serif (Default)</option>
+                <option value="Georgia" className="dark:bg-slate-900">Georgia (Serif)</option>
+                <option value="Inter" className="dark:bg-slate-900">Inter (Sans)</option>
+                <option value="JetBrains Mono" className="dark:bg-slate-900">JetBrains Mono (Mono)</option>
+                <option value="Playfair Display" className="dark:bg-slate-900">Playfair Display</option>
+                <option value="Roboto" className="dark:bg-slate-900">Roboto</option>
+                <option value="Arial" className="dark:bg-slate-900">Arial</option>
               </select>
             </div>
           </div>
@@ -795,22 +795,22 @@ export function PropertiesPanel() {
           {/* Text Style & Formatting Toolbar (Bold, Italic, Underline) */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="block text-slate-400 font-medium">
-                Text Style & Decoration
+              <label className="block text-gray-600 dark:text-slate-400 font-semibold">
+                Text Style &amp; Decoration
               </label>
               {activeTextSelection &&
                 activeTextSelection.elementId === selectedElement.id &&
                 activeTextSelection.selectedText && (
                   <span
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-500/30 flex items-center gap-1 font-mono truncate max-w-[130px]"
+                    className="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 flex items-center gap-1 font-mono truncate max-w-[130px]"
                     title={`Selected: "${activeTextSelection.selectedText}"`}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 animate-pulse" />
                     <span className="truncate">"{activeTextSelection.selectedText}"</span>
                   </span>
                 )}
             </div>
-            <div className="grid grid-cols-3 gap-1.5 bg-slate-950 border border-slate-800 rounded p-1">
+            <div className="grid grid-cols-3 gap-1.5 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1">
               <button
                 type="button"
                 onClick={() => {
@@ -826,8 +826,8 @@ export function PropertiesPanel() {
                   selectedElement.fontWeight === "bold" ||
                   selectedElement.fontWeight === "700" ||
                   selectedElement.fontWeight === "800"
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                    ? "bg-blue-600 text-white shadow-xs"
+                    : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800"
                 }`}
                 title="Bold (Selection or Element)"
               >
@@ -844,8 +844,8 @@ export function PropertiesPanel() {
                 }}
                 className={`py-1.5 rounded flex items-center justify-center gap-1 text-xs italic transition-colors cursor-pointer ${
                   selectedElement.fontStyle === "italic"
-                    ? "bg-blue-600 text-white font-bold shadow-sm"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                    ? "bg-blue-600 text-white font-bold shadow-xs"
+                    : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800"
                 }`}
                 title="Italic (Selection or Element)"
               >
@@ -861,8 +861,8 @@ export function PropertiesPanel() {
                 }}
                 className={`py-1.5 rounded flex items-center justify-center gap-1 text-xs underline transition-colors cursor-pointer ${
                   selectedElement.underline
-                    ? "bg-blue-600 text-white font-bold shadow-sm"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                    ? "bg-blue-600 text-white font-bold shadow-xs"
+                    : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800"
                 }`}
                 title="Underline (Selection or Element)"
               >
@@ -873,7 +873,7 @@ export function PropertiesPanel() {
           </div>
 
           <div>
-            <label className="block text-slate-400 font-medium mb-1">
+            <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
               Font Weight
             </label>
             <select
@@ -881,21 +881,21 @@ export function PropertiesPanel() {
               onChange={(e) =>
                 applyTextProperty("fontWeight", e.target.value)
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 cursor-pointer"
+              className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 cursor-pointer focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
             >
-              <option value="normal">Regular</option>
-              <option value="500">Medium</option>
-              <option value="600">Semibold</option>
-              <option value="700">Bold</option>
-              <option value="800">Extra Bold</option>
+              <option value="normal" className="dark:bg-slate-900">Regular</option>
+              <option value="500" className="dark:bg-slate-900">Medium</option>
+              <option value="600" className="dark:bg-slate-900">Semibold</option>
+              <option value="700" className="dark:bg-slate-900">Bold</option>
+              <option value="800" className="dark:bg-slate-900">Extra Bold</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-slate-400 font-medium mb-1">
+            <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
               Text Alignment
             </label>
-            <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded p-1">
+            <div className="flex items-center gap-1 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1">
               <button
                 type="button"
                 onClick={() =>
@@ -908,8 +908,8 @@ export function PropertiesPanel() {
                 }
                 className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors cursor-pointer ${
                   (selectedElement.textAlign || "left") === "left"
-                    ? "bg-blue-600 text-white font-bold"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-blue-600 text-white font-bold shadow-xs"
+                    : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800"
                 }`}
               >
                 <AlignLeft className="w-3.5 h-3.5" /> Left
@@ -926,8 +926,8 @@ export function PropertiesPanel() {
                 }
                 className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors cursor-pointer ${
                   selectedElement.textAlign === "center"
-                    ? "bg-blue-600 text-white font-bold"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-blue-600 text-white font-bold shadow-xs"
+                    : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800"
                 }`}
               >
                 <AlignCenter className="w-3.5 h-3.5" /> Center
@@ -944,8 +944,8 @@ export function PropertiesPanel() {
                 }
                 className={`flex-1 py-1.5 rounded flex items-center justify-center gap-1 text-xs transition-colors cursor-pointer ${
                   selectedElement.textAlign === "right"
-                    ? "bg-blue-600 text-white font-bold"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-blue-600 text-white font-bold shadow-xs"
+                    : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800"
                 }`}
               >
                 <AlignRight className="w-3.5 h-3.5" /> Right
@@ -956,17 +956,17 @@ export function PropertiesPanel() {
           {/* Text Color */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="block text-slate-400 font-medium">
+              <label className="block text-gray-600 dark:text-slate-400 font-semibold">
                 Text Color
               </label>
               {activeTextSelection &&
                 activeTextSelection.elementId === selectedElement.id &&
                 activeTextSelection.selectedText && (
                   <span
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-500/30 flex items-center gap-1 font-mono truncate max-w-[130px]"
+                    className="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 flex items-center gap-1 font-mono truncate max-w-[130px]"
                     title={`Selected: "${activeTextSelection.selectedText}"`}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 animate-pulse" />
                     <span className="truncate">"{activeTextSelection.selectedText}"</span>
                   </span>
                 )}
@@ -976,13 +976,13 @@ export function PropertiesPanel() {
                 type="color"
                 value={selectedElement.fill || "#000000"}
                 onChange={(e) => applyTextProperty("fill", e.target.value)}
-                className="w-7 h-7 rounded border border-slate-700 bg-transparent cursor-pointer"
+                className="w-8 h-8 rounded border border-gray-300 dark:border-slate-700 bg-transparent cursor-pointer p-0"
               />
               <input
                 type="text"
                 value={selectedElement.fill || "#000000"}
                 onChange={(e) => applyTextProperty("fill", e.target.value)}
-                className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 font-mono text-slate-200 text-xs"
+                className="flex-1 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded px-2.5 py-1.5 font-mono text-gray-800 dark:text-slate-200 text-xs focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
           </div>
@@ -990,8 +990,8 @@ export function PropertiesPanel() {
           {/* Text Highlight / Background Color */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-slate-400 font-medium flex items-center gap-1.5">
-                <Highlighter className="w-3.5 h-3.5 text-amber-400" />
+              <label className="text-gray-600 dark:text-slate-400 font-semibold flex items-center gap-1.5">
+                <Highlighter className="w-3.5 h-3.5 text-amber-500" />
                 <span>Text Background / Highlight</span>
               </label>
             </div>
@@ -1003,7 +1003,7 @@ export function PropertiesPanel() {
                 onChange={(e) =>
                   applyTextProperty("textBackgroundColor", e.target.value)
                 }
-                className="w-7 h-7 rounded border border-slate-700 bg-transparent cursor-pointer"
+                className="w-8 h-8 rounded border border-gray-300 dark:border-slate-700 bg-transparent cursor-pointer p-0"
               />
               <input
                 type="text"
@@ -1012,13 +1012,13 @@ export function PropertiesPanel() {
                 onChange={(e) =>
                   applyTextProperty("textBackgroundColor", e.target.value)
                 }
-                className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 font-mono text-slate-200 text-xs placeholder:text-slate-600"
+                className="flex-1 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded px-2.5 py-1.5 font-mono text-gray-800 dark:text-slate-200 text-xs placeholder:text-gray-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
               {selectedElement.textBackgroundColor && (
                 <button
                   type="button"
                   onClick={() => applyTextProperty("textBackgroundColor", "")}
-                  className="text-[10px] text-slate-400 hover:text-slate-200 px-1.5 py-1 bg-slate-800 hover:bg-slate-700 rounded border border-slate-700 cursor-pointer shrink-0"
+                  className="text-[10px] text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white px-2 py-1 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 rounded border border-gray-200 dark:border-white/10 cursor-pointer shrink-0 font-medium"
                   title="Remove Highlight"
                 >
                   Clear
@@ -1028,7 +1028,7 @@ export function PropertiesPanel() {
 
             {/* Quick Highlight Preset Palettes */}
             <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-              <span className="text-[10px] text-slate-500 font-mono mr-0.5">Presets:</span>
+              <span className="text-[10px] text-gray-500 dark:text-slate-400 font-mono mr-0.5">Presets:</span>
               {[
                 { name: "Yellow", color: "#FFF176" },
                 { name: "Sepia / Coral", color: "#FAD4C0" },
@@ -1042,33 +1042,18 @@ export function PropertiesPanel() {
                   onClick={() => applyTextProperty("textBackgroundColor", swatch.color)}
                   style={{ backgroundColor: swatch.color }}
                   title={`${swatch.name} (${swatch.color})`}
-                  className="w-5 h-5 rounded-md border border-slate-700/60 hover:scale-110 transition-transform cursor-pointer shadow-sm"
+                  className="w-5 h-5 rounded-md border border-gray-300 dark:border-slate-700 hover:scale-110 transition-transform cursor-pointer shadow-2xs"
                 />
               ))}
               <button
                 type="button"
                 onClick={() => applyTextProperty("textBackgroundColor", "")}
-                className="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 border border-slate-700 transition-colors cursor-pointer"
+                className="px-2 py-0.5 rounded text-[10px] bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-white/10 transition-colors cursor-pointer"
                 title="Remove text background"
               >
                 None
               </button>
             </div>
-
-            {activeTextSelection &&
-              activeTextSelection.elementId === selectedElement.id &&
-              activeTextSelection.selectedText && (
-                <div className="flex items-center justify-between mt-2 text-[11px] text-blue-300 bg-blue-950/40 p-1.5 rounded-lg border border-blue-500/20">
-                  <span className="truncate">Applying to selected text</span>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTextSelection(null)}
-                    className="text-slate-400 hover:text-slate-200 text-[10px] underline cursor-pointer shrink-0 ml-1"
-                  >
-                    Clear selection
-                  </button>
-                </div>
-              )}
           </div>
         </div>
       )}
@@ -1077,7 +1062,7 @@ export function PropertiesPanel() {
       {(selectedElement.type === "rect" || selectedElement.type === "circle") && (
         <div className="space-y-3">
           <div>
-            <label className="block text-slate-400 font-medium mb-1">
+            <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
               Fill Color
             </label>
             <div className="flex items-center gap-2">
@@ -1087,7 +1072,7 @@ export function PropertiesPanel() {
                 onChange={(e) =>
                   updateElement(selectedElement.id, { fill: e.target.value })
                 }
-                className="w-7 h-7 rounded border border-slate-700 bg-transparent cursor-pointer"
+                className="w-8 h-8 rounded border border-gray-300 dark:border-slate-700 bg-transparent cursor-pointer p-0"
               />
               <input
                 type="text"
@@ -1095,13 +1080,13 @@ export function PropertiesPanel() {
                 onChange={(e) =>
                   updateElement(selectedElement.id, { fill: e.target.value })
                 }
-                className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 font-mono text-slate-200"
+                className="flex-1 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded px-2.5 py-1.5 font-mono text-gray-800 dark:text-slate-200 text-xs focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-slate-400 font-medium mb-1">
+            <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
               Stroke Color
             </label>
             <div className="flex items-center gap-2">
@@ -1111,7 +1096,7 @@ export function PropertiesPanel() {
                 onChange={(e) =>
                   updateElement(selectedElement.id, { stroke: e.target.value })
                 }
-                className="w-7 h-7 rounded border border-slate-700 bg-transparent cursor-pointer"
+                className="w-8 h-8 rounded border border-gray-300 dark:border-slate-700 bg-transparent cursor-pointer p-0"
               />
               <input
                 type="text"
@@ -1119,13 +1104,13 @@ export function PropertiesPanel() {
                 onChange={(e) =>
                   updateElement(selectedElement.id, { stroke: e.target.value })
                 }
-                className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 font-mono text-slate-200"
+                className="flex-1 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded px-2.5 py-1.5 font-mono text-gray-800 dark:text-slate-200 text-xs focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-slate-400 font-medium mb-1">
+            <label className="block text-gray-600 dark:text-slate-400 font-semibold mb-1">
               Stroke Width (px)
             </label>
             <input
@@ -1136,18 +1121,18 @@ export function PropertiesPanel() {
                   strokeWidth: Number(e.target.value),
                 })
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+              className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
             />
           </div>
         </div>
       )}
 
       {/* Position & Geometry Properties */}
-      <div className="border-t border-slate-800 pt-3 space-y-3">
-        <span className="block font-semibold text-slate-300">Transform</span>
+      <div className="border-t border-[#e2e8f0] dark:border-white/10 pt-3 space-y-3">
+        <span className="block font-semibold text-gray-800 dark:text-slate-200">Transform</span>
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="block text-slate-500 mb-1">X Position</label>
+            <label className="block text-gray-500 dark:text-slate-400 mb-1">X Position</label>
             <input
               type="number"
               value={Math.round(selectedElement.x || 0)}
@@ -1156,11 +1141,11 @@ export function PropertiesPanel() {
                   x: Number(e.target.value),
                 })
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+              className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
             />
           </div>
           <div>
-            <label className="block text-slate-500 mb-1">Y Position</label>
+            <label className="block text-gray-500 dark:text-slate-400 mb-1">Y Position</label>
             <input
               type="number"
               value={Math.round(selectedElement.y || 0)}
@@ -1169,11 +1154,11 @@ export function PropertiesPanel() {
                   y: Number(e.target.value),
                 })
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+              className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
             />
           </div>
           <div>
-            <label className="block text-slate-500 mb-1">Width (px)</label>
+            <label className="block text-gray-500 dark:text-slate-400 mb-1">Width (px)</label>
             <input
               type="number"
               value={Math.round(selectedElement.width || (selectedElement.radius ? selectedElement.radius * 2 : 0))}
@@ -1189,11 +1174,11 @@ export function PropertiesPanel() {
                   updateElement(selectedElement.id, { width: val });
                 }
               }}
-              className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+              className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
             />
           </div>
           <div>
-            <label className="block text-slate-500 mb-1">Height (px)</label>
+            <label className="block text-gray-500 dark:text-slate-400 mb-1">Height (px)</label>
             <input
               type="number"
               value={Math.round(selectedElement.height || (selectedElement.radius ? selectedElement.radius * 2 : 0))}
@@ -1209,11 +1194,11 @@ export function PropertiesPanel() {
                   updateElement(selectedElement.id, { height: val });
                 }
               }}
-              className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+              className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
             />
           </div>
           <div className="col-span-2">
-            <label className="block text-slate-500 mb-1">Rotation (°)</label>
+            <label className="block text-gray-500 dark:text-slate-400 mb-1">Rotation (°)</label>
             <input
               type="number"
               value={selectedElement.rotation || 0}
@@ -1222,107 +1207,83 @@ export function PropertiesPanel() {
                   rotation: Number(e.target.value),
                 })
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-slate-200 font-mono"
+              className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded p-1.5 text-gray-800 dark:text-slate-200 font-mono focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"
             />
           </div>
         </div>
 
         {/* Instant Alignment Buttons */}
         <div className="space-y-1.5 pt-1">
-          <label className="block text-slate-500 mb-1">Align & Distribute</label>
+          <label className="block text-gray-500 dark:text-slate-400 mb-1 font-semibold">Align &amp; Distribute</label>
           <div className="grid grid-cols-3 gap-1.5">
             <button
               onClick={alignLeft}
-              className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors flex items-center justify-center gap-1"
+              className="py-1 px-2 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded border border-gray-200 dark:border-white/10 text-[11px] font-medium transition-colors flex items-center justify-center gap-1 cursor-pointer"
               title="Align Left"
             >
               <AlignLeft className="w-3 h-3" /> Left
             </button>
             <button
               onClick={centerHorizontally}
-              className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors"
+              className="py-1 px-2 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded border border-gray-200 dark:border-white/10 text-[11px] font-medium transition-colors cursor-pointer"
               title="Center Horizontally on Canvas"
             >
               ↔ Center H
             </button>
             <button
               onClick={alignRight}
-              className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors flex items-center justify-center gap-1"
+              className="py-1 px-2 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded border border-gray-200 dark:border-white/10 text-[11px] font-medium transition-colors flex items-center justify-center gap-1 cursor-pointer"
               title="Align Right"
             >
               Right <AlignRight className="w-3 h-3" />
-            </button>
-            <button
-              onClick={centerVertically}
-              className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors"
-              title="Align to Right Margin"
-            >
-              Right →
             </button>
           </div>
           <div className="grid grid-cols-2 gap-1.5 pt-1">
             <button
               onClick={centerBoth}
-              className="py-1 px-2 bg-blue-600/80 hover:bg-blue-600 text-white rounded border border-blue-500 text-[11px] font-medium transition-colors"
+              className="py-1 px-2 bg-blue-600 hover:bg-blue-700 text-white rounded border border-blue-600 text-[11px] font-semibold transition-colors cursor-pointer shadow-xs"
               title="Center Horizontally & Vertically"
             >
               ⤢ Both Center
             </button>
             <button
-              onClick={() => {
-                if (!activeSlide) return;
-                const els = activeSlide.elements.filter((e) => !e.id?.includes("bg") && !e.id?.includes("page"));
-                if (els.length < 2) return;
-                const minY = layoutBounds.contentZone.y;
-                const maxY = layoutBounds.contentZone.bottom - 100;
-                const step = (maxY - minY) / (els.length - 1);
-                els.forEach((el, idx) => {
-                  updateElement(el.id, { y: Math.round(minY + idx * step) });
-                });
-              }}
-              className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors"
-              title="Distribute Slide Elements Vertically"
-            >
-              ↕ Distribute
-            </button>
-            <button
               onClick={distributeVertically}
-              className="py-1 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px] font-medium transition-colors"
+              className="py-1 px-2 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded border border-gray-200 dark:border-white/10 text-[11px] font-medium transition-colors cursor-pointer"
               title="Distribute non-chrome elements vertically"
             >
-              ↕ Dist V
+              ↕ Distribute
             </button>
           </div>
         </div>
 
         {!isChromeElement(selectedElement) && (
           <div className="space-y-1.5 pt-1">
-            <label className="block text-slate-500 mb-1">Layer Order</label>
+            <label className="block text-gray-500 dark:text-slate-400 mb-1 font-semibold">Layer Order</label>
             <div className="grid grid-cols-4 gap-1.5">
               <button
                 onClick={() => nudgeElementLayer(selectedElement.id, "front")}
-                className="py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 flex items-center justify-center"
+                className="py-1 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded border border-gray-200 dark:border-white/10 flex items-center justify-center cursor-pointer"
                 title="Bring to Front"
               >
                 <ChevronsUp className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => nudgeElementLayer(selectedElement.id, "forward")}
-                className="py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 flex items-center justify-center"
+                className="py-1 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded border border-gray-200 dark:border-white/10 flex items-center justify-center cursor-pointer"
                 title="Bring Forward"
               >
                 <ArrowUp className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => nudgeElementLayer(selectedElement.id, "backward")}
-                className="py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 flex items-center justify-center"
+                className="py-1 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded border border-gray-200 dark:border-white/10 flex items-center justify-center cursor-pointer"
                 title="Send Backward"
               >
                 <ArrowDown className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => nudgeElementLayer(selectedElement.id, "back")}
-                className="py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 flex items-center justify-center"
+                className="py-1 bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded border border-gray-200 dark:border-white/10 flex items-center justify-center cursor-pointer"
                 title="Send to Back"
               >
                 <ChevronsDown className="w-3.5 h-3.5" />

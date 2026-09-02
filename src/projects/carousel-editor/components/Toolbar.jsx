@@ -22,11 +22,15 @@ import {
   Maximize2,
   Lock,
   Unlock,
+  Layers,
+  Sliders,
+  Save,
+  Check,
 } from "lucide-react";
 import { THEME } from "../theme/theme";
 import { createElementId } from "../theme/elementClassify";
 
-export function Toolbar({ onOpenSettings, currentPost }) {
+export function Toolbar({ onOpenSettings, currentPost, mobileDrawer, onToggleMobileDrawer }) {
   const { projectSlug } = useParams();
   const activeSlug = projectSlug || currentPost?.projectId || currentPost?.projectSlug || 'swe-notebook';
   const backToHomeUrl = routes.contentHub ? routes.contentHub(activeSlug) : `/${activeSlug}/content`;
@@ -175,6 +179,27 @@ export function Toolbar({ onOpenSettings, currentPost }) {
     URL.revokeObjectURL(url);
   };
 
+  const [isSaved, setIsSaved] = useState(false);
+
+  const handleSaveDocument = () => {
+    try {
+      const docKey = `friendly_canvas_doc_${document.id || currentPost?.id || 'active'}`;
+      localStorage.setItem(docKey, JSON.stringify(document));
+      localStorage.setItem(
+        'friendly_canvas_last_saved',
+        JSON.stringify({
+          id: document.id || currentPost?.id || 'active',
+          title: document.metadata?.title || 'Untitled Post',
+          savedAt: new Date().toISOString(),
+        })
+      );
+    } catch (e) {
+      console.warn("Could not save to localStorage:", e);
+    }
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 2000);
+  };
+
   const downloadAllSlidesPNG = async () => {
     const slides = document.slides;
     if (!slides || slides.length === 0) return;
@@ -199,22 +224,45 @@ export function Toolbar({ onOpenSettings, currentPost }) {
   };
 
   return (
-    <header className="h-11 bg-[#151821] border-b border-white/10 px-4 flex items-center justify-between gap-4 shrink-0 select-none z-50">
-      {/* Left: Back + Title */}
-      <div className="flex items-center gap-3 shrink-0">
-        <Link
-          to={backToHomeUrl}
-          className="p-1 hover:bg-white/5 rounded text-slate-400 hover:text-white transition-colors"
-          title="Back to Home"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </Link>
-        <div className="h-4 w-[1px] bg-white/10" />
+    <header className="h-12 bg-white dark:bg-[#151821] border-b border-[#e2e8f0] dark:border-white/10 px-3 md:px-4 flex items-center justify-between gap-2 md:gap-4 shrink-0 select-none z-50 overflow-x-auto no-scrollbar shadow-2xs">
+      {/* Left: Title + Mobile Toggles */}
+      <div className="flex items-center gap-2 md:gap-3 shrink-0">
+        {/* Mobile Drawer Toggles */}
+        {onToggleMobileDrawer && (
+          <div className="flex items-center gap-1 lg:hidden">
+            <button
+              onClick={() => onToggleMobileDrawer("slides")}
+              className={`px-2 py-1 rounded text-xs font-semibold flex items-center gap-1 border transition-colors cursor-pointer ${
+                mobileDrawer === "slides"
+                  ? "bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700"
+                  : "bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-white/10"
+              }`}
+              title="Toggle Slides Drawer"
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>{document.slides.length}</span>
+            </button>
+
+            <button
+              onClick={() => onToggleMobileDrawer("properties")}
+              className={`p-1.5 rounded text-xs border transition-colors cursor-pointer ${
+                mobileDrawer === "properties"
+                  ? "bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700"
+                  : "bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-white/10"
+              }`}
+              title="Toggle Properties Panel"
+            >
+              <Sliders className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
+        <div className="h-4 w-[1px] bg-gray-200 dark:bg-white/10 hidden sm:block" />
         <div className="flex flex-col">
-          <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-widest leading-none">
+          <span className="text-[10px] font-mono text-blue-600 dark:text-blue-400 font-bold uppercase tracking-widest leading-none truncate max-w-[140px] sm:max-w-[200px]">
             {currentPost?.collectionName
               ? `${currentPost.collectionName} • #${currentPost.designNo || 1}`
-              : "WORKSPACE / PROJECT"}
+              : "FRIENDLY CANVAS STUDIO"}
           </span>
           {isEditingTitle ? (
             <input
@@ -226,59 +274,59 @@ export function Toolbar({ onOpenSettings, currentPost }) {
               onKeyDown={(e) => {
                 if (e.key === "Enter") setIsEditingTitle(false);
               }}
-              className="bg-[#0f1117] border border-cyan-400 rounded px-1.5 py-0 text-xs font-semibold text-slate-100 focus:outline-none"
+              className="bg-white dark:bg-slate-900 border border-blue-500 rounded px-1.5 py-0 text-xs font-semibold text-gray-900 dark:text-slate-100 focus:outline-none shadow-2xs"
             />
           ) : (
             <h1
               onClick={() => setIsEditingTitle(true)}
-              className="text-xs font-semibold text-slate-100 flex items-center gap-1 cursor-pointer hover:text-cyan-300 transition-colors group leading-tight"
+              className="text-xs font-bold text-gray-900 dark:text-slate-100 flex items-center gap-1 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors group leading-tight"
               title="Click to edit title"
             >
-              <span className="truncate max-w-[200px]">{document.metadata.title || "Untitled Post"}</span>
-              <Edit3 className="w-3 h-3 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity" />
+              <span className="truncate max-w-[120px] sm:max-w-[200px]">{document.metadata.title || "Untitled Post"}</span>
+              <Edit3 className="w-3 h-3 opacity-0 group-hover:opacity-100 text-gray-400 dark:text-slate-500 transition-opacity" />
             </h1>
           )}
         </div>
       </div>
 
       {/* Center: Tools Navigation Bar & Background Controls */}
-      <div className="flex items-center gap-2">
-        <nav className="flex items-center gap-1 bg-[#0f1117] p-0.5 rounded-lg border border-white/10">
+      <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
+        <nav className="flex items-center gap-1 bg-gray-50 dark:bg-slate-900 p-0.5 rounded-lg border border-gray-200 dark:border-white/10">
           <button
             onClick={() => addText("heading")}
-            className="px-2.5 py-1 rounded text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5"
+            className="px-2 py-1 rounded text-xs font-medium text-gray-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-800 transition-all flex items-center gap-1 cursor-pointer"
             title="Add Heading"
           >
-            <Type className="w-3.5 h-3.5 text-cyan-400" />
+            <Type className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span className="hidden sm:inline">Heading</span>
           </button>
           <button
             onClick={() => addText("body")}
-            className="px-2.5 py-1 rounded text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5"
+            className="px-2 py-1 rounded text-xs font-medium text-gray-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-white dark:hover:bg-slate-800 transition-all flex items-center gap-1 cursor-pointer"
             title="Add Body Text"
           >
-            <Type className="w-3.5 h-3.5 text-emerald-400" />
+            <Type className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
             <span className="hidden sm:inline">Body</span>
           </button>
           <button
             onClick={addRectangle}
-            className="p-1.5 rounded text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+            className="p-1.5 rounded text-gray-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800 transition-all cursor-pointer"
             title="Add Rectangle"
           >
-            <Square className="w-3.5 h-3.5 text-amber-400" />
+            <Square className="w-3.5 h-3.5 text-amber-500" />
           </button>
           <button
             onClick={addCircle}
-            className="p-1.5 rounded text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+            className="p-1.5 rounded text-gray-700 dark:text-slate-300 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-white dark:hover:bg-slate-800 transition-all cursor-pointer"
             title="Add Circle"
           >
-            <CircleIcon className="w-3.5 h-3.5 text-pink-400" />
+            <CircleIcon className="w-3.5 h-3.5 text-pink-500" />
           </button>
           <label
-            className="p-1.5 rounded text-slate-300 hover:text-white hover:bg-white/5 cursor-pointer transition-all"
+            className="p-1.5 rounded text-gray-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-white dark:hover:bg-slate-800 cursor-pointer transition-all"
             title="Upload Image"
           >
-            <ImageIcon className="w-3.5 h-3.5 text-purple-400" />
+            <ImageIcon className="w-3.5 h-3.5 text-purple-500" />
             <input
               ref={imageInputRef}
               type="file"
@@ -290,86 +338,86 @@ export function Toolbar({ onOpenSettings, currentPost }) {
         </nav>
 
         {/* Canvas & Background Controls (Applies to ALL slides) */}
-        <div className="flex items-center gap-1.5 bg-[#0f1117] px-2 py-0.5 rounded-lg border border-white/10 text-xs">
+        <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-slate-900 px-2 py-0.5 rounded-lg border border-gray-200 dark:border-white/10 text-xs">
           {/* Aspect Ratio Selector */}
           <div className="flex items-center gap-1" title="Canvas Aspect Ratio">
-            <Maximize2 className="w-3 h-3 text-cyan-400 shrink-0" />
+            <Maximize2 className="w-3 h-3 text-blue-600 dark:text-blue-400 shrink-0" />
             <select
               value={globalLayoutConfig?.aspectRatio || document.metadata.aspectRatio || "4:5"}
               onChange={(e) => updateGlobalLayoutConfig({ aspectRatio: e.target.value })}
-              className="bg-transparent text-cyan-300 font-mono font-bold text-xs focus:outline-none cursor-pointer"
+              className="bg-transparent text-gray-800 dark:text-slate-200 font-mono font-bold text-xs focus:outline-none cursor-pointer"
             >
-              <option value="4:5" className="bg-[#151821] text-slate-200">4:5 (Portrait)</option>
-              <option value="1:1" className="bg-[#151821] text-slate-200">1:1 (Square)</option>
-              <option value="9:16" className="bg-[#151821] text-slate-200">9:16 (Story)</option>
-              <option value="16:9" className="bg-[#151821] text-slate-200">16:9 (Landscape)</option>
+              <option value="4:5" className="dark:bg-slate-900">4:5 (Portrait)</option>
+              <option value="1:1" className="dark:bg-slate-900">1:1 (Square)</option>
+              <option value="9:16" className="dark:bg-slate-900">9:16 (Story)</option>
+              <option value="16:9" className="dark:bg-slate-900">16:9 (Landscape)</option>
             </select>
           </div>
 
-          <div className="h-3 w-[1px] bg-white/10" />
+          <div className="h-3 w-[1px] bg-gray-200 dark:bg-white/10" />
 
           {/* All-Slides Background Color Picker */}
-          <div className="flex items-center gap-1.5" title="Change Background Color for ALL Slides">
+          <div className="flex items-center gap-1" title="Change Background Color for ALL Slides">
             <input
               type="color"
               value={activeSlide?.backgroundColor || "#ffffff"}
               onChange={(e) => applyBgColorToAllSlides(e.target.value)}
-              className="w-4 h-4 rounded border border-slate-700 bg-transparent cursor-pointer"
+              className="w-4 h-4 rounded border border-gray-300 dark:border-slate-700 bg-transparent cursor-pointer p-0"
             />
-            <span className="font-mono text-[10px] text-slate-300 uppercase hidden lg:inline">
+            <span className="font-mono text-[10px] text-gray-600 dark:text-slate-400 uppercase hidden lg:inline">
               {activeSlide?.backgroundColor || "#ffffff"}
             </span>
           </div>
 
-          <div className="h-3 w-[1px] bg-white/10" />
+          <div className="h-3 w-[1px] bg-gray-200 dark:bg-white/10 hidden md:block" />
 
           {/* All-Slides Background Pattern Dropdown */}
           <select
             value={activeSlide?.bgPattern || globalLayoutConfig?.bgPattern || "solid"}
             onChange={(e) => applyBgPatternToAllSlides(e.target.value)}
-            className="bg-transparent text-slate-200 text-xs font-sans focus:outline-none cursor-pointer"
+            className="bg-transparent text-gray-700 dark:text-slate-300 text-xs font-sans focus:outline-none cursor-pointer hidden md:block"
             title="Change Background Pattern for ALL Slides"
           >
-            <option value="solid" className="bg-[#151821] text-slate-200">Solid (Plain)</option>
-            <option value="paper" className="bg-[#151821] text-slate-200">Warm Paper</option>
-            <option value="grid" className="bg-[#151821] text-slate-200">Notebook Grid</option>
-            <option value="dots" className="bg-[#151821] text-slate-200">Dot Grid</option>
-            <option value="blueprint" className="bg-[#151821] text-slate-200">Blueprint Grid</option>
-            <option value="texture" className="bg-[#151821] text-slate-200">Tactile Grain</option>
+            <option value="solid" className="dark:bg-slate-900">Solid (Plain)</option>
+            <option value="paper" className="dark:bg-slate-900">Warm Paper</option>
+            <option value="grid" className="dark:bg-slate-900">Notebook Grid</option>
+            <option value="dots" className="dark:bg-slate-900">Dot Grid</option>
+            <option value="blueprint" className="dark:bg-slate-900">Blueprint Grid</option>
+            <option value="texture" className="dark:bg-slate-900">Tactile Grain</option>
           </select>
         </div>
       </div>
 
-      {/* Right: Snap, Zoom, Undo, Settings & Export */}
-      <div className="flex items-center gap-3 shrink-0">
-        <div className="flex items-center gap-2 bg-[#0f1117] px-2.5 py-1 rounded-full border border-white/10 text-xs">
+      {/* Right: Snap, Zoom, Undo, Save & Export */}
+      <div className="flex items-center gap-2 md:gap-3 shrink-0">
+        <div className="flex items-center gap-1.5 md:gap-2 bg-gray-50 dark:bg-slate-900 px-2 py-1 rounded-full border border-gray-200 dark:border-white/10 text-xs hidden md:flex">
           {/* Snap */}
           <button
             onClick={toggleSnapToGuides}
-            className={`flex items-center gap-1 text-[10px] font-mono font-bold transition-all ${
-              snapToGuides ? "text-cyan-400" : "text-slate-500 hover:text-slate-300"
+            className={`flex items-center gap-1 text-[10px] font-mono font-bold transition-all cursor-pointer ${
+              snapToGuides ? "text-blue-600 dark:text-blue-400" : "text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300"
             }`}
             title="Toggle Snap to Guides"
           >
-            <Magnet className="w-3 h-3 text-cyan-400" />
-            <span>SNAP</span>
+            <Magnet className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+            <span className="hidden sm:inline">SNAP</span>
           </button>
 
-          <div className="h-3 w-[1px] bg-white/10" />
+          <div className="h-3 w-[1px] bg-gray-200 dark:bg-white/10" />
 
           {/* Guides */}
           <button
             onClick={toggleSafeAreaGuides}
-            className={`flex items-center gap-1 text-[10px] font-mono font-bold transition-all ${
-              showSafeAreaGuides ? "text-cyan-400" : "text-slate-500 hover:text-slate-300"
+            className={`flex items-center gap-1 text-[10px] font-mono font-bold transition-all cursor-pointer ${
+              showSafeAreaGuides ? "text-blue-600 dark:text-blue-400" : "text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300"
             }`}
             title="Toggle Safe Area Guides"
           >
             <Grid className="w-3 h-3" />
-            <span>GUIDES</span>
+            <span className="hidden sm:inline">GUIDES</span>
           </button>
 
-          <div className="h-3 w-[1px] bg-white/10" />
+          <div className="h-3 w-[1px] bg-gray-200 dark:bg-white/10" />
 
           {/* Zoom & Lock */}
           <div className="flex items-center gap-1">
@@ -377,14 +425,14 @@ export function Toolbar({ onOpenSettings, currentPost }) {
               onClick={() => setZoom(Math.max(0.2, Math.round((zoom - 0.1) * 10) / 10))}
               disabled={isZoomLocked}
               className={`p-0.5 rounded transition-colors ${
-                isZoomLocked ? "text-slate-700 cursor-not-allowed" : "text-slate-500 hover:text-slate-200"
+                isZoomLocked ? "text-gray-300 dark:text-slate-600 cursor-not-allowed" : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200 cursor-pointer"
               }`}
               title={isZoomLocked ? "Zoom is locked at 100%" : "Zoom Out"}
             >
               <ZoomOut className="w-3 h-3" />
             </button>
             <span
-              className="text-[10px] font-mono font-bold text-slate-200 px-0.5"
+              className="text-[10px] font-mono font-bold text-gray-700 dark:text-slate-300 px-0.5"
               title="Canvas Zoom Level"
             >
               {Math.round(zoom * 100)}%
@@ -393,7 +441,7 @@ export function Toolbar({ onOpenSettings, currentPost }) {
               onClick={() => setZoom(Math.min(2.0, Math.round((zoom + 0.1) * 10) / 10))}
               disabled={isZoomLocked}
               className={`p-0.5 rounded transition-colors ${
-                isZoomLocked ? "text-slate-700 cursor-not-allowed" : "text-slate-500 hover:text-slate-200"
+                isZoomLocked ? "text-gray-300 dark:text-slate-600 cursor-not-allowed" : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200 cursor-pointer"
               }`}
               title={isZoomLocked ? "Zoom is locked at 100%" : "Zoom In"}
             >
@@ -405,8 +453,8 @@ export function Toolbar({ onOpenSettings, currentPost }) {
               onClick={toggleZoomLock}
               className={`p-1 rounded transition-all cursor-pointer ${
                 isZoomLocked
-                  ? "text-amber-400 hover:text-amber-300"
-                  : "text-slate-500 hover:text-slate-300"
+                  ? "text-amber-500 hover:text-amber-600"
+                  : "text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300"
               }`}
               title={
                 isZoomLocked
@@ -424,12 +472,12 @@ export function Toolbar({ onOpenSettings, currentPost }) {
         </div>
 
         {/* Undo / Redo */}
-        <div className="flex items-center gap-0.5 bg-[#0f1117] p-0.5 rounded-lg border border-white/10">
+        <div className="flex items-center gap-0.5 bg-gray-50 dark:bg-slate-900 p-0.5 rounded-lg border border-gray-200 dark:border-white/10">
           <button
             onClick={undo}
             disabled={historyPast.length === 0}
             className={`p-1 rounded transition-colors ${
-              historyPast.length > 0 ? "text-slate-300 hover:text-white" : "text-slate-600 cursor-not-allowed"
+              historyPast.length > 0 ? "text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white cursor-pointer" : "text-gray-300 dark:text-slate-600 cursor-not-allowed"
             }`}
             title="Undo"
           >
@@ -439,7 +487,7 @@ export function Toolbar({ onOpenSettings, currentPost }) {
             onClick={redo}
             disabled={historyFuture.length === 0}
             className={`p-1 rounded transition-colors ${
-              historyFuture.length > 0 ? "text-slate-300 hover:text-white" : "text-slate-600 cursor-not-allowed"
+              historyFuture.length > 0 ? "text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white cursor-pointer" : "text-gray-300 dark:text-slate-600 cursor-not-allowed"
             }`}
             title="Redo"
           >
@@ -447,35 +495,33 @@ export function Toolbar({ onOpenSettings, currentPost }) {
           </button>
         </div>
 
-
-
-        {/* Global Layout Settings Button */}
-        {onOpenSettings && (
-          <button
-            onClick={onOpenSettings}
-            className="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 rounded-md border border-slate-700/80 text-xs font-semibold transition-all cursor-pointer"
-            title="Configure Global Layout (Title, Numbering, Swipe & CTA)"
-          >
-            <Layout className="w-3.5 h-3.5 text-blue-400" />
-            <span>Layout</span>
-          </button>
-        )}
-
-        {/* Theme Settings Button */}
-        {onOpenSettings && (
-          <button
-            onClick={onOpenSettings}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-colors cursor-pointer"
-            title="Theme & Layout Settings"
-          >
-            <Settings className="w-3.5 h-3.5" />
-          </button>
-        )}
+        {/* Save CTA */}
+        <button
+          onClick={handleSaveDocument}
+          className={`px-3.5 py-1 rounded-md text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer shrink-0 ${
+            isSaved
+              ? "bg-emerald-600 text-white shadow-emerald-600/20"
+              : "bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-white/10"
+          }`}
+          title="Save Canvas Document"
+        >
+          {isSaved ? (
+            <>
+              <Check className="w-3.5 h-3.5 text-white" />
+              <span>SAVED!</span>
+            </>
+          ) : (
+            <>
+              <Save className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+              <span>SAVE</span>
+            </>
+          )}
+        </button>
 
         {/* Export CTA */}
         <button
           onClick={downloadAllSlidesPNG}
-          className="bg-cyan-500 text-slate-950 px-3.5 py-1 rounded-md text-xs font-bold hover:bg-cyan-400 transition-all shadow-[0_0_20px_rgba(6,182,212,0.25)] flex items-center gap-1.5 cursor-pointer"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1 rounded-md text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer shrink-0"
           title="Export All Slides as PNG"
         >
           <span>EXPORT</span>

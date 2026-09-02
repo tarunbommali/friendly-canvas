@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const authRoutes = require('./routes/auth');
+const workspaceRoutes = require('./routes/workspaces');
+const projectRoutes = require('./routes/projects');
 const trackRoutes = require('./routes/tracks');
 const postRoutes = require('./routes/posts');
 
@@ -11,6 +14,9 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/workspaces', workspaceRoutes);
+app.use('/api/projects', projectRoutes);
 app.use('/api/tracks', trackRoutes);
 app.use('/api/posts', postRoutes);
 
@@ -22,7 +28,7 @@ app.get('/api/health', (req, res) => {
 // Centralized error handling middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled Server Error:', err);
-  res.status(500).json({ error: 'Internal server error' });
+  res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
 });
 
 const PORT = process.env.PORT || 5000;

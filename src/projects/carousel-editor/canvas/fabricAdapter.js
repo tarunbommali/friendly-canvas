@@ -176,26 +176,35 @@ export function createFabricObject(element, options = {}) {
 
     case "headline":
     case "badge":
+    case "body":
     case "text": {
       const rawText = element.text || element.content || "";
       const elemWidth = element.width || THEME.contentZone.width;
-      const elemFontSize = element.fontSize || (element.type === "headline" ? 92 : 64);
+      const elemFontSize =
+        element.fontSize ||
+        (element.type === "headline" ? 92 : element.type === "body" ? 48 : 64);
 
       const annotationStyles =
         element.styles && Object.keys(element.styles).length > 0
           ? element.styles
           : element.type === "headline"
           ? buildHeadlineStyles(rawText, element.accentColor || element._accent)
-          : element.type === "text"
+          : element.type === "text" || element.type === "body"
           ? buildBodyStyles(rawText, element.fill || element._primary)
           : {};
+
+      const defaultFont =
+        element.fontFamily ||
+        (element.type === "headline"
+          ? THEME.typography.headline.fontFamily || "Instrument Serif"
+          : THEME.typography.body.fontFamily || "Inter");
 
       return new Textbox(rawText, {
         left: element.x,
         top: element.y,
         width: elemWidth,
         fontSize: elemFontSize,
-        fontFamily: element.fontFamily || THEME.typography.headline.fontFamily || "Instrument Serif",
+        fontFamily: defaultFont,
         fontWeight: element.fontWeight || "normal",
         fontStyle: element.fontStyle || "normal",
         underline: Boolean(element.underline),
