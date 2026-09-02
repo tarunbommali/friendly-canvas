@@ -5,123 +5,123 @@
     "width": 1080,
     "height": 1350
   },
-  "trackPalettes": {
+  "collectionPalettes": {
     "10": {
-      "name": "Track 10 — Frameworks & Backend",
+      "name": "Collection 10 — Frameworks & Backend",
       "palette": "Mint",
       "primary": "#2D6A4F",
       "accent": "#B7E4C7"
     },
     "11": {
-      "name": "Track 11 — Databases & DBMS",
+      "name": "Collection 11 — Databases & DBMS",
       "palette": "Sky Blue",
       "primary": "#2B6CB0",
       "accent": "#BEE3F8"
     },
     "12": {
-      "name": "Track 12 — Security",
+      "name": "Collection 12 — Security",
       "palette": "Crimson",
       "primary": "#9B111E",
       "accent": "#F8B4B4"
     },
     "13": {
-      "name": "Track 13 — Linux + DevOps",
+      "name": "Collection 13 — Linux + DevOps",
       "palette": "Charcoal Orange",
       "primary": "#2B2B2B",
       "accent": "#F2A65A"
     },
     "14": {
-      "name": "Track 14 — Cloud Computing",
+      "name": "Collection 14 — Cloud Computing",
       "palette": "Cobalt",
       "primary": "#1A365D",
       "accent": "#90CDF4"
     },
     "15": {
-      "name": "Track 15 — System Design",
+      "name": "Collection 15 — System Design",
       "palette": "Forest Green",
       "primary": "#22543D",
       "accent": "#9AE6B4"
     },
     "16": {
-      "name": "Track 16 — Data & Python",
+      "name": "Collection 16 — Data & Python",
       "palette": "Yellow-Blue",
       "primary": "#3776AB",
       "accent": "#FFD24C"
     },
     "17": {
-      "name": "Track 17 — Machine Learning",
+      "name": "Collection 17 — Machine Learning",
       "palette": "Rose",
       "primary": "#97266D",
       "accent": "#FBB6CE"
     },
     "18": {
-      "name": "Track 18 — Deep Learning",
+      "name": "Collection 18 — Deep Learning",
       "palette": "Electric Violet",
       "primary": "#4C1D95",
       "accent": "#DDD6FE"
     },
     "19": {
-      "name": "Track 19 — Generative AI",
+      "name": "Collection 19 — Generative AI",
       "palette": "Neon Cyan",
       "primary": "#007791",
       "accent": "#A5F3FC"
     },
     "20": {
-      "name": "Track 20 — AI Agents",
+      "name": "Collection 20 — AI Agents",
       "palette": "Futuristic Purple",
       "primary": "#5B2C91",
       "accent": "#C9A9F0"
     },
     "01": {
-      "name": "Track 1 — Why Computers Exist",
+      "name": "Collection 1 — Why Computers Exist",
       "palette": "Sepia",
       "primary": "#8B5E3C",
       "accent": "#D9C7A3"
     },
     "02": {
-      "name": "Track 2 — How a Computer Actually Works",
+      "name": "Collection 2 — How a Computer Actually Works",
       "palette": "Tech Blue",
       "primary": "#1E5FA8",
       "accent": "#A9D0F5"
     },
     "03": {
-      "name": "Track 3 — How Software Became Possible",
+      "name": "Collection 3 — How Software Became Possible",
       "palette": "Lavender",
       "primary": "#5B4A8A",
       "accent": "#C8BFDF"
     },
     "04": {
-      "name": "Track 4 — Operating Systems",
+      "name": "Collection 4 — Operating Systems",
       "palette": "Teal",
       "primary": "#1B6B6B",
       "accent": "#A8D8D8"
     },
     "05": {
-      "name": "Track 5 — Programming",
+      "name": "Collection 5 — Programming",
       "palette": "Emerald",
       "primary": "#1F8A5F",
       "accent": "#B6E6CE"
     },
     "06": {
-      "name": "Track 6 — Problem Solving & DSA",
+      "name": "Collection 6 — Problem Solving & DSA",
       "palette": "Amber",
       "primary": "#C05621",
       "accent": "#FBD38D"
     },
     "07": {
-      "name": "Track 7 — Software Engineering",
+      "name": "Collection 7 — Software Engineering",
       "palette": "Indigo",
       "primary": "#4A3F8C",
       "accent": "#C9C2EC"
     },
     "08": {
-      "name": "Track 8 — Computer Networks",
+      "name": "Collection 8 — Computer Networks",
       "palette": "Cyan",
       "primary": "#0E8FA0",
       "accent": "#A9E7EE"
     },
     "09": {
-      "name": "Track 9 — Web Development",
+      "name": "Collection 9 — Web Development",
       "palette": "Coral",
       "primary": "#C84B31",
       "accent": "#FAD4C0"
@@ -129,131 +129,131 @@
   },
   "chapterCovers": [
     {
-      "trackId": "01",
-      "headline": "Track 1 — Why Computers Exist",
-      "text": "Before the machine, there was the problem. We start with why humans needed computers at all bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "01",
+      "headline": "Collection 1 — Why Computers Exist",
+      "text": "Before the machine, there was the problem. We start with why humans needed computers at all bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "02",
-      "headline": "Track 2 — How a Computer Actually Works",
-      "text": "From history to hardware — we uncover the transistors, logic gates, and memory that make a machine think bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "02",
+      "headline": "Collection 2 — How a Computer Actually Works",
+      "text": "From history to hardware — we uncover the transistors, logic gates, and memory that make a machine think bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "03",
-      "headline": "Track 3 — How Software Became Possible",
-      "text": "Hardware alone does nothing. Here's how humans taught machines to follow instructions bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "03",
+      "headline": "Collection 3 — How Software Became Possible",
+      "text": "Hardware alone does nothing. Here's how humans taught machines to follow instructions bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "04",
-      "headline": "Track 4 — Operating Systems",
-      "text": "One machine, many programs. Here's the referee that makes it all work together bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "04",
+      "headline": "Collection 4 — Operating Systems",
+      "text": "One machine, many programs. Here's the referee that makes it all work together bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "05",
-      "headline": "Track 5 — Programming",
-      "text": "Now that the machine can run instructions, it's time to learn how to write them bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "05",
+      "headline": "Collection 5 — Programming",
+      "text": "Now that the machine can run instructions, it's time to learn how to write them bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "06",
-      "headline": "Track 6 — Problem Solving & DSA",
-      "text": "Syntax isn't enough. Here's how to actually think like a problem-solver bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "06",
+      "headline": "Collection 6 — Problem Solving & DSA",
+      "text": "Syntax isn't enough. Here's how to actually think like a problem-solver bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "07",
-      "headline": "Track 7 — Software Engineering",
-      "text": "From writing a program to building real software that teams can ship and maintain bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "07",
+      "headline": "Collection 7 — Software Engineering",
+      "text": "From writing a program to building real software that teams can ship and maintain bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "08",
-      "headline": "Track 8 — Computer Networks",
-      "text": "From wiring two machines together to moving packets across the planet — the protocols, layers, and hardware beneath everything online bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "08",
+      "headline": "Collection 8 — Computer Networks",
+      "text": "From wiring two machines together to moving packets across the planet — the protocols, layers, and hardware beneath everything online bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "09",
-      "headline": "Track 9 — Web Development",
-      "text": "Time to build things people can actually access through the Internet bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "09",
+      "headline": "Collection 9 — Web Development",
+      "text": "Time to build things people can actually access through the Internet bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "10",
-      "headline": "Track 10 — Frameworks & Backend",
-      "text": "Why did frameworks appear, and what's really happening on the server? bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "10",
+      "headline": "Collection 10 — Frameworks & Backend",
+      "text": "Why did frameworks appear, and what's really happening on the server? bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "11",
-      "headline": "Track 11 — Databases & DBMS",
-      "text": "From ER models and normalization to ACID transactions, indexing, and advanced SQL bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "11",
+      "headline": "Collection 11 — Databases & DBMS",
+      "text": "From ER models and normalization to ACID transactions, indexing, and advanced SQL bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "12",
-      "headline": "Track 12 — Security",
-      "text": "Every system worth building is worth attacking. Here's how we defend it bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "12",
+      "headline": "Collection 12 — Security",
+      "text": "Every system worth building is worth attacking. Here's how we defend it bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "13",
-      "headline": "Track 13 — Linux + DevOps",
-      "text": "Back to Linux — now with real engineering context, plus the rise of containers bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "13",
+      "headline": "Collection 13 — Linux + DevOps",
+      "text": "Back to Linux — now with real engineering context, plus the rise of containers bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "14",
-      "headline": "Track 14 — Cloud Computing",
-      "text": "What happens when one computer isn't enough anymore? bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "14",
+      "headline": "Collection 14 — Cloud Computing",
+      "text": "What happens when one computer isn't enough anymore? bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "15",
-      "headline": "Track 15 — System Design",
-      "text": "From building applications to designing systems that survive millions of users bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "15",
+      "headline": "Collection 15 — System Design",
+      "text": "From building applications to designing systems that survive millions of users bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "16",
-      "headline": "Track 16 — Data & Python",
-      "text": "The language that becomes essential for automation, data, and AI bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "16",
+      "headline": "Collection 16 — Data & Python",
+      "text": "The language that becomes essential for automation, data, and AI bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "17",
-      "headline": "Track 17 — Machine Learning",
-      "text": "Traditional software follows rules. Machine learning learns them from data bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "17",
+      "headline": "Collection 17 — Machine Learning",
+      "text": "Traditional software follows rules. Machine learning learns them from data bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "18",
-      "headline": "Track 18 — Deep Learning",
-      "text": "Inside the neural networks that power modern AI bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "18",
+      "headline": "Collection 18 — Deep Learning",
+      "text": "Inside the neural networks that power modern AI bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "19",
-      "headline": "Track 19 — Generative AI",
-      "text": "Now the audience reaches modern AI — LLMs, tokens, and prompting bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "19",
+      "headline": "Collection 19 — Generative AI",
+      "text": "Now the audience reaches modern AI — LLMs, tokens, and prompting bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     },
     {
-      "trackId": "20",
-      "headline": "Track 20 — AI Agents",
-      "text": "The hero destination: models that can reason, plan, and act on their own bookmark this — 20 tracks, one complete system.",
-      "vibe": "full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour"
+      "collectionId": "20",
+      "headline": "Collection 20 — AI Agents",
+      "text": "The hero destination: models that can reason, plan, and act on their own bookmark this — 20 Collections, one complete system.",
+      "vibe": "full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour"
     }
   ],
   "posts": [
     {
       "id": "post_t01_p01",
       "title": "Why Did Humans Even Invent Computers?",
-      "trackId": "01",
+      "collectionId": "01",
       "postNo": 1,
       "resources": [
         {
@@ -312,7 +312,7 @@
     {
       "id": "post_t01_p02",
       "title": "The Minds Before Computers Existed",
-      "trackId": "01",
+      "collectionId": "01",
       "postNo": 2,
       "resources": [
         {
@@ -371,7 +371,7 @@
     {
       "id": "post_t01_p03",
       "title": "From Mainframes to AI Computers: The Full Evolution",
-      "trackId": "01",
+      "collectionId": "01",
       "postNo": 3,
       "resources": [
         {
@@ -430,7 +430,7 @@
     {
       "id": "post_t02_p04",
       "title": "What Is a Computer, Really?",
-      "trackId": "02",
+      "collectionId": "02",
       "postNo": 4,
       "resources": [
         {
@@ -489,7 +489,7 @@
     {
       "id": "post_t02_p05",
       "title": "Von Neumann vs Harvard: Two Ways to Build a Computer",
-      "trackId": "02",
+      "collectionId": "02",
       "postNo": 5,
       "resources": [
         {
@@ -548,7 +548,7 @@
     {
       "id": "post_t02_p06",
       "title": "x86 vs ARM: Instruction Set Architectures & Pipelining",
-      "trackId": "02",
+      "collectionId": "02",
       "postNo": 6,
       "resources": [
         {
@@ -607,7 +607,7 @@
     {
       "id": "post_t02_p07",
       "title": "Bits, Bytes & Binary: The Language of Machines",
-      "trackId": "02",
+      "collectionId": "02",
       "postNo": 7,
       "resources": [
         {
@@ -666,7 +666,7 @@
     {
       "id": "post_t02_p08",
       "title": "Logic Gates: How Computers Think",
-      "trackId": "02",
+      "collectionId": "02",
       "postNo": 8,
       "resources": [
         {
@@ -725,7 +725,7 @@
     {
       "id": "post_t02_p09",
       "title": "Transistors to CPU: The Brain of the Machine",
-      "trackId": "02",
+      "collectionId": "02",
       "postNo": 9,
       "resources": [
         {
@@ -784,7 +784,7 @@
     {
       "id": "post_t02_p10",
       "title": "Cache, RAM & Storage: Where Computers Keep Memories",
-      "trackId": "02",
+      "collectionId": "02",
       "postNo": 10,
       "resources": [
         {
@@ -843,7 +843,7 @@
     {
       "id": "post_t02_p11",
       "title": "GPU, Motherboard & I/O: Completing the Machine",
-      "trackId": "02",
+      "collectionId": "02",
       "postNo": 11,
       "resources": [
         {
@@ -902,7 +902,7 @@
     {
       "id": "post_t03_p12",
       "title": "From Machine Code to Real Programming Languages",
-      "trackId": "03",
+      "collectionId": "03",
       "postNo": 12,
       "resources": [
         {
@@ -961,7 +961,7 @@
     {
       "id": "post_t03_p13",
       "title": "Compilers vs Interpreters: What Actually Runs Your Code",
-      "trackId": "03",
+      "collectionId": "03",
       "postNo": 13,
       "resources": [
         {
@@ -1020,7 +1020,7 @@
     {
       "id": "post_t03_p14",
       "title": "What Really Happens Inside Your Computer When You Run a Program",
-      "trackId": "03",
+      "collectionId": "03",
       "postNo": 14,
       "resources": [
         {
@@ -1079,7 +1079,7 @@
     {
       "id": "post_os_01",
       "title": "Operating System Basics",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1131,7 +1131,7 @@
     {
       "id": "post_os_02",
       "title": "Processes & Execution",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1183,7 +1183,7 @@
     {
       "id": "post_os_03",
       "title": "CPU Scheduling Policies",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1235,7 +1235,7 @@
     {
       "id": "post_os_04",
       "title": "Concurrency & Synchronization",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1287,7 +1287,7 @@
     {
       "id": "post_os_05",
       "title": "Deadlock Strategies",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1339,7 +1339,7 @@
     {
       "id": "post_os_06",
       "title": "Main Memory Architecture",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1391,7 +1391,7 @@
     {
       "id": "post_os_07",
       "title": "Virtual Memory & Paging",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1443,7 +1443,7 @@
     {
       "id": "post_os_08",
       "title": "File Systems & Storage",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1495,7 +1495,7 @@
     {
       "id": "post_os_09",
       "title": "Input/Output Management",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1547,7 +1547,7 @@
     {
       "id": "post_os_10",
       "title": "Operating System Models",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1599,7 +1599,7 @@
     {
       "id": "post_os_11",
       "title": "Real‑World OS Variants",
-      "trackId": "04",
+      "collectionId": "04",
       "resources": [],
       "assets": [],
       "slides": [
@@ -1651,7 +1651,7 @@
     {
       "id": "post_t05_p20",
       "title": "What Is Programming, Actually?",
-      "trackId": "05",
+      "collectionId": "05",
       "postNo": 26,
       "resources": [
         {
@@ -1710,7 +1710,7 @@
     {
       "id": "post_t05_p21",
       "title": "Imperative vs Declarative: Two Ways to Tell a Computer What to Do",
-      "trackId": "05",
+      "collectionId": "05",
       "postNo": 27,
       "resources": [
         {
@@ -1769,7 +1769,7 @@
     {
       "id": "post_t05_p22",
       "title": "The Building Blocks Every Programmer Learns First",
-      "trackId": "05",
+      "collectionId": "05",
       "postNo": 28,
       "resources": [
         {
@@ -1828,7 +1828,7 @@
     {
       "id": "post_t05_p23",
       "title": "Functional Programming: Pure Functions & Immutability",
-      "trackId": "05",
+      "collectionId": "05",
       "postNo": 29,
       "resources": [
         {
@@ -1887,7 +1887,7 @@
     {
       "id": "post_t05_p24",
       "title": "Scope, Recursion & Handling Errors Like a Pro",
-      "trackId": "05",
+      "collectionId": "05",
       "postNo": 30,
       "resources": [
         {
@@ -1946,7 +1946,7 @@
     {
       "id": "post_t05_p25",
       "title": "Modules, Libraries, Packages & APIs Explained",
-      "trackId": "05",
+      "collectionId": "05",
       "postNo": 31,
       "resources": [
         {
@@ -2005,7 +2005,7 @@
     {
       "id": "post_t06_p26",
       "title": "What Is an Algorithm? (And Why Coding Is Not Problem Solving)",
-      "trackId": "06",
+      "collectionId": "06",
       "postNo": 32,
       "resources": [
         {
@@ -2064,7 +2064,7 @@
     {
       "id": "post_t06_p27",
       "title": "Big O Notation: The Skill That Separates Junior From Senior",
-      "trackId": "06",
+      "collectionId": "06",
       "postNo": 33,
       "resources": [
         {
@@ -2123,7 +2123,7 @@
     {
       "id": "post_t06_p28",
       "title": "Arrays, Strings & Linked Lists: Where Everyone Starts",
-      "trackId": "06",
+      "collectionId": "06",
       "postNo": 34,
       "resources": [
         {
@@ -2191,7 +2191,7 @@
     {
       "id": "post_t06_p29",
       "title": "Stacks, Queues & Hash Tables Explained",
-      "trackId": "06",
+      "collectionId": "06",
       "postNo": 35,
       "resources": [
         {
@@ -2208,7 +2208,7 @@
           "slideNo": 1,
           "layout": "hook-open",
           "headline": "Stack",
-          "text": "Picture a stack of plates — you only ever add or remove from the top, never the middle or bottom. That's Last-In-First-Out. It's why Ctrl+Z works, why your browser's back button peels off the most recent page first, and how the call stack tracks which function returns next."
+          "text": "Picture a stack of plates — you only ever add or remove from the top, never the middle or bottom. That's Last-In-First-Out. It's why Ctrl+Z works, why your browser's back button peels off the most recent page first, and how the call stack Collections which function returns next."
         },
         {
           "id": "slide_t06_p29_s02",
@@ -2259,7 +2259,7 @@
     {
       "id": "post_t06_p30",
       "title": "Trees, Heaps & Graphs: Where DSA Gets Real",
-      "trackId": "06",
+      "collectionId": "06",
       "postNo": 36,
       "resources": [
         {
@@ -2327,7 +2327,7 @@
     {
       "id": "post_t06_p31",
       "title": "Searching & Sorting: The Algorithms Behind Everything",
-      "trackId": "06",
+      "collectionId": "06",
       "postNo": 37,
       "resources": [
         {
@@ -2386,7 +2386,7 @@
     {
       "id": "post_t06_p32",
       "title": "Recursion, Backtracking, Greedy & DP: The Hard Stuff",
-      "trackId": "06",
+      "collectionId": "06",
       "postNo": 38,
       "resources": [
         {
@@ -2445,7 +2445,7 @@
     {
       "id": "post_t07_p33",
       "title": "Software Engineering vs Just Writing Code",
-      "trackId": "07",
+      "collectionId": "07",
       "postNo": 39,
       "resources": [
         {
@@ -2504,7 +2504,7 @@
     {
       "id": "post_t07_p34",
       "title": "The Software Lifecycle: Build, Test, Ship, Maintain",
-      "trackId": "07",
+      "collectionId": "07",
       "postNo": 40,
       "resources": [
         {
@@ -2563,7 +2563,7 @@
     {
       "id": "post_t07_p35",
       "title": "Git, GitHub & How Teams Actually Collaborate on Code",
-      "trackId": "07",
+      "collectionId": "07",
       "postNo": 41,
       "resources": [
         {
@@ -2586,7 +2586,7 @@
           "id": "slide_t07_p35_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "Git tracks every change; GitHub hosts it so teams can collaborate",
+          "headline": "Git Collections every change; GitHub hosts it so teams can collaborate",
           "text": "Git records snapshots of your code over time and lets branches diverge and merge; GitHub is the shared home where those histories live and get reviewed."
         },
         {
@@ -2622,7 +2622,7 @@
     {
       "id": "post_t07_p36",
       "title": "Clean Code, SOLID & Design Patterns",
-      "trackId": "07",
+      "collectionId": "07",
       "postNo": 42,
       "resources": [
         {
@@ -2681,7 +2681,7 @@
     {
       "id": "post_cn_01",
       "title": "What is a Computer Network?",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -2733,7 +2733,7 @@
     {
       "id": "post_cn_02",
       "title": "Network Topologies & Devices",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -2785,7 +2785,7 @@
     {
       "id": "post_cn_03",
       "title": "OSI & TCP/IP Models",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -2837,7 +2837,7 @@
     {
       "id": "post_cn_04",
       "title": "Physical Layer",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -2889,7 +2889,7 @@
     {
       "id": "post_cn_05",
       "title": "Data Link Layer",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -2941,7 +2941,7 @@
     {
       "id": "post_cn_06",
       "title": "Network Layer",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -2993,7 +2993,7 @@
     {
       "id": "post_cn_07",
       "title": "Transport Layer",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -3045,7 +3045,7 @@
     {
       "id": "post_cn_08",
       "title": "Session Layer",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -3097,7 +3097,7 @@
     {
       "id": "post_cn_09",
       "title": "Presentation Layer",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -3149,7 +3149,7 @@
     {
       "id": "post_cn_10",
       "title": "Application Layer",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -3201,7 +3201,7 @@
     {
       "id": "post_cn_11",
       "title": "Miscellaneous Topics: Bluetooth, Ethernet, WiFi, Firewall",
-      "trackId": "08",
+      "collectionId": "08",
       "resources": [],
       "assets": [],
       "slides": [
@@ -3253,7 +3253,7 @@
     {
       "id": "post_t10_p47",
       "title": "HTML: The Skeleton of Every Website",
-      "trackId": "09",
+      "collectionId": "09",
       "postNo": 54,
       "resources": [
         {
@@ -3312,7 +3312,7 @@
     {
       "id": "post_t10_p48",
       "title": "CSS: Making the Web Actually Look Good",
-      "trackId": "09",
+      "collectionId": "09",
       "postNo": 55,
       "resources": [
         {
@@ -3371,7 +3371,7 @@
     {
       "id": "post_t10_p49",
       "title": "JavaScript Basics: Making Pages Interactive",
-      "trackId": "09",
+      "collectionId": "09",
       "postNo": 56,
       "resources": [
         {
@@ -3430,7 +3430,7 @@
     {
       "id": "post_t10_p50",
       "title": "Closures, Promises & Async/Await: JS Gets Real",
-      "trackId": "09",
+      "collectionId": "09",
       "postNo": 57,
       "resources": [
         {
@@ -3489,7 +3489,7 @@
     {
       "id": "post_t10_p51",
       "title": "Fetch, APIs & JS Modules",
-      "trackId": "09",
+      "collectionId": "09",
       "postNo": 58,
       "resources": [
         {
@@ -3548,7 +3548,7 @@
     {
       "id": "post_t11_p52",
       "title": "Library vs Framework: Why React Exists",
-      "trackId": "10",
+      "collectionId": "10",
       "postNo": 59,
       "resources": [
         {
@@ -3607,7 +3607,7 @@
     {
       "id": "post_t11_p53",
       "title": "State, Routing & Server-Side Rendering",
-      "trackId": "10",
+      "collectionId": "10",
       "postNo": 60,
       "resources": [
         {
@@ -3666,7 +3666,7 @@
     {
       "id": "post_t11_p54",
       "title": "Node.js & Express: JavaScript on the Backend",
-      "trackId": "10",
+      "collectionId": "10",
       "postNo": 61,
       "resources": [
         {
@@ -3725,7 +3725,7 @@
     {
       "id": "post_t11_p55",
       "title": "REST APIs, Auth & Authorization Explained",
-      "trackId": "10",
+      "collectionId": "10",
       "postNo": 62,
       "resources": [
         {
@@ -3784,7 +3784,7 @@
     {
       "id": "post_t11_p56",
       "title": "Cookies, Sessions, JWT, Middleware & WebSockets",
-      "trackId": "10",
+      "collectionId": "10",
       "postNo": 63,
       "resources": [
         {
@@ -3843,7 +3843,7 @@
     {
       "id": "post_dbms_01",
       "title": "Database Foundations & Introduction",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -3895,7 +3895,7 @@
     {
       "id": "post_dbms_02",
       "title": "Entity Relationship Model",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -3947,7 +3947,7 @@
     {
       "id": "post_dbms_03",
       "title": "Relational Schema, Constraints & Keys",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -3999,7 +3999,7 @@
     {
       "id": "post_dbms_04",
       "title": "Functional Dependencies & Decomposition",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -4051,7 +4051,7 @@
     {
       "id": "post_dbms_05",
       "title": "Database Normalization & Normal Forms",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -4103,7 +4103,7 @@
     {
       "id": "post_dbms_06",
       "title": "Transaction Management & ACID",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -4155,7 +4155,7 @@
     {
       "id": "post_dbms_07",
       "title": "Concurrency Control & Recoverability",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -4207,7 +4207,7 @@
     {
       "id": "post_dbms_08",
       "title": "Relational Algebra",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -4259,7 +4259,7 @@
     {
       "id": "post_dbms_09",
       "title": "File Indexing",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -4311,7 +4311,7 @@
     {
       "id": "post_dbms_10",
       "title": "SQL Basics",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -4363,7 +4363,7 @@
     {
       "id": "post_dbms_11",
       "title": "Advanced SQL: Data Manipulation & Aggregations",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -4415,7 +4415,7 @@
     {
       "id": "post_dbms_12",
       "title": "Complex Joins, Grouping & Schema Modifications",
-      "trackId": "11",
+      "collectionId": "11",
       "resources": [],
       "assets": [],
       "slides": [
@@ -4467,7 +4467,7 @@
     {
       "id": "post_t13_p62",
       "title": "Why Security Isn't Optional",
-      "trackId": "12",
+      "collectionId": "12",
       "postNo": 76,
       "resources": [
         {
@@ -4526,7 +4526,7 @@
     {
       "id": "post_t13_p63",
       "title": "Encryption Explained: Symmetric vs Asymmetric",
-      "trackId": "12",
+      "collectionId": "12",
       "postNo": 77,
       "resources": [
         {
@@ -4585,7 +4585,7 @@
     {
       "id": "post_t13_p64",
       "title": "Password Security & the Attacks Every Dev Should Know",
-      "trackId": "12",
+      "collectionId": "12",
       "postNo": 78,
       "resources": [
         {
@@ -4644,7 +4644,7 @@
     {
       "id": "post_t13_p65",
       "title": "Rate Limiting, Secrets & OAuth",
-      "trackId": "12",
+      "collectionId": "12",
       "postNo": 79,
       "resources": [
         {
@@ -4703,7 +4703,7 @@
     {
       "id": "post_t14_p66",
       "title": "Linux & the Command Line Every Server Speaks",
-      "trackId": "13",
+      "collectionId": "13",
       "postNo": 80,
       "resources": [
         {
@@ -4762,7 +4762,7 @@
     {
       "id": "post_t14_p67",
       "title": "What Is DevOps, Really? The Culture Behind the Tools",
-      "trackId": "13",
+      "collectionId": "13",
       "postNo": 81,
       "resources": [
         {
@@ -4821,7 +4821,7 @@
     {
       "id": "post_t14_p68",
       "title": "Logs, SSH & Shell Scripting",
-      "trackId": "13",
+      "collectionId": "13",
       "postNo": 82,
       "resources": [
         {
@@ -4880,7 +4880,7 @@
     {
       "id": "post_t14_p69",
       "title": "Nginx & What Deployment Actually Means",
-      "trackId": "13",
+      "collectionId": "13",
       "postNo": 83,
       "resources": [
         {
@@ -4939,7 +4939,7 @@
     {
       "id": "post_t14_p70",
       "title": "Docker: Containers, Images & Your First Dockerfile",
-      "trackId": "13",
+      "collectionId": "13",
       "postNo": 84,
       "resources": [
         {
@@ -4998,7 +4998,7 @@
     {
       "id": "post_t14_p71",
       "title": "Docker Volumes, Networking & Compose",
-      "trackId": "13",
+      "collectionId": "13",
       "postNo": 85,
       "resources": [
         {
@@ -5057,7 +5057,7 @@
     {
       "id": "post_t14_p72",
       "title": "Container Registries & CI/CD",
-      "trackId": "13",
+      "collectionId": "13",
       "postNo": 86,
       "resources": [
         {
@@ -5116,7 +5116,7 @@
     {
       "id": "post_t14_p73",
       "title": "Monitoring, Alerting & Distributed Tracing: Prometheus, Grafana & Jaeger",
-      "trackId": "13",
+      "collectionId": "13",
       "postNo": 87,
       "resources": [
         {
@@ -5175,7 +5175,7 @@
     {
       "id": "post_t14_p74",
       "title": "Infrastructure as Code & Config Management: Terraform & Ansible",
-      "trackId": "13",
+      "collectionId": "13",
       "postNo": 88,
       "resources": [
         {
@@ -5234,7 +5234,7 @@
     {
       "id": "post_t14_p75",
       "title": "Service Mesh: Istio & Service-to-Service Communication",
-      "trackId": "13",
+      "collectionId": "13",
       "postNo": 89,
       "resources": [
         {
@@ -5293,7 +5293,7 @@
     {
       "id": "post_t15_p76",
       "title": "Why Cloud Computing Exists",
-      "trackId": "14",
+      "collectionId": "14",
       "postNo": 90,
       "resources": [
         {
@@ -5324,7 +5324,7 @@
           "slideNo": 3,
           "layout": "process-flow",
           "headline": "Request resources, use them, release them, pay by usage",
-          "text": "Spin up servers, storage, or databases in minutes via an API; shut them down when done; the bill tracks actual consumption."
+          "text": "Spin up servers, storage, or databases in minutes via an API; shut them down when done; the bill Collections actual consumption."
         },
         {
           "id": "slide_t15_p76_s04",
@@ -5352,7 +5352,7 @@
     {
       "id": "post_t15_p77",
       "title": "Regions, Availability Zones & Data Centers",
-      "trackId": "14",
+      "collectionId": "14",
       "postNo": 91,
       "resources": [
         {
@@ -5411,7 +5411,7 @@
     {
       "id": "post_t15_p78",
       "title": "AWS Basics: EC2, S3 & IAM",
-      "trackId": "14",
+      "collectionId": "14",
       "postNo": 92,
       "resources": [
         {
@@ -5470,7 +5470,7 @@
     {
       "id": "post_t15_p79",
       "title": "VPC, Load Balancers & Auto Scaling",
-      "trackId": "14",
+      "collectionId": "14",
       "postNo": 93,
       "resources": [
         {
@@ -5529,7 +5529,7 @@
     {
       "id": "post_t15_p80",
       "title": "RDS, Lambda & CloudWatch",
-      "trackId": "14",
+      "collectionId": "14",
       "postNo": 94,
       "resources": [
         {
@@ -5588,7 +5588,7 @@
     {
       "id": "post_t15_p81",
       "title": "CDN, Infrastructure as Code & Production Architecture",
-      "trackId": "14",
+      "collectionId": "14",
       "postNo": 95,
       "resources": [
         {
@@ -5647,7 +5647,7 @@
     {
       "id": "post_t16_p82",
       "title": "What Is System Design & Why It's Different From Coding",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 96,
       "resources": [
         {
@@ -5706,7 +5706,7 @@
     {
       "id": "post_t16_p83",
       "title": "Scaling: Vertical vs Horizontal, Load Balancing & Caching",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 97,
       "resources": [
         {
@@ -5765,7 +5765,7 @@
     {
       "id": "post_t16_p84",
       "title": "Database Replication & Sharding at Scale",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 98,
       "resources": [
         {
@@ -5824,7 +5824,7 @@
     {
       "id": "post_t16_p85",
       "title": "Message Queues, Kafka & Event-Driven Architecture",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 99,
       "resources": [
         {
@@ -5883,7 +5883,7 @@
     {
       "id": "post_t16_p86",
       "title": "Microservices vs Monolith & the CAP Theorem",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 100,
       "resources": [
         {
@@ -5942,7 +5942,7 @@
     {
       "id": "post_t16_p87",
       "title": "Fault Tolerance, Distributed Systems, Rate Limiting & Idempotency",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 101,
       "resources": [
         {
@@ -6001,7 +6001,7 @@
     {
       "id": "post_t16_p88",
       "title": "Designing a URL Shortener From Scratch",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 102,
       "resources": [
         {
@@ -6060,7 +6060,7 @@
     {
       "id": "post_t16_p89",
       "title": "Designing Instagram: A System Design Breakdown",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 103,
       "resources": [
         {
@@ -6119,7 +6119,7 @@
     {
       "id": "post_t16_p90",
       "title": "Designing WhatsApp: How Real-Time Messaging Scales",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 104,
       "resources": [
         {
@@ -6178,7 +6178,7 @@
     {
       "id": "post_t16_p91",
       "title": "Designing YouTube: Video at Massive Scale",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 105,
       "resources": [
         {
@@ -6237,7 +6237,7 @@
     {
       "id": "post_t16_p92",
       "title": "Designing Uber: Real-Time Location & Matching",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 106,
       "resources": [
         {
@@ -6260,7 +6260,7 @@
           "id": "slide_t16_p92_s02",
           "slideNo": 2,
           "layout": "concept-explain",
-          "headline": "The system tracks live locations and matches riders to nearby drivers",
+          "headline": "The system Collections live locations and matches riders to nearby drivers",
           "text": "Drivers stream their position constantly; a geospatial index finds candidates near a rider; a matching service picks one and coordinates the trip."
         },
         {
@@ -6296,7 +6296,7 @@
     {
       "id": "post_t16_p93",
       "title": "Designing Netflix: Streaming at Global Scale",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 107,
       "resources": [
         {
@@ -6355,7 +6355,7 @@
     {
       "id": "post_t16_p94",
       "title": "Designing a Payment System: Handling Money Safely",
-      "trackId": "15",
+      "collectionId": "15",
       "postNo": 108,
       "resources": [
         {
@@ -6414,7 +6414,7 @@
     {
       "id": "post_t17_p95",
       "title": "Why Python? (And the Fundamentals)",
-      "trackId": "16",
+      "collectionId": "16",
       "postNo": 109,
       "resources": [
         {
@@ -6473,7 +6473,7 @@
     {
       "id": "post_t17_p96",
       "title": "OOP, Modules & File Handling in Python",
-      "trackId": "16",
+      "collectionId": "16",
       "postNo": 110,
       "resources": [
         {
@@ -6532,7 +6532,7 @@
     {
       "id": "post_t17_p97",
       "title": "Python for Automation: os, subprocess & APIs",
-      "trackId": "16",
+      "collectionId": "16",
       "postNo": 111,
       "resources": [
         {
@@ -6591,7 +6591,7 @@
     {
       "id": "post_t17_p98",
       "title": "Pandas, NumPy & Matplotlib: Python for Data",
-      "trackId": "16",
+      "collectionId": "16",
       "postNo": 112,
       "resources": [
         {
@@ -6650,7 +6650,7 @@
     {
       "id": "post_t17_p99",
       "title": "Why Your App's Database Is Wrong for Analytics (OLTP vs OLAP)",
-      "trackId": "16",
+      "collectionId": "16",
       "postNo": 113,
       "resources": [
         {
@@ -6709,7 +6709,7 @@
     {
       "id": "post_t17_p100",
       "title": "Data Warehouses, Data Lakes & Big Data Pipelines",
-      "trackId": "16",
+      "collectionId": "16",
       "postNo": 114,
       "resources": [
         {
@@ -6768,7 +6768,7 @@
     {
       "id": "post_t17_p101",
       "title": "Data Cleaning & Visualization With Python",
-      "trackId": "16",
+      "collectionId": "16",
       "postNo": 115,
       "resources": [
         {
@@ -6827,7 +6827,7 @@
     {
       "id": "post_t18_p102",
       "title": "Why Machine Learning? (AI vs ML vs Traditional Programming)",
-      "trackId": "17",
+      "collectionId": "17",
       "postNo": 116,
       "resources": [
         {
@@ -6886,7 +6886,7 @@
     {
       "id": "post_t18_p103",
       "title": "Datasets, Features, Labels & the Training Process",
-      "trackId": "17",
+      "collectionId": "17",
       "postNo": 117,
       "resources": [
         {
@@ -6945,7 +6945,7 @@
     {
       "id": "post_t18_p104",
       "title": "Supervised vs Unsupervised: Regression, Classification & Clustering",
-      "trackId": "17",
+      "collectionId": "17",
       "postNo": 118,
       "resources": [
         {
@@ -7004,7 +7004,7 @@
     {
       "id": "post_t18_p105",
       "title": "Overfitting, Underfitting & Feature Engineering",
-      "trackId": "17",
+      "collectionId": "17",
       "postNo": 119,
       "resources": [
         {
@@ -7063,7 +7063,7 @@
     {
       "id": "post_t18_p106",
       "title": "Evaluation Metrics: Precision, Recall, F1 & ROC-AUC",
-      "trackId": "17",
+      "collectionId": "17",
       "postNo": 120,
       "resources": [
         {
@@ -7122,7 +7122,7 @@
     {
       "id": "post_t18_p107",
       "title": "From ML to Neural Networks & Deep Learning",
-      "trackId": "17",
+      "collectionId": "17",
       "postNo": 121,
       "resources": [
         {
@@ -7181,7 +7181,7 @@
     {
       "id": "post_t19_p108",
       "title": "Neural Networks Explained: Neurons, Weights & Bias",
-      "trackId": "18",
+      "collectionId": "18",
       "postNo": 122,
       "resources": [
         {
@@ -7240,7 +7240,7 @@
     {
       "id": "post_t19_p109",
       "title": "Forward Propagation, Loss & Backpropagation",
-      "trackId": "18",
+      "collectionId": "18",
       "postNo": 123,
       "resources": [
         {
@@ -7299,7 +7299,7 @@
     {
       "id": "post_new_dl_activations",
       "title": "Activation Functions: Why Networks Need Non-Linearity",
-      "trackId": "18",
+      "collectionId": "18",
       "postNo": 124,
       "resources": [],
       "assets": [],
@@ -7351,7 +7351,7 @@
     {
       "id": "post_new_dl_vanishing",
       "title": "Vanishing Gradients: Why Deep Networks Were Once Impossible to Train",
-      "trackId": "18",
+      "collectionId": "18",
       "postNo": 125,
       "resources": [],
       "assets": [],
@@ -7403,7 +7403,7 @@
     {
       "id": "post_new_dl_traininfer",
       "title": "Training vs Inference: Why AI Needs So Much Compute",
-      "trackId": "18",
+      "collectionId": "18",
       "postNo": 126,
       "resources": [],
       "assets": [],
@@ -7455,7 +7455,7 @@
     {
       "id": "post_t19_p110",
       "title": "CNNs, RNNs & the Rise of Transformers",
-      "trackId": "18",
+      "collectionId": "18",
       "postNo": 127,
       "resources": [
         {
@@ -7514,7 +7514,7 @@
     {
       "id": "post_t20_p111",
       "title": "What Is Generative AI & What Is an LLM?",
-      "trackId": "19",
+      "collectionId": "19",
       "postNo": 128,
       "resources": [
         {
@@ -7573,7 +7573,7 @@
     {
       "id": "post_new_ga_tokens",
       "title": "Tokens & Context Windows: How LLMs Actually Read Text",
-      "trackId": "19",
+      "collectionId": "19",
       "postNo": 129,
       "resources": [],
       "assets": [],
@@ -7625,7 +7625,7 @@
     {
       "id": "post_t20_p112",
       "title": "Embeddings, Attention & Transformers Demystified",
-      "trackId": "19",
+      "collectionId": "19",
       "postNo": 130,
       "resources": [
         {
@@ -7684,7 +7684,7 @@
     {
       "id": "post_new_ga_sampling",
       "title": "Temperature & Sampling: Why the Same Prompt Gives Different Answers",
-      "trackId": "19",
+      "collectionId": "19",
       "postNo": 131,
       "resources": [],
       "assets": [],
@@ -7736,7 +7736,7 @@
     {
       "id": "post_t20_p113",
       "title": "Prompting, System Prompts & Structured Outputs",
-      "trackId": "19",
+      "collectionId": "19",
       "postNo": 132,
       "resources": [
         {
@@ -7795,7 +7795,7 @@
     {
       "id": "post_new_ga_hallucination",
       "title": "Why LLMs Hallucinate (And What Actually Reduces It)",
-      "trackId": "19",
+      "collectionId": "19",
       "postNo": 133,
       "resources": [],
       "assets": [],
@@ -7847,7 +7847,7 @@
     {
       "id": "post_t20_p114",
       "title": "Fine-Tuning, RAG & Vector Databases",
-      "trackId": "19",
+      "collectionId": "19",
       "postNo": 134,
       "resources": [
         {
@@ -7906,7 +7906,7 @@
     {
       "id": "post_t21_p115",
       "title": "Why Chatbots Aren't Agents (And What Actually Makes an Agent)",
-      "trackId": "20",
+      "collectionId": "20",
       "postNo": 135,
       "resources": [
         {
@@ -7965,7 +7965,7 @@
     {
       "id": "post_t21_p116",
       "title": "Tool Calling, Memory & Planning: How Agents Think",
-      "trackId": "20",
+      "collectionId": "20",
       "postNo": 136,
       "resources": [
         {
@@ -8024,7 +8024,7 @@
     {
       "id": "post_t21_p117",
       "title": "Agent Loops, Multi-Step Tasks & Real-World Agents",
-      "trackId": "20",
+      "collectionId": "20",
       "postNo": 137,
       "resources": [
         {
@@ -8083,7 +8083,7 @@
     {
       "id": "post_t21_p118",
       "title": "AI Workflows, Multi-Agent Systems & MCP",
-      "trackId": "20",
+      "collectionId": "20",
       "postNo": 138,
       "resources": [
         {
@@ -8142,7 +8142,7 @@
     {
       "id": "post_t21_p119",
       "title": "Evaluating & Securing Production AI Agents",
-      "trackId": "20",
+      "collectionId": "20",
       "postNo": 139,
       "resources": [
         {
@@ -8201,7 +8201,7 @@
     {
       "id": "post_t21_p120",
       "title": "Building Your First AI Agent (Then a Multi-Agent System)",
-      "trackId": "20",
+      "collectionId": "20",
       "postNo": 140,
       "resources": [
         {
@@ -8260,7 +8260,7 @@
     {
       "id": "post_t21_p121",
       "title": "The Entire Journey: From Computer to AI Agent",
-      "trackId": "20",
+      "collectionId": "20",
       "postNo": 141,
       "resources": [
         {

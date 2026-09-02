@@ -15,7 +15,6 @@ import {
   ChevronDown,
   Sparkles,
   ExternalLink,
-  BookOpen,
 } from 'lucide-react';
 
 export default function WorkspaceDashboardPage() {
@@ -31,15 +30,15 @@ export default function WorkspaceDashboardPage() {
 
   useEffect(() => {
     if (activeWorkspace?._id) {
-      loadProjects(activeWorkspace._id).catch(() => {});
+      loadProjects(activeWorkspace._id).catch(() => { });
     }
   }, [activeWorkspace, loadProjects]);
 
   // Derive default flagship SWE.Notebook project from data.json
   const sweProject = useMemo(() => {
-    const rawTrackPalettes = data.trackPalettes || {};
+    const rawcollectionPalettes = data.collectionPalettes || {};
     const rawPosts = data.posts || [];
-    const trackCount = Object.keys(rawTrackPalettes).length || 20;
+    const trackCount = Object.keys(rawcollectionPalettes).length || 20;
     const postCount = rawPosts.length || 100;
     const slideCount = rawPosts.reduce((sum, p) => sum + (p.slides?.length || 0), 0) || 500;
 
@@ -48,12 +47,12 @@ export default function WorkspaceDashboardPage() {
       title: data.name || 'SWE.Notebook',
       slug: data.slug || 'swe-notebook',
       description:
-        'Complete Software Engineering Zero to Hero curriculum with 20 tracks, post inspectors, interactive live slide studio, and Fabric.js canvas editor.',
+        'Complete Software Engineering Zero to Hero curriculum with 20 Collections, post inspectors, interactive live slide studio, and Fabric.js canvas editor.',
       trackCount,
       postCount,
       slideCount,
       isPrimary: true,
-      palettes: Object.values(rawTrackPalettes).slice(0, 6),
+      palettes: Object.values(rawcollectionPalettes).slice(0, 6),
     };
   }, []);
 
@@ -64,7 +63,7 @@ export default function WorkspaceDashboardPage() {
   }, [sweProject, projects]);
 
   // Aggregate totals across all projects in workspace
-  const totalTracks = allProjects.reduce((sum, p) => sum + (p.trackCount || 0), 0);
+  const totalCollections = allProjects.reduce((sum, p) => sum + (p.trackCount || 0), 0);
   const totalPosts = allProjects.reduce((sum, p) => sum + (p.postCount || 0), 0);
   const totalSlides = allProjects.reduce((sum, p) => sum + (p.slideCount || 0), 0);
 
@@ -101,8 +100,6 @@ export default function WorkspaceDashboardPage() {
     await reorderProjects(wsId, orderedIds);
   };
 
-  const canCreate = true;
-
   return (
     <div className="p-8 max-w-7xl mx-auto font-sans">
       {/* Top Banner & Stats */}
@@ -112,19 +109,17 @@ export default function WorkspaceDashboardPage() {
             {activeWorkspace?.name || 'Friendly Workspace'} Dashboard
           </h1>
           <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
-            Manage your project curricula, tracks, and isolated Instagram carousel canvas studios.
+            Manage your project curricula, collections, and isolated Instagram carousel canvas studios.
           </p>
         </div>
 
-        {canCreate && (
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-colors flex items-center gap-2 shadow-sm shrink-0 cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>New Project</span>
-          </button>
-        )}
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-colors flex items-center gap-2 shadow-sm shrink-0 cursor-pointer"
+        >
+          <Plus className="w-4 h-4" />
+          <span>New Project</span>
+        </button>
       </div>
 
       {/* Dynamic Summary Cards */}
@@ -134,9 +129,9 @@ export default function WorkspaceDashboardPage() {
             <Layers className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-xs font-mono text-gray-400 dark:text-slate-500 font-semibold uppercase">Total Tracks</div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-slate-100">{totalTracks}</div>
-            <div className="text-[11px] text-gray-400 dark:text-slate-500">Curriculum &amp; Studio Tracks</div>
+            <div className="text-xs font-mono text-gray-400 dark:text-slate-500 font-semibold uppercase">Total Collections</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-slate-100">{totalCollections}</div>
+            <div className="text-[11px] text-gray-400 dark:text-slate-500">Curriculum &amp; Studio Collections</div>
           </div>
         </div>
 
@@ -188,18 +183,16 @@ export default function WorkspaceDashboardPage() {
           return (
             <div
               key={proj._id}
-              className={`bg-white dark:bg-[#151821] border ${
-                isPrimary ? 'border-blue-200 dark:border-blue-800 shadow-sm' : 'border-[#e2e8f0] dark:border-white/10'
-              } hover:border-blue-300 dark:hover:border-blue-700 rounded-xl p-6 shadow-xs flex flex-col justify-between transition-all hover:shadow-md`}
+              className={`bg-white dark:bg-[#151821] border ${isPrimary ? 'border-blue-200 dark:border-blue-800 shadow-sm' : 'border-[#e2e8f0] dark:border-white/10'
+                } hover:border-blue-300 dark:hover:border-blue-700 rounded-xl p-6 shadow-xs flex flex-col justify-between transition-all hover:shadow-md`}
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <span
-                    className={`text-[11px] font-mono font-bold uppercase px-2.5 py-0.5 rounded ${
-                      isPrimary
-                        ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700'
-                        : 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700'
-                    }`}
+                    className={`text-[11px] font-mono font-bold uppercase px-2.5 py-0.5 rounded ${isPrimary
+                      ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700'
+                      : 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700'
+                      }`}
                   >
                     {isPrimary ? 'FLAGSHIP' : 'CUSTOM PROJECT'}
                   </span>
@@ -259,7 +252,7 @@ export default function WorkspaceDashboardPage() {
 
               <div className="mt-6 pt-4 border-t border-[#e2e8f0] dark:border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-3 text-xs font-mono text-gray-500 dark:text-slate-400">
-                  <span>{proj.trackCount || 0} Tracks</span>
+                  <span>{proj.trackCount || 0} Collections</span>
                   <span>•</span>
                   <span>{proj.postCount || 0} Posts</span>
                 </div>
@@ -268,7 +261,7 @@ export default function WorkspaceDashboardPage() {
                   to={`/${proj.slug}/content`}
                   className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                 >
-                  <span>Open Tracks</span>
+                  <span>Open Collections</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -327,7 +320,7 @@ export default function WorkspaceDashboardPage() {
                 </label>
                 <textarea
                   rows={3}
-                  placeholder="Brief summary of tracks, chapters, and content goals..."
+                  placeholder="Brief summary of collections, chapters, and content goals..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="w-full px-3 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 rounded-lg text-sm text-gray-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 focus:outline-none"

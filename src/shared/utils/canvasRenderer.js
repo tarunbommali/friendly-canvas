@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import html2canvas from 'html2canvas'
-import SlideRenderer from '../../projects/track-content/components/SlideRenderer'
+import SlideRenderer from '../../projects/collection-content/components/SlideRenderer'
 
 // ── Persistent 1×1 canvas for reliable sRGB color conversion ───────────────
 let colorCtx = null

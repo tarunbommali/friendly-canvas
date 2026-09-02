@@ -7,7 +7,7 @@ export function useCollectionData() {
   const visualGlossary = data.visualGlossary || {}
   const chapterCovers = data.chapterCovers || []
   const rawPosts = data.posts || []
-  const rawPalettes = data.trackPalettes || {}
+  const rawPalettes = data.collectionPalettes || {}
 
   const { collectionThemes, collections, collectionIdMap } = useMemo(() => {
     const palettesByCollectionName = {}
@@ -17,18 +17,18 @@ export function useCollectionData() {
     const sortedEntries = Object.entries(rawPalettes)
       .map(([collectionId, item]) => {
         const match = item.name?.match(/\d+/)
-        const trackNo = match ? parseInt(match[0], 10) : parseInt(collectionId, 10)
-        return { collectionId, trackNo, item }
+        const collectionNo = match ? parseInt(match[0], 10) : parseInt(collectionId, 10)
+        return { collectionId, collectionNo, item }
       })
-      .sort((a, b) => a.trackNo - b.trackNo)
+      .sort((a, b) => a.collectionNo - b.collectionNo)
 
-    sortedEntries.forEach(({ collectionId, trackNo, item }) => {
+    sortedEntries.forEach(({ collectionId, collectionNo, item }) => {
       const collectionName = item.name
       const norm = getNormalizedPalette(collectionName, item)
       palettesByCollectionName[collectionName] = norm
       palettesByCollectionId[collectionId] = norm
-      palettesByCollectionId[String(trackNo)] = norm
-      palettesByCollectionId[String(trackNo).padStart(2, '0')] = norm
+      palettesByCollectionId[String(collectionNo)] = norm
+      palettesByCollectionId[String(collectionNo).padStart(2, '0')] = norm
       collectionNamesList.push(collectionName)
     })
 
@@ -41,7 +41,7 @@ export function useCollectionData() {
 
   const designs = useMemo(() => {
     return rawPosts.map((p, idx) => {
-      const collectionId = p.trackId || String(idx + 1).padStart(2, '0')
+      const collectionId = p.collectionId || String(idx + 1).padStart(2, '0')
       const collectionName =
         collectionIdMap[collectionId]?.name ||
         collections[parseInt(collectionId, 10) - 1] ||
@@ -91,16 +91,15 @@ export function useCollectionData() {
         id: p.id || `post_t${collectionId}_p${String(designNo).padStart(2, '0')}`,
         title,
         collectionId,
-        trackId: collectionId,
+        collectionId: collectionId,
         designNo,
         postNo: designNo,
         slides: normalizedSlides,
         collectionName,
         trackColor: palette,
         palette,
-        // Legacy props for existing components
-        Track: collectionName,
-        TrackNo: parseInt(collectionId, 10),
+        collection: collectionName,
+        collectionNo: parseInt(collectionId, 10),
         PostNo: designNo,
         PostTitle: title,
         Slides: normalizedSlides,
@@ -130,12 +129,9 @@ export function useCollectionData() {
     collectionIdMap,
     designs,
     designsByCollection,
-    // Backward compatibility
-    tracks: collections,
-    trackPalettes: collectionThemes,
-    trackIdMap: collectionIdMap,
     posts: designs,
-    postsByTrack: designsByCollection,
+    postsByCollection: designsByCollection,
+    collectionPalettes: collectionThemes,
   }
 }
 

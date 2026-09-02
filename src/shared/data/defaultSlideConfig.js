@@ -5,7 +5,7 @@ export const DEFAULT_SLIDE_CONFIG = {
   backgroundType: 'dots',
   header: {
     show: true,
-    text: 'TRACK 01',
+    text: 'COLLECTION 01',
     font: { family: 'monospace', size: 12, weight: 'bold', color: '#1E5FA8' },
   },
   footer: {

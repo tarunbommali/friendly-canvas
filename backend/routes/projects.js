@@ -1,6 +1,6 @@
 const express = require('express');
 const Project = require('../models/Project');
-const Track = require('../models/Track');
+const Collection = require('../models/Collection');
 const Post = require('../models/Post');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const { requireRole } = require('../middleware/rbacMiddleware');
@@ -49,9 +49,9 @@ router.delete('/:projectId', requireRole('admin'), async (req, res, next) => {
       return res.status(404).json({ error: 'Project not found' });
     }
 
-    // Cascade delete associated tracks and posts
+    // Cascade delete associated collections and posts
     await Post.deleteMany({ project: project._id });
-    await Track.deleteMany({ project: project._id });
+    await Collection.deleteMany({ project: project._id });
     await Project.findByIdAndDelete(project._id);
 
     res.json({ message: 'Project and associated curriculum data deleted successfully' });

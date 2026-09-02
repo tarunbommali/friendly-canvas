@@ -5,7 +5,7 @@ import { CompositeRankingEngine } from './strategies/CompositeRankingEngine.js';
 
 /**
  * Enterprise Client-Side Search Engine.
- * Sub-16ms search-as-you-type indexing over tracks, posts, and slide content.
+ * Sub-16ms search-as-you-type indexing over Collections, posts, and slide content.
  */
 export class SearchEngine {
   /**

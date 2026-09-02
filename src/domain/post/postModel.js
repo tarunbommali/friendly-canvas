@@ -1,7 +1,7 @@
 /**
  * postModel.js
  * ────────────
- * Canonical Domain Model for SWE.notebook Posts, Slides, and Track Palettes.
+ * Canonical Domain Model for SWE.notebook Posts, Slides, and Collection Palettes.
  * Adheres to carousel-post.schema.json (v1.0.0).
  */
 
@@ -17,10 +17,10 @@ export const DEFAULT_CANONICAL_CONFIG = {
 }
 
 /**
- * Normalizes or extracts track ID from track string e.g. "Track 1 — Why Computers Exist" -> "01"
+ * Normalizes or extracts collection ID from collection string e.g. "Collection 1 — Why Computers Exist" -> "01"
  */
-export function extractTrackNumber(trackString = '') {
-  const match = trackString.match(/Track\s*(\d+)/i)
+export function extractCollectionNumber(collectionString = '') {
+  const match = collectionString.match(/collection\s*(\d+)/i)
   if (match) {
     return match[1].padStart(2, '0')
   }
@@ -33,8 +33,8 @@ export function extractTrackNumber(trackString = '') {
 export function createCanonicalPost({
   id,
   title = 'Untitled Post',
-  trackId = '01',
-  trackName = 'Track 1 — General Engineering',
+  collectionId = '01',
+  collectionName = 'Collection 1 — General Engineering',
   palette = { name: 'Sepia', primary: '#8B5E3C', accent: '#D9C7A3' },
   slides = [],
   metadata = {},
@@ -46,9 +46,10 @@ export function createCanonicalPost({
     id: generatedId,
     schemaVersion: SCHEMA_VERSION,
     title,
-    track: {
-      id: trackId,
-      name: trackName,
+    collectionId,
+    collection: {
+      id: collectionId,
+      name: collectionName,
       palette: {
         name: palette.name || 'Custom',
         primary: palette.primary || '#1E5FA8',
@@ -70,10 +71,10 @@ export function createCanonicalPost({
       suggestedAudio: metadata.suggestedAudio || {
         Mood: 'Curious / documentary',
         SearchTerms: ['trending engineering sound', 'tech explainer audio'],
-        Note: 'Pick a currently trending audio track matching this mood at posting time.',
+        Note: 'Pick a currently trending audio clip matching this mood at posting time.',
       },
       context: metadata.context || '',
-      isFirstPostInTrack: Boolean(metadata.isFirstPostInTrack),
+      isFirstPostInCollection: Boolean(metadata.isFirstPostInCollection || metadata.isFirstPostInTrack),
       ...metadata,
     },
   }
@@ -140,8 +141,8 @@ export function validateCanonicalPost(post) {
     errors.push(`Invalid schemaVersion: expected 1.0.0 or 1.1.0, got ${post.schemaVersion}`)
   }
   if (!post.title && !post.PostTitle) errors.push('Missing post.title')
-  if (!post.trackId && !post.track?.id && !post.TrackNo && !post.Track) {
-    errors.push('Missing post.trackId')
+  if (!post.collectionId && !post.collection?.id) {
+    errors.push('Missing post.collectionId')
   }
   const slides = post.slides || post.Slides
   if (!Array.isArray(slides) || slides.length === 0) {

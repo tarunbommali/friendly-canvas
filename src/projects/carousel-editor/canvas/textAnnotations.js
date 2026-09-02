@@ -25,7 +25,7 @@ const HIGHLIGHT_COLORS = [
 ]
 
 /**
- * Pick highlight color from track accent or fallback palette.
+ * Pick highlight color from collection accent or fallback palette.
  * Ensures the highlight is always a flat, semi-transparent tint.
  */
 function resolveHighlightColor(accentColor) {

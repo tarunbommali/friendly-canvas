@@ -16,7 +16,7 @@ export default function NotFoundPage() {
         </h1>
         <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">Page Not Found</h2>
         <p className="text-xs text-gray-500 dark:text-slate-400 max-w-sm leading-relaxed">
-          The curriculum track, post, or resource you are looking for does not exist or has been relocated.
+          The curriculum collection, post, or resource you are looking for does not exist or has been relocated.
         </p>
         <div className="flex items-center gap-3 pt-2">
           <button
@@ -31,7 +31,7 @@ export default function NotFoundPage() {
             onClick={() => navigate('/swe-notebook/content')}
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Curriculum Tracks</span>
+            <span>Curriculum Collections</span>
           </button>
         </div>
       </div>

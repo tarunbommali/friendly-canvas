@@ -18,8 +18,8 @@ export default function RoleMatrixPage() {
       viewer: false,
     },
     {
-      resource: 'Tracks',
-      action: 'Create, edit, delete & reorder tracks',
+      resource: 'Collections',
+      action: 'Create, edit, delete & reorder Collections',
       admin: true,
       editor: true,
       viewer: false,

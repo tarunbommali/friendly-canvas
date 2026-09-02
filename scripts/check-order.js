@@ -3,11 +3,11 @@ import fs from 'fs';
 const data = JSON.parse(fs.readFileSync('./data.json', 'utf8'));
 
 console.log('Keys in data.json:', Object.keys(data));
-console.log('trackPalettes keys:', Object.keys(data.trackPalettes || {}));
+console.log('collectionPalettes keys:', Object.keys(data.collectionPalettes || {}));
 
-if (Array.isArray(data.tracks)) {
-  console.log('Tracks count:', data.tracks.length);
-  console.log('Track numbers:', data.tracks.map(t => t.trackNo || t.id));
+if (Array.isArray(data.Collections)) {
+  console.log('Collections count:', data.Collections.length);
+  console.log('Track numbers:', data.Collections.map(t => t.trackNo || t.id));
 }
 
 if (Array.isArray(data.posts)) {

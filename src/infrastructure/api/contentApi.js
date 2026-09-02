@@ -1,35 +1,35 @@
 import { apiClient } from './apiClient';
 
 export const contentApi = {
-  // Tracks
-  async getTracks(projectId) {
+  // Collections
+  async getCollections(projectId) {
     const query = projectId ? `?projectId=${projectId}` : '';
-    return apiClient.get(`/tracks${query}`);
+    return apiClient.get(`/collections${query}`);
   },
 
-  async getTrack(trackId) {
-    return apiClient.get(`/tracks/${trackId}`);
+  async getCollection(collectionId) {
+    return apiClient.get(`/collections/${collectionId}`);
   },
 
-  async createTrack(projectId, trackData) {
-    return apiClient.post('/tracks', { ...trackData, projectId });
+  async createCollection(projectId, collectionData) {
+    return apiClient.post('/collections', { ...collectionData, projectId });
   },
 
-  async updateTrack(trackId, trackData) {
-    return apiClient.patch(`/tracks/${trackId}`, trackData);
+  async updateCollection(collectionId, collectionData) {
+    return apiClient.patch(`/collections/${collectionId}`, collectionData);
   },
 
-  async deleteTrack(trackId) {
-    return apiClient.delete(`/tracks/${trackId}`);
+  async deleteCollection(collectionId) {
+    return apiClient.delete(`/collections/${collectionId}`);
   },
 
-  async reorderTracks(projectId, orderedIds) {
-    return apiClient.patch('/tracks/reorder/bulk', { projectId, orderedIds });
+  async reorderCollections(projectId, orderedIds) {
+    return apiClient.patch('/collections/reorder/bulk', { projectId, orderedIds });
   },
 
   // Posts
-  async getPosts(trackId) {
-    const query = trackId ? `?trackId=${trackId}` : '';
+  async getPosts(collectionId) {
+    const query = collectionId ? `?collectionId=${collectionId}` : '';
     return apiClient.get(`/posts${query}`);
   },
 
@@ -37,8 +37,8 @@ export const contentApi = {
     return apiClient.get(`/posts/${postId}`);
   },
 
-  async createPost(trackId, postData) {
-    return apiClient.post('/posts', { ...postData, trackId });
+  async createPost(collectionId, postData) {
+    return apiClient.post('/posts', { ...postData, collectionId });
   },
 
   async updatePost(postId, postData) {
@@ -49,8 +49,8 @@ export const contentApi = {
     return apiClient.delete(`/posts/${postId}`);
   },
 
-  async reorderPosts(trackId, orderedIds) {
-    return apiClient.patch('/posts/reorder/bulk', { trackId, orderedIds });
+  async reorderPosts(collectionId, orderedIds) {
+    return apiClient.patch('/posts/reorder/bulk', { collectionId, orderedIds });
   },
 
   // Slides & Canvas

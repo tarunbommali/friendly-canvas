@@ -107,8 +107,8 @@ Application
 │   └── schemas/
 │       └── carouselSchema.js      — Zod validation schema for import
 │
-├── Track Content (src/projects/track-content/)
-│   — separate domain: content management, tracks, posts
+├── Collection Content (src/projects/collection-content/)
+│   — separate domain: content management, Collections, posts
 │
 ├── Domain (src/domain/)
 │   — config/, layout/, post/, slide/ — pure domain models (no UI)
@@ -480,7 +480,7 @@ Allows changing all slides at once via `GlobalLayoutSettingsPage`:
 
 ### 9.1 `CarouselBuilderPage.jsx`
 
-Route: `/design/track/:trackId/post/:postId`
+Route: `/design/collection/:collectionId/post/:postId`
 
 ```
 ┌───────────────────────────── Header ────────────────────────────────┐
@@ -502,7 +502,7 @@ Loads post from `useCollectionData()` hook. Converts to `CarouselDocument` via `
 
 ### 9.2 `GlobalLayoutSettingsPage.jsx`
 
-Route: `/design/track/:trackId/post/:postId/settings`
+Route: `/design/collection/:collectionId/post/:postId/settings`
 
 Tabs: **Positions** · **Typography** · **Margins / Safe Area** · **Theme & Colors**
 
@@ -603,13 +603,13 @@ Import validation: `carouselDocumentSchema.safeParse(parsed)` → show error ale
 
 ```
 /                                            → HomePage
-/design/track/:trackId/post/:postId          → CarouselBuilderPage
-/design/track/:trackId/post/:postId/settings → GlobalLayoutSettingsPage
-/:projectSlug/design/track/:trackId/post/:postId          → CarouselBuilderPage
-/:projectSlug/design/track/:trackId/post/:postId/settings → GlobalLayoutSettingsPage
-/track/:trackId/post/:postId/edit            → CarouselBuilderPage
+/design/collection/:collectionId/post/:postId          → CarouselBuilderPage
+/design/collection/:collectionId/post/:postId/settings → GlobalLayoutSettingsPage
+/:projectSlug/design/collection/:collectionId/post/:postId          → CarouselBuilderPage
+/:projectSlug/design/collection/:collectionId/post/:postId/settings → GlobalLayoutSettingsPage
+/collection/:collectionId/post/:postId/edit            → CarouselBuilderPage
 /:projectSlug/content                        → ContentManagementPage
-/:projectSlug/track/:trackId                 → TrackPage
+/:projectSlug/collection/:collectionId                 → TrackPage
 /search                                      → SearchPage
 *                                            → NotFoundPage
 ```
@@ -622,8 +622,8 @@ All routes wrapped in `WorkspaceLayout` shell with `ErrorBoundary` as `errorElem
 
 `useCollectionData.js` → loads `data.json`, provides:
 - `designs: Post[]`
-- `collectionIdMap: { [trackId]: ColorPalette }`
-- `trackPalettes: { [collectionName]: ColorPalette }`
+- `collectionIdMap: { [collectionId]: ColorPalette }`
+- `collectionPalettes: { [collectionName]: ColorPalette }`
 
 `convertPostToCarouselDoc(post, themeConfig)`:
 1. Maps each `post.slides[]` → `composeSlide(contentElements, options)`

@@ -3,7 +3,7 @@ import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { Users, UserPlus, Shield, Check, Trash2, Mail } from 'lucide-react';
 
 export default function MemberManagementPage() {
-  const { user, activeWorkspace, activeRole } = useAuthStore();
+  const { user } = useAuthStore();
 
   const [members, setMembers] = useState([
     {

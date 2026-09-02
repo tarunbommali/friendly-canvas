@@ -57,9 +57,9 @@ export async function runPersistenceMigrations() {
           return createCanonicalPost({
             id: post.id,
             title: post.title || post.name,
-            trackId: post.trackNo || '01',
-            trackName: post.trackName || 'Custom Track',
-            palette: post.trackColor || { primary: '#1E5FA8', accent: '#A9D0F5' },
+            collectionId: post.collectionId || '01',
+            collectionName: post.collectionName || 'Custom Collection',
+            palette: post.palette || { primary: '#1E5FA8', accent: '#A9D0F5' },
             slides: post.slides || [],
             metadata: {
               createdAt: post.createdAt,

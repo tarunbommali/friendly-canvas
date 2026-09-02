@@ -15,14 +15,12 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useProjectData } from '../hooks/useProjectData';
-import { useTrackData } from '../../../shared/hooks/useTrackData';
 
 export default function ContentManagementPage() {
-  const { projectSlug = 'swe-notebook', trackId = '01', postId = '1' } = useParams();
+  const { projectSlug = 'swe-notebook', collectionId = '01', postId = '1' } = useParams();
   const navigate = useNavigate();
 
-  const { project, tracks, updateSlideContent } = useProjectData(projectSlug);
-  const { trackPalettes } = useTrackData();
+  const { project, collections, updateSlideContent } = useProjectData(projectSlug);
 
   const [activeTab, setActiveTab] = useState('content'); // 'content' | 'storyboard' | 'assets' | 'music'
   const [toastMsg, setToastMsg] = useState('');
@@ -32,45 +30,45 @@ export default function ContentManagementPage() {
     setTimeout(() => setToastMsg(''), 2500);
   };
 
-  const activeTrack = useMemo(() => {
-    if (!tracks || tracks.length === 0) return null;
-    const numId = parseInt(trackId, 10);
+  const activeCollection = useMemo(() => {
+    if (!collections || collections.length === 0) return null;
+    const numId = parseInt(collectionId, 10);
     return (
-      tracks.find(
-        (t) =>
-          String(t.id) === String(trackId) ||
-          String(t.trackKey) === String(trackId) ||
-          parseInt(t.trackNo, 10) === numId ||
-          parseInt(t.id, 10) === numId
-      ) || tracks[0]
+      collections.find(
+        (c) =>
+          String(c.id) === String(collectionId) ||
+          String(c.collectionKey) === String(collectionId) ||
+          parseInt(c.collectionNo, 10) === numId ||
+          parseInt(c.id, 10) === numId
+      ) || collections[0]
     );
-  }, [tracks, trackId]);
+  }, [collections, collectionId]);
 
-  const trackPosts = useMemo(() => {
-    return activeTrack?.posts || [];
-  }, [activeTrack]);
+  const collectionPosts = useMemo(() => {
+    return activeCollection?.posts || [];
+  }, [activeCollection]);
 
   const activePost = useMemo(() => {
-    if (!trackPosts || trackPosts.length === 0) return null;
+    if (!collectionPosts || collectionPosts.length === 0) return null;
     const numPostId = parseInt(postId, 10);
     return (
-      trackPosts.find(
+      collectionPosts.find(
         (p) =>
           String(p.id) === String(postId) ||
           parseInt(p.postNo, 10) === numPostId ||
           parseInt(p.PostNo, 10) === numPostId ||
           String(p.designNo) === String(postId)
-      ) || trackPosts[0]
+      ) || collectionPosts[0]
     );
-  }, [trackPosts, postId]);
+  }, [collectionPosts, postId]);
 
-  const trackNumStr = String(activeTrack?.trackNo || trackId).padStart(2, '0');
-  const cleanTrackTitle = (activeTrack?.title || activeTrack?.name || 'Track').replace(/^Track \d+\s*—\s*/, '');
-  const palette = activeTrack?.palette || { primary: '#2563eb', accent: '#93c5fd' };
+  const collectionNumStr = String(activeCollection?.collectionNo || collectionId).padStart(2, '0');
+  const cleanCollectionTitle = (activeCollection?.title || activeCollection?.name || 'Collection').replace(/^Collection \d+\s*—\s*/, '');
+  const palette = activeCollection?.palette || { primary: '#2563eb', accent: '#93c5fd' };
 
   const handleOpenCanvas = () => {
     const pId = activePost?.id || activePost?.postNo || '1';
-    navigate(`/${projectSlug}/design/track/${trackNumStr}/post/${pId}`);
+    navigate(`/${projectSlug}/design/collection/${collectionNumStr}/post/${pId}`);
   };
 
   return (
@@ -92,11 +90,8 @@ export default function ContentManagementPage() {
           {project?.title || 'SWE Engineering'}
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-gray-400 dark:text-slate-500" />
-        <Link
-          to={`/${projectSlug}/content/track/${trackNumStr}`}
-          className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >
-          Track {trackNumStr}
+        <Link to={`/${projectSlug}/content/collection/${collectionNumStr}`} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+          Collection {collectionNumStr}
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-gray-400 dark:text-slate-500" />
         <span className="text-gray-900 dark:text-slate-100 font-semibold font-mono">
@@ -112,10 +107,10 @@ export default function ContentManagementPage() {
         <div className="max-w-3xl">
           <div className="flex items-center gap-3 mb-2">
             <span className="px-2.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-mono text-xs font-bold border border-blue-200 dark:border-blue-700">
-              {trackNumStr}.{activePost?.postNo || activePost?.PostNo || '1'}
+              <span>{collectionNumStr}.{activePost?.postNo || activePost?.PostNo || '1'}</span>
             </span>
             <div className="flex items-center gap-2 text-xs font-mono text-gray-500 dark:text-slate-400">
-              <span>Track {trackNumStr}: {cleanTrackTitle}</span>
+              <span>Collection {collectionNumStr}: {cleanCollectionTitle}</span>
               <span>•</span>
               <span>{activePost?.slides?.length || 0} Slides</span>
             </div>
@@ -136,7 +131,7 @@ export default function ContentManagementPage() {
                 activePost.id,
                 `slide_new_${Date.now()}`,
                 { title: `Slide ${nextNo} Headline`, body: '' },
-                activeTrack?.title,
+                activeCollection?.title,
                 activePost.postNo,
                 nextNo
               );
@@ -150,7 +145,7 @@ export default function ContentManagementPage() {
         </div>
       </section>
 
-      {/* Main 2-Column Layout: Left Slide Editor & Right Track Overview / Switcher Card */}
+      {/* Main 2-Column Layout: Left Slide Editor & Right Collection Overview / Switcher Card */}
       <div className="flex flex-col lg:flex-row gap-6 items-start w-full">
         {/* Left: Slide Editor & Navigation Tabs */}
         <div className="flex-1 min-w-0 w-full flex flex-col gap-5">
@@ -168,11 +163,10 @@ export default function ContentManagementPage() {
                 <button
                   key={tab.key}
                   type="button"
-                  className={`px-4 py-2 text-xs font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
-                    isActive
-                      ? 'border-blue-600 text-blue-700 dark:text-blue-400 font-bold bg-blue-50/50 dark:bg-blue-900/30 rounded-t-lg'
-                      : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
-                  }`}
+                  className={`px-4 py-2 text-xs font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${isActive
+                    ? 'border-blue-600 text-blue-700 dark:text-blue-400 font-bold bg-blue-50/50 dark:bg-blue-900/30 rounded-t-lg'
+                    : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
+                    }`}
                   onClick={() => setActiveTab(tab.key)}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -192,7 +186,7 @@ export default function ContentManagementPage() {
                     activePost.id,
                     slideId,
                     updates,
-                    activeTrack?.title || activeTrack?.name,
+                    activeCollection?.title || activeCollection?.name,
                     activePost.postNo || 1,
                     slideNo
                   );
@@ -209,40 +203,40 @@ export default function ContentManagementPage() {
           </div>
         </div>
 
-        {/* Right: Track Overview & Posts Switcher Card */}
+        {/* Right: Collection Overview & Posts Switcher Card */}
         <aside className="w-full lg:w-80 shrink-0 bg-white dark:bg-[#151821] border border-[#e2e8f0] dark:border-white/10 rounded-xl p-5 shadow-xs flex flex-col gap-4 sticky top-6">
           <div className="flex items-center justify-between border-b border-[#e2e8f0] dark:border-white/10 pb-3">
             <Link
-              to={`/${projectSlug}/content/track/${trackNumStr}`}
+              to={`/${projectSlug}/content/collection/${collectionNumStr}`}
               className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center gap-1 font-semibold transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
-              <span>Track {trackNumStr} Overview</span>
+              <span>Collection {collectionNumStr} Overview</span>
             </Link>
             <span className="text-[10px] font-mono text-gray-400 dark:text-slate-500">
-              {trackPosts.length} Posts
+              {collectionPosts.length} Posts
             </span>
           </div>
 
-          {/* Track Summary */}
+          {/* Collection Summary */}
           <div className="flex items-center gap-2.5 pb-1">
             <span
               className="w-3.5 h-3.5 rounded-full inline-block shrink-0 shadow-xs border border-white dark:border-slate-800"
               style={{ backgroundColor: palette.primary }}
             />
             <div className="min-w-0">
-              <h3 className="text-xs font-bold text-gray-900 dark:text-slate-100 truncate" title={cleanTrackTitle}>
-                {cleanTrackTitle}
+              <h3 className="text-xs font-bold text-gray-900 dark:text-slate-100 truncate" title={cleanCollectionTitle}>
+                {cleanCollectionTitle}
               </h3>
               <span className="text-[10px] font-mono text-gray-400 dark:text-slate-500 uppercase">
-                Track {trackNumStr}
+                Collection {collectionNumStr}
               </span>
             </div>
           </div>
 
-          {/* List of Posts in this track */}
+          {/* List of Posts in this collection */}
           <div className="flex flex-col gap-1 max-h-96 overflow-y-auto pt-1">
-            {trackPosts.map((post, pIdx) => {
+            {collectionPosts.map((post, pIdx) => {
               const postNo = post.postNo || post.PostNo || pIdx + 1;
               const isSelected =
                 activePost &&
@@ -254,16 +248,15 @@ export default function ContentManagementPage() {
                 <button
                   key={post.id || pIdx}
                   onClick={() =>
-                    navigate(`/${projectSlug}/content/track/${trackNumStr}/post/${post.id || postNo}`)
+                    navigate(`/${projectSlug}/content/collection/${collectionNumStr}/post/${post.id || postNo}`)
                   }
-                  className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left text-xs transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 font-semibold border border-blue-200 dark:border-blue-700 shadow-xs'
-                      : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-900/60 border border-transparent'
-                  }`}
+                  className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left text-xs transition-all cursor-pointer ${isSelected
+                    ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 font-semibold border border-blue-200 dark:border-blue-700 shadow-xs'
+                    : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-900/60 border border-transparent'
+                    }`}
                 >
                   <span className="font-mono text-[10px] text-gray-400 dark:text-slate-500 font-bold shrink-0">
-                    {trackNumStr}.{postNo}
+                    {collectionNumStr}.{postNo}
                   </span>
                   <span className="truncate flex-1">
                     {post.title || post.PostTitle || `Post ${postNo}`}

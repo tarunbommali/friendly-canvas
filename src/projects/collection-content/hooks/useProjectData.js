@@ -6,13 +6,13 @@ export function useProjectData(projectSlug = 'swe-notebook') {
   const [overrides, setOverrides] = useState({});
 
   const project = useMemo(() => {
-    const rawTrackPalettes = data.trackPalettes || {};
-    const trackPalettes = {};
+    const rawcollectionPalettes = data.collectionPalettes || {};
+    const collectionPalettes = {};
 
-    Object.entries(rawTrackPalettes).forEach(([trackId, val]) => {
-      trackPalettes[trackId] = val;
-      trackPalettes[String(parseInt(trackId, 10))] = val;
-      if (val.name) trackPalettes[val.name] = val;
+    Object.entries(rawcollectionPalettes).forEach(([collectionId, val]) => {
+      collectionPalettes[collectionId] = val;
+      collectionPalettes[String(parseInt(collectionId, 10))] = val;
+      if (val.name) collectionPalettes[val.name] = val;
     });
 
     return {
@@ -20,13 +20,13 @@ export function useProjectData(projectSlug = 'swe-notebook') {
       slug: data.slug || 'swe-notebook',
       title: data.name || 'SWE Notebook',
       description:
-        'Complete Software Engineering Zero to Hero curriculum. Includes track-wise content management, post inspectors, interactive live slide studio, prompt copiers, and slide override editors.',
+        'Complete Software Engineering Zero to Hero curriculum. Includes collection-wise content management, post inspectors, interactive live slide studio, prompt copiers, and slide override editors.',
       stats: {
-        trackCount: Object.keys(rawTrackPalettes).length,
+        collectionCount: Object.keys(rawcollectionPalettes).length,
         postCount: (data.posts || []).length,
       },
       config: {
-        trackPalettes,
+        collectionPalettes,
         background: { type: 'dots', color: '#F8F7F4' },
         canvasSpec: { width: 1080, height: 1350, padding: 48 },
         typography: {
@@ -50,20 +50,20 @@ export function useProjectData(projectSlug = 'swe-notebook') {
     };
   }, []);
 
-  const tracks = useMemo(() => {
-    const rawPalettes = data.trackPalettes || {};
+  const collections = useMemo(() => {
+    const rawPalettes = data.collectionPalettes || {};
     const rawPosts = data.posts || [];
 
-    const trackEntries = Object.entries(rawPalettes)
-      .map(([trackId, p]) => {
+    const collectionEntries = Object.entries(rawPalettes)
+      .map(([collectionId, p]) => {
         const match = p.name?.match(/\d+/);
-        const trackNo = match ? parseInt(match[0], 10) : parseInt(trackId, 10);
-        return { trackId: String(trackNo).padStart(2, '0'), trackNo, title: p.name, palette: p };
+        const collectionNo = match ? parseInt(match[0], 10) : parseInt(collectionId, 10);
+        return { collectionId: String(collectionNo).padStart(2, '0'), collectionNo, title: p.name, palette: p };
       })
-      .sort((a, b) => a.trackNo - b.trackNo);
+      .sort((a, b) => a.collectionNo - b.collectionNo);
 
-    return trackEntries.map(({ trackId, trackNo, title: trackName, palette }) => {
-      const matchingPosts = rawPosts.filter((p) => p.trackId === trackId);
+    return collectionEntries.map(({ collectionId, collectionNo, title: collectionName, palette }) => {
+      const matchingPosts = rawPosts.filter((p) => p.collectionId === collectionId);
 
       const posts = matchingPosts.map((p, pIdx) => {
         const postNo = p.postNo || pIdx + 1;
@@ -73,8 +73,8 @@ export function useProjectData(projectSlug = 'swe-notebook') {
         const slides = rawSlides.map((s, sIdx) => {
           const slideNo = s.slideNo || sIdx + 1;
           const slideId =
-            s.id || `slide_t${trackId}_p${String(postNo).padStart(2, '0')}_s${String(slideNo).padStart(2, '0')}`;
-          const legacyKey = `${trackName}|${postNo}|${slideNo}`;
+            s.id || `slide_t${collectionId}_p${String(postNo).padStart(2, '0')}_s${String(slideNo).padStart(2, '0')}`;
+          const legacyKey = `${collectionName}|${postNo}|${slideNo}`;
           const slideOverride = overrides[slideId] || overrides[legacyKey] || {};
           const layoutId =
             slideOverride.Layout ||
@@ -132,7 +132,7 @@ export function useProjectData(projectSlug = 'swe-notebook') {
               uploaded: [],
             },
             musicReference: {
-              id: `music_${trackId}_${postNo}`,
+              id: `music_${collectionId}_${postNo}`,
               title: audioTitle,
               mood: audio.mood,
               searchTerms: audio.searchTerms || [],
@@ -143,10 +143,10 @@ export function useProjectData(projectSlug = 'swe-notebook') {
 
         return {
           id: postId,
-          trackId,
+          collectionId,
           order: postNo,
           postNo,
-          code: `${trackNo}.${postNo}`,
+          code: `${collectionNo}.${postNo}`,
           title: p.title || `Post ${postNo}`,
           status: 'ready',
           slideCount: slides.length,
@@ -157,12 +157,12 @@ export function useProjectData(projectSlug = 'swe-notebook') {
       });
 
       return {
-        id: trackId,
+        id: collectionId,
         projectId: 'swe-notebook',
-        order: trackNo,
-        trackNo,
-        slug: `track-${trackId}`,
-        title: trackName,
+        order: collectionNo,
+        collectionNo,
+        slug: `collection-${collectionId}`,
+        title: collectionName,
         postCount: posts.length,
         palette,
         posts,
@@ -171,7 +171,7 @@ export function useProjectData(projectSlug = 'swe-notebook') {
   }, [overrides]);
 
   const updateSlideContent = useCallback(
-    (postId, slideId, contentUpdates, trackName, postNo, slideNo) => {
+    (postId, slideId, contentUpdates, collectionName, postNo, slideNo) => {
       setOverrides((prev) => {
         const existingSlideId = prev[slideId] || {};
         const pascalUpdates = {};
@@ -183,8 +183,8 @@ export function useProjectData(projectSlug = 'swe-notebook') {
         const updatedObj = { ...existingSlideId, ...contentUpdates, ...pascalUpdates };
         const nextOverrides = { ...prev, [slideId]: updatedObj };
 
-        if (trackName && postNo && slideNo) {
-          const legacyKey = `${trackName}|${postNo}|${slideNo}`;
+        if (collectionName && postNo && slideNo) {
+          const legacyKey = `${collectionName}|${postNo}|${slideNo}`;
           const existingLegacy = prev[legacyKey] || {};
           nextOverrides[legacyKey] = { ...existingLegacy, ...updatedObj };
         }
@@ -208,5 +208,5 @@ export function useProjectData(projectSlug = 'swe-notebook') {
     []
   );
 
-  return { project, tracks, updateSlideContent };
+  return { project, collections, updateSlideContent };
 }

@@ -76,10 +76,10 @@ router.get('/:workspaceId/projects', requireRole('viewer'), async (req, res, nex
       { $sort: { sortOrder: 1 } },
       {
         $lookup: {
-          from: 'tracks',
+          from: 'collections',
           localField: '_id',
           foreignField: 'project',
-          as: 'tracks',
+          as: 'collections',
         },
       },
       {
@@ -98,7 +98,8 @@ router.get('/:workspaceId/projects', requireRole('viewer'), async (req, res, nex
           sortOrder: 1,
           workspace: 1,
           createdAt: 1,
-          trackCount: { $size: '$tracks' },
+          collectionCount: { $size: '$collections' },
+          trackCount: { $size: '$collections' },
           postCount: { $size: '$posts' },
           slideCount: {
             $sum: {

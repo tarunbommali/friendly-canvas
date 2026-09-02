@@ -1,9 +1,9 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, models } = require('mongoose');
 
-const trackSchema = new Schema(
+const collectionSchema = new Schema(
   {
     project: { type: Schema.Types.ObjectId, ref: 'Project', required: true, index: true },
-    trackKey: { type: String, required: true, trim: true }, // "01".."20" scoped to project
+    collectionKey: { type: String, required: true, trim: true }, // "01".."20" scoped to project
     name: { type: String, required: true, trim: true },
     palette: {
       name: { type: String, required: true },
@@ -20,7 +20,7 @@ const trackSchema = new Schema(
   { timestamps: true }
 );
 
-trackSchema.index({ project: 1, trackKey: 1 }, { unique: true });
-trackSchema.index({ project: 1, sortOrder: 1 });
+collectionSchema.index({ project: 1, collectionKey: 1 }, { unique: true });
+collectionSchema.index({ project: 1, sortOrder: 1 });
 
-module.exports = model('Track', trackSchema);
+module.exports = models.Collection || model('Collection', collectionSchema);

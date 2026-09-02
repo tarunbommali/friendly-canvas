@@ -1,10 +1,10 @@
 # SWE Notebook — 21 Track Color Palettes Reference
 
-All 21 tracks of the Zero to Hero curriculum have mathematically balanced primary and accent colors calibrated for high contrast and legible highlighter overlays.
+All 21 Collections of the Zero to Hero curriculum have mathematically balanced primary and accent colors calibrated for high contrast and legible highlighter overlays.
 
 ---
 
-| Track # | Track Name | Palette Name | Primary (`#HEX`) | Accent (`#HEX`) | Recommended Background |
+| Track # | collection name | Palette Name | Primary (`#HEX`) | Accent (`#HEX`) | Recommended Background |
 | :---: | :--- | :--- | :--- | :--- | :--- |
 | **01** | Track 1 — Why Computers Exist | Sepia | `#8B5E3C` | `#D9C7A3` | Warm Paper `#F8F7F4` |
 | **02** | Track 2 — How a Computer Actually Works | Tech Blue | `#1E5FA8` | `#A9D0F5` | Dot Grid `#F8F9FA` |

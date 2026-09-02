@@ -18,7 +18,6 @@ import {
   Edit,
 } from 'lucide-react';
 import { useProjectData } from '../hooks/useProjectData';
-import { useTrackData } from '../../../shared/hooks/useTrackData';
 import { useAuthStore } from '../../../shared/stores/useAuthStore';
 import { useWorkspaceStore } from '../../../shared/stores/useWorkspaceStore';
 
@@ -31,12 +30,11 @@ const PRESET_PALETTES = [
   { name: 'Crimson Focus', primary: '#dc2626', accent: '#fee2e2' },
 ];
 
-export default function TrackDetailPage() {
-  const { projectSlug = 'swe-notebook', trackId = '01' } = useParams();
+export default function CollectionDetailPage() {
+  const { projectSlug = 'swe-notebook', collectionId = '01' } = useParams();
   const navigate = useNavigate();
   const { activeRole } = useAuthStore();
-  const { project, tracks } = useProjectData(projectSlug);
-  const { trackPalettes, updateTrackPalette } = useTrackData();
+  const { project, collections } = useProjectData(projectSlug);
   const { createPost } = useWorkspaceStore();
 
   const [isAddPostOpen, setIsAddPostOpen] = useState(false);
@@ -48,29 +46,29 @@ export default function TrackDetailPage() {
     setTimeout(() => setToastMsg(''), 2500);
   };
 
-  const currentTrack = useMemo(() => {
-    if (!tracks || tracks.length === 0) return null;
-    const numId = parseInt(trackId, 10);
+  const currentCollection = useMemo(() => {
+    if (!collections || collections.length === 0) return null;
+    const numId = parseInt(collectionId, 10);
     return (
-      tracks.find(
-        (t) =>
-          String(t.id) === String(trackId) ||
-          String(t.trackKey) === String(trackId) ||
-          parseInt(t.trackNo, 10) === numId ||
-          parseInt(t.id, 10) === numId
-      ) || tracks[0]
+      collections.find(
+        (c) =>
+          String(c.id) === String(collectionId) ||
+          String(c.collectionKey) === String(collectionId) ||
+          parseInt(c.collectionNo, 10) === numId ||
+          parseInt(c.id, 10) === numId
+      ) || collections[0]
     );
-  }, [tracks, trackId]);
+  }, [collections, collectionId]);
 
   const posts = useMemo(() => {
-    return currentTrack?.posts || [];
-  }, [currentTrack]);
+    return currentCollection?.posts || [];
+  }, [currentCollection]);
 
   const totalSlides = useMemo(() => {
     return posts.reduce((sum, p) => sum + (p.slides?.length || 0), 0);
   }, [posts]);
 
-  // Track Configuration State
+  // Collection Configuration State
   const [primaryColor, setPrimaryColor] = useState('#2563eb');
   const [accentColor, setAccentColor] = useState('#93c5fd');
   const [aspectRatio, setAspectRatio] = useState('4:5');
@@ -81,27 +79,27 @@ export default function TrackDetailPage() {
   const [bodyFont, setBodyFont] = useState('Inter, sans-serif');
   const [techFont, setTechFont] = useState('JetBrains Mono');
 
-  // Load configuration from currentTrack
+  // Load configuration from currentCollection
   useEffect(() => {
-    if (currentTrack) {
-      const p = currentTrack.palette || {};
+    if (currentCollection) {
+      const p = currentCollection.palette || {};
       setPrimaryColor(p.primary || '#2563eb');
       setAccentColor(p.accent || '#93c5fd');
 
-      const dim = currentTrack.canvasDimensions || {};
+      const dim = currentCollection.canvasDimensions || {};
       setCanvasWidth(dim.width || 1080);
       setCanvasHeight(dim.height || 1350);
       setPadding(dim.padding || 48);
 
-      const ratio = currentTrack.aspectRatio || '4:5';
+      const ratio = currentCollection.aspectRatio || '4:5';
       setAspectRatio(ratio);
 
-      const typo = currentTrack.typography || {};
+      const typo = currentCollection.typography || {};
       if (typo.headline) setHeadlineFont(typo.headline);
       if (typo.body) setBodyFont(typo.body);
       if (typo.tech) setTechFont(typo.tech);
     }
-  }, [currentTrack]);
+  }, [currentCollection]);
 
   const handleAspectRatioChange = (ratio) => {
     setAspectRatio(ratio);
@@ -121,17 +119,7 @@ export default function TrackDetailPage() {
   };
 
   const handleSaveConfig = () => {
-    const trackKey = String(currentTrack?.trackNo || trackId).padStart(2, '0');
-    if (typeof updateTrackPalette === 'function') {
-      updateTrackPalette(trackKey, {
-        primary: primaryColor,
-        accent: accentColor,
-        canvasDimensions: { width: canvasWidth, height: canvasHeight, padding },
-        aspectRatio,
-        typography: { headline: headlineFont, body: bodyFont, tech: techFont },
-      });
-    }
-    showToast('Track configuration saved successfully!');
+    showToast('Collection configuration saved successfully!');
   };
 
   const handleResetConfig = () => {
@@ -144,15 +132,15 @@ export default function TrackDetailPage() {
     setHeadlineFont('Instrument Serif, Georgia');
     setBodyFont('Inter, sans-serif');
     setTechFont('JetBrains Mono');
-    showToast('Reset to track defaults');
+    showToast('Reset to collection defaults');
   };
 
   const handleCreatePost = async (e) => {
     e.preventDefault();
-    if (!newPostTitle || !currentTrack) return;
+    if (!newPostTitle || !currentCollection) return;
     const nextPostNo = posts.length + 1;
     try {
-      await createPost(currentTrack.id, {
+      await createPost(currentCollection.id, {
         postNo: nextPostNo,
         title: newPostTitle.trim(),
         slides: [
@@ -173,8 +161,8 @@ export default function TrackDetailPage() {
   };
 
   const isAdmin = activeRole === 'admin' || activeRole === 'editor';
-  const trackNumStr = String(currentTrack?.trackNo || trackId).padStart(2, '0');
-  const cleanTrackTitle = (currentTrack?.title || currentTrack?.name || 'Track').replace(/^Track \d+\s*—\s*/, '');
+  const collectionNumStr = String(currentCollection?.collectionNo || collectionId).padStart(2, '0');
+  const cleanCollectionTitle = (currentCollection?.title || currentCollection?.name || 'Collection').replace(/^Collection \d+\s*—\s*/, '');
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto w-full font-sans flex flex-col gap-6">
@@ -196,19 +184,19 @@ export default function TrackDetailPage() {
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-gray-400 dark:text-slate-500" />
         <span className="text-gray-900 dark:text-slate-100 font-semibold font-mono">
-          Track {trackNumStr}
+          Collection {collectionNumStr}
         </span>
         <span className="px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-mono text-[10px] font-bold border border-blue-200 dark:border-blue-700">
           Lesson Posts
         </span>
       </div>
 
-      {/* Track Header */}
+      {/* Collection Header */}
       <section className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#e2e8f0] dark:border-white/10">
         <div className="max-w-3xl">
           <div className="flex items-center gap-3 mb-2">
             <span className="px-2.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-mono text-xs font-bold border border-blue-200 dark:border-blue-700">
-              TRACK {trackNumStr}
+              COLLECTION {collectionNumStr}
             </span>
             <div className="flex items-center gap-2 text-xs font-mono text-gray-500 dark:text-slate-400">
               <span className="font-semibold text-gray-700 dark:text-slate-300">{posts.length} Posts</span>
@@ -221,17 +209,17 @@ export default function TrackDetailPage() {
                   style={{ backgroundColor: primaryColor }}
                 />
                 <span className="capitalize text-gray-700 dark:text-slate-300 font-medium">
-                  {currentTrack?.palette?.palette || currentTrack?.palette?.name || 'Custom Theme'}
+                  {currentCollection?.palette?.palette || currentCollection?.palette?.name || 'Custom Theme'}
                 </span>
               </div>
             </div>
           </div>
 
           <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">
-            {cleanTrackTitle}
+            {cleanCollectionTitle}
           </h1>
           <p className="text-sm text-gray-500 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
-            {currentTrack?.cover?.headline || 'Curated lessons and slide decks for this track.'}
+            {currentCollection?.cover?.headline || 'Curated lessons and slide decks for this collection.'}
           </p>
         </div>
 
@@ -248,13 +236,13 @@ export default function TrackDetailPage() {
         </div>
       </section>
 
-      {/* Main 2-Column Layout: Left Posts Grid & Right Track Configuration */}
+      {/* Main 2-Column Layout: Left Posts Grid & Right Collection Configuration */}
       <div className="flex flex-col lg:flex-row gap-6 items-start w-full">
         {/* Left: Posts List */}
         <div className="flex-1 min-w-0 w-full flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">Track Posts &amp; Slide Decks</h2>
-            <span className="text-xs font-mono text-gray-500 dark:text-slate-400">({posts.length} Posts in Track)</span>
+            <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">Collection Posts &amp; Slide Decks</h2>
+            <span className="text-xs font-mono text-gray-500 dark:text-slate-400">({posts.length} Posts in Collection)</span>
           </div>
 
           <div className="flex flex-col gap-3 w-full">
@@ -267,7 +255,7 @@ export default function TrackDetailPage() {
                 <div
                   key={post.id || idx}
                   onClick={() =>
-                    navigate(`/${projectSlug}/content/track/${trackNumStr}/post/${postTargetId}`)
+                    navigate(`/${projectSlug}/content/collection/${collectionNumStr}/post/${postTargetId}`)
                   }
                   className="group bg-white dark:bg-[#151821] hover:border-blue-300 dark:hover:border-blue-600 border border-[#e2e8f0] dark:border-white/10 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm cursor-pointer w-full"
                 >
@@ -303,7 +291,7 @@ export default function TrackDetailPage() {
                   >
                     <button
                       onClick={() =>
-                        navigate(`/${projectSlug}/content/track/${trackNumStr}/post/${postTargetId}`)
+                        navigate(`/${projectSlug}/content/collection/${collectionNumStr}/post/${postTargetId}`)
                       }
                       className="px-3.5 py-2 rounded-lg bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-white/10 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
@@ -313,7 +301,7 @@ export default function TrackDetailPage() {
 
                     <button
                       onClick={() =>
-                        navigate(`/${projectSlug}/design/track/${trackNumStr}/post/${postTargetId}`)
+                        navigate(`/${projectSlug}/design/collection/${collectionNumStr}/post/${postTargetId}`)
                       }
                       className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
                     >
@@ -328,7 +316,7 @@ export default function TrackDetailPage() {
             {posts.length === 0 && (
               <div className="bg-white dark:bg-[#151821] border border-dashed border-gray-300 dark:border-white/10 rounded-xl p-12 text-center w-full">
                 <FileText className="w-10 h-10 text-gray-400 dark:text-slate-500 mx-auto mb-3" />
-                <h3 className="text-sm font-semibold text-gray-800 dark:text-slate-200">No posts in this track yet</h3>
+                <h3 className="text-sm font-semibold text-gray-800 dark:text-slate-200">No posts in this collection yet</h3>
                 <p className="text-xs text-gray-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
                   Create the first post to begin writing slides and designing carousel graphics.
                 </p>
@@ -337,16 +325,16 @@ export default function TrackDetailPage() {
           </div>
         </div>
 
-        {/* Right: Editable Track Configuration Panel */}
+        {/* Right: Editable Collection Configuration Panel */}
         <aside className="w-full lg:w-80 shrink-0 bg-white dark:bg-[#151821] border border-[#e2e8f0] dark:border-white/10 rounded-xl p-5 shadow-xs flex flex-col gap-5 sticky top-6">
           <div className="flex items-center justify-between border-b border-[#e2e8f0] dark:border-white/10 pb-3">
             <div className="flex items-center gap-2 text-xs font-bold text-gray-800 dark:text-slate-200 uppercase font-mono">
               <Palette className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span>Track Configuration</span>
+              <span>Collection Configuration</span>
             </div>
             <button
               onClick={handleResetConfig}
-              title="Reset to Track Defaults"
+              title="Reset to Collection Defaults"
               className="p-1 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -357,7 +345,7 @@ export default function TrackDetailPage() {
           <div className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono font-bold uppercase text-gray-500 dark:text-slate-400">
-                Track Palette
+                Collection Palette
               </span>
               <select
                 onChange={(e) => {
@@ -542,7 +530,7 @@ export default function TrackDetailPage() {
           <div className="bg-white dark:bg-[#151821] border border-gray-200 dark:border-white/10 rounded-xl max-w-md w-full p-6 shadow-2xl animate-fade-in">
             <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-1">Create New Post</h3>
             <p className="text-xs text-gray-500 dark:text-slate-400 mb-4">
-              Add a new post to Track {trackNumStr} ({cleanTrackTitle}).
+              Add a new post to Collection {collectionNumStr} ({cleanCollectionTitle}).
             </p>
 
             <form onSubmit={handleCreatePost} className="space-y-4">

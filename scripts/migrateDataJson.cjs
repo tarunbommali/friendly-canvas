@@ -5,8 +5,8 @@ const dataPath = path.resolve(__dirname, '../data.json');
 const rawData = fs.readFileSync(dataPath, 'utf8');
 const data = JSON.parse(rawData);
 
-function extractTrackNum(trackStr = '') {
-  const m = trackStr.match(/Track\s*(\d+)/i);
+function extractTrackNum(Collectionstr = '') {
+  const m = Collectionstr.match(/collection\s*(\d+)/i);
   return m ? m[1].padStart(2, '0') : '01';
 }
 

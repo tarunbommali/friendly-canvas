@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Post = require('../models/Post');
-const Track = require('../models/Track');
+const Collection = require('../models/Collection');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const { requireRole } = require('../middleware/rbacMiddleware');
 
@@ -9,25 +9,25 @@ const router = express.Router({ mergeParams: true });
 
 router.use(authMiddleware);
 
-// GET /api/posts or /api/tracks/:trackId/posts
+// GET /api/posts or /api/collections/:collectionId/posts
 router.get('/', async (req, res, next) => {
   try {
-    const trackId = req.params.trackId || req.query.trackId;
+    const collectionId = req.params.collectionId || req.query.collectionId;
     const filter = {};
 
-    if (trackId) {
-      const isObjectId = mongoose.Types.ObjectId.isValid(trackId);
+    if (collectionId) {
+      const isObjectId = mongoose.Types.ObjectId.isValid(collectionId);
       if (isObjectId) {
-        filter.track = trackId;
+        filter.collection = collectionId;
       } else {
-        const track = await Track.findOne({ trackKey: trackId });
-        if (!track) return res.json([]);
-        filter.track = track._id;
+        const coll = await Collection.findOne({ collectionKey: collectionId });
+        if (!coll) return res.json([]);
+        filter.collection = coll._id;
       }
     }
 
     const posts = await Post.find(filter)
-      .populate('track', 'trackKey name palette')
+      .populate('collection', 'collectionKey name palette')
       .sort('sortOrder');
 
     res.json(posts);
@@ -43,7 +43,8 @@ router.get('/:postId', async (req, res, next) => {
     const isObjectId = mongoose.Types.ObjectId.isValid(postId);
     const query = isObjectId ? { _id: postId } : { externalId: postId };
 
-    const post = await Post.findOne(query).populate('track', 'trackKey name palette');
+    const post = await Post.findOne(query)
+      .populate('collection', 'collectionKey name palette');
     if (!post) return res.status(404).json({ error: 'Post not found' });
     res.json(post);
   } catch (err) {
@@ -51,46 +52,50 @@ router.get('/:postId', async (req, res, next) => {
   }
 });
 
-// POST /api/tracks/:trackId/posts
+// POST /api/collections/:collectionId/posts
 router.post('/', requireRole('editor'), async (req, res, next) => {
   try {
-    const trackId = req.params.trackId || req.body.trackId;
+    const collectionId = req.params.collectionId || req.body.collectionId;
     const { title, postNo, resources, assets, slides } = req.body;
 
-    const track = await Track.findById(trackId);
-    if (!track) return res.status(404).json({ error: 'Track not found' });
+    const isObjectId = mongoose.Types.ObjectId.isValid(collectionId);
+    const query = isObjectId ? { _id: collectionId } : { collectionKey: collectionId };
 
-    const maxPost = await Post.findOne({ track: track._id }).sort('-sortOrder');
+    const coll = await Collection.findOne(query);
+    if (!coll) return res.status(404).json({ error: 'Collection not found' });
+
+    const maxPost = await Post.findOne({ collection: coll._id }).sort('-sortOrder');
     const sortOrder = maxPost ? maxPost.sortOrder + 1 : 0;
     const calculatedPostNo = postNo !== undefined ? postNo : (maxPost ? maxPost.postNo + 1 : 1);
 
-    const externalId = `post_t${track.trackKey}_p${String(calculatedPostNo).padStart(2, '0')}`;
+    const collKey = coll.collectionKey || '01';
+    const externalId = `post_c${collKey}_p${String(calculatedPostNo).padStart(2, '0')}`;
 
     const defaultSlides = (slides && slides.length > 0)
       ? slides
       : [
-          {
-            externalId: `slide_${externalId}_s01`,
-            slideNo: 1,
-            layout: 'hook-open',
-            headline: title || 'New Hook Headline',
-            text: 'Supporting narrative for the concept.',
-            canvas: {
-              version: 1,
-              width: 1080,
-              height: 1350,
-              aspectRatio: '4:5',
-              bgPattern: 'solid',
-              textAlign: 'left',
-              objects: [],
-              background: { type: 'color', value: '#121212' },
-            },
+        {
+          externalId: `slide_${externalId}_s01`,
+          slideNo: 1,
+          layout: 'hook-open',
+          headline: title || 'New Hook Headline',
+          text: 'Supporting narrative for the concept.',
+          canvas: {
+            version: 1,
+            width: 1080,
+            height: 1350,
+            aspectRatio: '4:5',
+            bgPattern: 'solid',
+            textAlign: 'left',
+            objects: [],
+            background: { type: 'color', value: '#121212' },
           },
-        ];
+        },
+      ];
 
     const post = await Post.create({
-      project: track.project,
-      track: track._id,
+      project: coll.project,
+      collection: coll._id,
       externalId,
       title: title || `Post #${calculatedPostNo}`,
       postNo: calculatedPostNo,
@@ -137,7 +142,7 @@ router.delete('/:postId', requireRole('editor'), async (req, res, next) => {
   }
 });
 
-// PATCH /api/tracks/:trackId/posts/reorder
+// PATCH /api/Collections/:collectionId/posts/reorder
 router.patch('/reorder/bulk', requireRole('editor'), async (req, res, next) => {
   try {
     const { orderedIds } = req.body;

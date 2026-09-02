@@ -5,7 +5,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const workspaceRoutes = require('./routes/workspaces');
 const projectRoutes = require('./routes/projects');
-const trackRoutes = require('./routes/tracks');
+const collectionRoutes = require('./routes/collections');
 const postRoutes = require('./routes/posts');
 
 const app = express();
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/workspaces', workspaceRoutes);
 app.use('/api/projects', projectRoutes);
-app.use('/api/tracks', trackRoutes);
+app.use('/api/collections', collectionRoutes);
 app.use('/api/posts', postRoutes);
 
 // Health check route

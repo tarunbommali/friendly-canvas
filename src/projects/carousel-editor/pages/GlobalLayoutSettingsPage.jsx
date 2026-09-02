@@ -34,7 +34,7 @@ const FONT_OPTIONS = [
 export function GlobalLayoutSettingsPage() {
   useEditorKeyboardShortcuts();
   const navigate = useNavigate();
-  const { trackId, postId, projectSlug } = useParams();
+  const { collectionId, postId, projectSlug } = useParams();
 
   const globalLayoutConfig = useCarouselStore((state) => state.globalLayoutConfig);
   const applyGlobalLayoutConfigToAllSlides = useCarouselStore(
@@ -122,10 +122,10 @@ export function GlobalLayoutSettingsPage() {
   };
 
   const handleBackToEditor = () => {
-    if (projectSlug && trackId && postId) {
-      navigate(`/${projectSlug}/design/track/${trackId}/post/${postId}`);
-    } else if (trackId && postId) {
-      navigate(`/design/track/${trackId}/post/${postId}`);
+    if (projectSlug && collectionId && postId) {
+      navigate(`/${projectSlug}/design/collection/${collectionId}/post/${postId}`);
+    } else if (collectionId && postId) {
+      navigate(`/design/collection/${collectionId}/post/${postId}`);
     } else if (postId) {
       navigate(`/design/${postId}`);
     } else {
@@ -194,55 +194,50 @@ export function GlobalLayoutSettingsPage() {
           </div>
           <button
             onClick={() => setActiveTab("layout")}
-            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${
-              activeTab === "layout"
-                ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-            }`}
+            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${activeTab === "layout"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+              : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              }`}
           >
             <Layout className="w-4 h-4" />
             <span>Layout (Title, Numbering, CTA)</span>
           </button>
           <button
             onClick={() => setActiveTab("positions")}
-            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${
-              activeTab === "positions"
-                ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-            }`}
+            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${activeTab === "positions"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+              : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              }`}
           >
             <Move className="w-4 h-4" />
             <span>1. Element X/Y Positions</span>
           </button>
           <button
             onClick={() => setActiveTab("typography")}
-            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${
-              activeTab === "typography"
-                ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-            }`}
+            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${activeTab === "typography"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+              : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              }`}
           >
             <Type className="w-4 h-4" />
             <span>2. Typography & Fonts</span>
           </button>
           <button
             onClick={() => setActiveTab("margins")}
-            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${
-              activeTab === "margins"
-                ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-            }`}
+            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${activeTab === "margins"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+              : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              }`}
           >
             <Grid className="w-4 h-4" />
             <span>3. Safe Area & Margins</span>
           </button>
           <button
             onClick={() => setActiveTab("theme")}
-            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${
-              activeTab === "theme"
-                ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-            }`}
+            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${activeTab === "theme"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+              : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              }`}
           >
             <Palette className="w-4 h-4" />
             <span>4. Theme & Aspect Ratio</span>
@@ -259,7 +254,7 @@ export function GlobalLayoutSettingsPage() {
         {/* Right Settings Workbench with 2-Column Split: Form Inputs & Original CanvasEditor Preview */}
         <main className="flex-1 overflow-y-auto p-6 bg-slate-950">
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 items-start">
-            
+
             {/* Left Column: Form Controls */}
             <div className="w-full lg:w-7/12 space-y-6">
 
@@ -276,523 +271,522 @@ export function GlobalLayoutSettingsPage() {
                     </p>
                   </div>
 
-                    {/* 1. HEADER BADGE & POST TITLE PLACEMENT (SWE NOTEBOOK) */}
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                        <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
-                          <Type className="w-4 h-4 text-amber-400" />
-                          <span>1. Header Badge & Post Title Placement ("SWE NOTEBOOK")</span>
-                        </div>
-                        <span className="font-mono text-[11px] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full">
-                          X: {localConfig.badgeX ?? 140}px | Y: {localConfig.badgeY ?? 104}px | {localConfig.badgeFontSize ?? 20}px
-                        </span>
+                  {/* 1. HEADER BADGE & POST TITLE PLACEMENT (SWE NOTEBOOK) */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
+                        <Type className="w-4 h-4 text-amber-400" />
+                        <span>1. Header Badge & Post Title Placement ("SWE NOTEBOOK")</span>
                       </div>
+                      <span className="font-mono text-[11px] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                        X: {localConfig.badgeX ?? 140}px | Y: {localConfig.badgeY ?? 104}px | {localConfig.badgeFontSize ?? 20}px
+                      </span>
+                    </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Badge Custom Label / Post Title</label>
-                          <input
-                            type="text"
-                            value={localConfig.badgeText || ""}
-                            onChange={(e) => handleChange("badgeText", e.target.value)}
-                            placeholder="e.g. SWE NOTEBOOK / Track Category"
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 text-xs focus:border-amber-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
-                          <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
-                            <input
-                              type="color"
-                              value={localConfig.badgeColor || localConfig.primaryColor || "#C84B31"}
-                              onChange={(e) => handleChange("badgeColor", e.target.value)}
-                              className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
-                            />
-                            <span className="font-mono text-[11px] text-slate-300">
-                              {localConfig.badgeColor || localConfig.primaryColor || "#C84B31"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.badgeX ?? 140}
-                            onChange={(e) => handleChange("badgeX", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-amber-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.badgeY ?? 104}
-                            onChange={(e) => handleChange("badgeY", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-amber-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.badgeFontSize ?? 20}
-                            onChange={(e) => handleChange("badgeFontSize", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-amber-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Font Family</label>
-                          <select
-                            value={localConfig.badgeFont || "Playfair Display"}
-                            onChange={(e) => handleChange("badgeFont", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-slate-100 font-sans focus:border-amber-400 focus:outline-none cursor-pointer"
-                          >
-                            {FONT_OPTIONS.map((f) => (
-                              <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
-                                {f.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                       <div>
-                        <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Badge Position Presets</span>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              handleChange("badgeX", 140);
-                              handleChange("badgeY", 104);
-                            }}
-                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
-                          >
-                            Top Left (Default)
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              handleChange("badgeX", 540);
-                              handleChange("badgeY", 104);
-                            }}
-                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
-                          >
-                            Top Center
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              handleChange("badgeX", 940);
-                              handleChange("badgeY", 104);
-                            }}
-                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
-                          >
-                            Top Right
-                          </button>
+                        <label className="block text-slate-400 mb-1 font-medium">Badge Custom Label / Post Title</label>
+                        <input
+                          type="text"
+                          value={localConfig.badgeText || ""}
+                          onChange={(e) => handleChange("badgeText", e.target.value)}
+                          placeholder="e.g. SWE NOTEBOOK / Collection Category"
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 text-xs focus:border-amber-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
+                        <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
+                          <input
+                            type="color"
+                            value={localConfig.badgeColor || localConfig.primaryColor || "#C84B31"}
+                            onChange={(e) => handleChange("badgeColor", e.target.value)}
+                            className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
+                          />
+                          <span className="font-mono text-[11px] text-slate-300">
+                            {localConfig.badgeColor || localConfig.primaryColor || "#C84B31"}
+                          </span>
                         </div>
                       </div>
                     </div>
 
-                    {/* 2. MAIN SLIDE HEADLINE PLACEMENT */}
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                        <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
-                          <Type className="w-4 h-4 text-blue-400" />
-                          <span>2. Main Slide Headline Placement (Headline Text)</span>
-                        </div>
-                        <span className="font-mono text-[11px] text-blue-400 bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 rounded-full">
-                          X: {localConfig.headlineX ?? 140}px | Y: {localConfig.headlineY ?? 210}px | {localConfig.headlineFontSize ?? 92}px
-                        </span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.badgeX ?? 140}
+                          onChange={(e) => handleChange("badgeX", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-amber-400 focus:outline-none"
+                        />
                       </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.headlineX ?? 140}
-                            onChange={(e) => handleChange("headlineX", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.headlineY ?? 210}
-                            onChange={(e) => handleChange("headlineY", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.headlineFontSize ?? 92}
-                            onChange={(e) => handleChange("headlineFontSize", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Font Family</label>
-                          <select
-                            value={localConfig.headlineFont || "Instrument Serif"}
-                            onChange={(e) => handleChange("headlineFont", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-slate-100 font-sans focus:border-blue-500 focus:outline-none cursor-pointer"
-                          >
-                            {FONT_OPTIONS.map((f) => (
-                              <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
-                                {f.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.badgeY ?? 104}
+                          onChange={(e) => handleChange("badgeY", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-amber-400 focus:outline-none"
+                        />
                       </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.badgeFontSize ?? 20}
+                          onChange={(e) => handleChange("badgeFontSize", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-amber-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Family</label>
+                        <select
+                          value={localConfig.badgeFont || "Playfair Display"}
+                          onChange={(e) => handleChange("badgeFont", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-slate-100 font-sans focus:border-amber-400 focus:outline-none cursor-pointer"
+                        >
+                          {FONT_OPTIONS.map((f) => (
+                            <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
+                              {f.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
 
-                      <div className="flex items-center justify-between gap-4 pt-1">
-                        <div>
-                          <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Text Alignment</span>
-                          <div className="flex items-center gap-1.5">
-                            {["left", "center", "right"].map((align) => (
-                              <button
-                                key={align}
-                                type="button"
-                                onClick={() => handleChange("textAlign", align)}
-                                className={`px-3 py-1 text-xs rounded-lg font-medium capitalize border transition-all ${
-                                  (localConfig.textAlign || "left") === align
-                                    ? "bg-blue-600 border-blue-500 text-white shadow-sm"
-                                    : "bg-slate-950 border-slate-700 text-slate-400 hover:text-slate-200"
+                    <div>
+                      <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Badge Position Presets</span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange("badgeX", 140);
+                            handleChange("badgeY", 104);
+                          }}
+                          className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                        >
+                          Top Left (Default)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange("badgeX", 540);
+                            handleChange("badgeY", 104);
+                          }}
+                          className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                        >
+                          Top Center
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange("badgeX", 940);
+                            handleChange("badgeY", 104);
+                          }}
+                          className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                        >
+                          Top Right
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. MAIN SLIDE HEADLINE PLACEMENT */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
+                        <Type className="w-4 h-4 text-blue-400" />
+                        <span>2. Main Slide Headline Placement (Headline Text)</span>
+                      </div>
+                      <span className="font-mono text-[11px] text-blue-400 bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 rounded-full">
+                        X: {localConfig.headlineX ?? 140}px | Y: {localConfig.headlineY ?? 210}px | {localConfig.headlineFontSize ?? 92}px
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.headlineX ?? 140}
+                          onChange={(e) => handleChange("headlineX", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.headlineY ?? 210}
+                          onChange={(e) => handleChange("headlineY", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.headlineFontSize ?? 92}
+                          onChange={(e) => handleChange("headlineFontSize", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Family</label>
+                        <select
+                          value={localConfig.headlineFont || "Instrument Serif"}
+                          onChange={(e) => handleChange("headlineFont", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-slate-100 font-sans focus:border-blue-500 focus:outline-none cursor-pointer"
+                        >
+                          {FONT_OPTIONS.map((f) => (
+                            <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
+                              {f.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4 pt-1">
+                      <div>
+                        <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Text Alignment</span>
+                        <div className="flex items-center gap-1.5">
+                          {["left", "center", "right"].map((align) => (
+                            <button
+                              key={align}
+                              type="button"
+                              onClick={() => handleChange("textAlign", align)}
+                              className={`px-3 py-1 text-xs rounded-lg font-medium capitalize border transition-all ${(localConfig.textAlign || "left") === align
+                                ? "bg-blue-600 border-blue-500 text-white shadow-sm"
+                                : "bg-slate-950 border-slate-700 text-slate-400 hover:text-slate-200"
                                 }`}
-                              >
-                                {align}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Quick Layout Presets</span>
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                handleChange("headlineX", 140);
-                                handleChange("headlineY", 210);
-                                handleChange("textAlign", "left");
-                              }}
-                              className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
                             >
-                              Default (Top Left)
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                handleChange("headlineX", 540);
-                                handleChange("headlineY", 210);
-                                handleChange("textAlign", "center");
-                              }}
-                              className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
-                            >
-                              Centered Title
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 3. SLIDE NUMBERING PLACEMENT */}
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                        <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
-                          <Hash className="w-4 h-4 text-cyan-400" />
-                          <span>3. Slide Numbering Placement (Page Counter)</span>
-                        </div>
-                        <span className="font-mono text-[11px] text-cyan-400 bg-cyan-500/10 border border-cyan-400/30 px-2 py-0.5 rounded-full">
-                          X: {localConfig.pageNumberX ?? 80}px | Y: {localConfig.pageNumberY ?? 1246}px
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.pageNumberX ?? 80}
-                            onChange={(e) => handleChange("pageNumberX", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-cyan-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.pageNumberY ?? 1246}
-                            onChange={(e) => handleChange("pageNumberY", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-cyan-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.pageNumberFontSize ?? 24}
-                            onChange={(e) => handleChange("pageNumberFontSize", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-cyan-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Font Family</label>
-                          <select
-                            value={localConfig.pageNumberFont || "Georgia"}
-                            onChange={(e) => handleChange("pageNumberFont", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2 py-1.5 text-slate-100 font-sans focus:border-cyan-400 focus:outline-none cursor-pointer"
-                          >
-                            {FONT_OPTIONS.map((f) => (
-                              <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
-                                {f.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
-                          <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
-                            <input
-                              type="color"
-                              value={localConfig.pageNumberColor || "#94a3b8"}
-                              onChange={(e) => handleChange("pageNumberColor", e.target.value)}
-                              className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
-                            />
-                            <span className="font-mono text-[11px] text-slate-300 truncate">
-                              {localConfig.pageNumberColor || "#94a3b8"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Position Presets</span>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              handleChange("pageNumberX", 80);
-                              handleChange("pageNumberY", 1246);
-                            }}
-                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
-                          >
-                            Bottom Left (Default)
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              handleChange("pageNumberX", 540);
-                              handleChange("pageNumberY", 1246);
-                            }}
-                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
-                          >
-                            Bottom Center
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              handleChange("pageNumberX", 1000);
-                              handleChange("pageNumberY", 110);
-                            }}
-                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
-                          >
-                            Top Right
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 4. SWIPE INDICATOR (MID SLIDES) */}
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                        <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
-                          <ArrowRight className="w-4 h-4 text-emerald-400" />
-                          <span>4. Swipe Indicator Placement (Mid Slides CTA)</span>
-                        </div>
-                        <span className="font-mono text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-400/30 px-2 py-0.5 rounded-full">
-                          "{localConfig.swipeText || 'Swipe →'}" | X: {localConfig.swipeX ?? 1000}px | Y: {localConfig.swipeY ?? 1246}px
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Swipe CTA Label</label>
-                          <input
-                            type="text"
-                            value={localConfig.swipeText || "Swipe →"}
-                            onChange={(e) => handleChange("swipeText", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-sans focus:border-emerald-400 focus:outline-none"
-                            placeholder="e.g. Swipe →"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Font Family</label>
-                          <select
-                            value={localConfig.swipeFont || "Georgia"}
-                            onChange={(e) => handleChange("swipeFont", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-slate-100 font-sans focus:border-emerald-400 focus:outline-none cursor-pointer"
-                          >
-                            {FONT_OPTIONS.map((f) => (
-                              <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
-                                {f.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
-                          <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
-                            <input
-                              type="color"
-                              value={localConfig.swipeColor || "#94a3b8"}
-                              onChange={(e) => handleChange("swipeColor", e.target.value)}
-                              className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
-                            />
-                            <span className="font-mono text-[11px] text-slate-300">
-                              {localConfig.swipeColor || "#94a3b8"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.swipeX ?? 1000}
-                            onChange={(e) => handleChange("swipeX", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-emerald-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.swipeY ?? 1246}
-                            onChange={(e) => handleChange("swipeY", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-emerald-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.swipeFontSize ?? 24}
-                            onChange={(e) => handleChange("swipeFontSize", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-emerald-400 focus:outline-none"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 5. LAST SLIDE FOLLOW CTA */}
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                        <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
-                          <UserPlus className="w-4 h-4 text-purple-400" />
-                          <span>5. Last Slide Follow CTA Placement (Closing Slide)</span>
-                        </div>
-                        <span className="font-mono text-[11px] text-purple-400 bg-purple-500/10 border border-purple-400/30 px-2 py-0.5 rounded-full">
-                          "{localConfig.followText || 'Follow for more →'}"
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Closing Slide CTA Text</label>
-                          <input
-                            type="text"
-                            value={localConfig.followText || "Follow for more →"}
-                            onChange={(e) => handleChange("followText", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-sans focus:border-purple-400 focus:outline-none"
-                            placeholder="e.g. Follow for more →"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Font Family</label>
-                          <select
-                            value={localConfig.followFont || "Georgia"}
-                            onChange={(e) => handleChange("followFont", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-slate-100 font-sans focus:border-purple-400 focus:outline-none cursor-pointer"
-                          >
-                            {FONT_OPTIONS.map((f) => (
-                              <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
-                                {f.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
-                          <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
-                            <input
-                              type="color"
-                              value={localConfig.followColor || "#94a3b8"}
-                              onChange={(e) => handleChange("followColor", e.target.value)}
-                              className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
-                            />
-                            <span className="font-mono text-[11px] text-slate-300">
-                              {localConfig.followColor || "#94a3b8"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.followX ?? 1000}
-                            onChange={(e) => handleChange("followX", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-purple-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.followY ?? 1246}
-                            onChange={(e) => handleChange("followY", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-purple-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
-                          <input
-                            type="number"
-                            value={localConfig.followFontSize ?? 24}
-                            onChange={(e) => handleChange("followFontSize", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-purple-400 focus:outline-none"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Quick CTA Presets</span>
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          {["Follow for more →", "Save for later 🔖", "Share with friends 🚀", "Read next track →"].map((preset) => (
-                            <button
-                              key={preset}
-                              type="button"
-                              onClick={() => handleChange("followText", preset)}
-                              className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
-                            >
-                              {preset}
+                              {align}
                             </button>
                           ))}
                         </div>
                       </div>
+
+                      <div>
+                        <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Quick Layout Presets</span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleChange("headlineX", 140);
+                              handleChange("headlineY", 210);
+                              handleChange("textAlign", "left");
+                            }}
+                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                          >
+                            Default (Top Left)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleChange("headlineX", 540);
+                              handleChange("headlineY", 210);
+                              handleChange("textAlign", "center");
+                            }}
+                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                          >
+                            Centered Title
+                          </button>
+                        </div>
+                      </div>
                     </div>
+                  </div>
+
+                  {/* 3. SLIDE NUMBERING PLACEMENT */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
+                        <Hash className="w-4 h-4 text-cyan-400" />
+                        <span>3. Slide Numbering Placement (Page Counter)</span>
+                      </div>
+                      <span className="font-mono text-[11px] text-cyan-400 bg-cyan-500/10 border border-cyan-400/30 px-2 py-0.5 rounded-full">
+                        X: {localConfig.pageNumberX ?? 80}px | Y: {localConfig.pageNumberY ?? 1246}px
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.pageNumberX ?? 80}
+                          onChange={(e) => handleChange("pageNumberX", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-cyan-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.pageNumberY ?? 1246}
+                          onChange={(e) => handleChange("pageNumberY", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-cyan-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.pageNumberFontSize ?? 24}
+                          onChange={(e) => handleChange("pageNumberFontSize", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-cyan-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Family</label>
+                        <select
+                          value={localConfig.pageNumberFont || "Georgia"}
+                          onChange={(e) => handleChange("pageNumberFont", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2 py-1.5 text-slate-100 font-sans focus:border-cyan-400 focus:outline-none cursor-pointer"
+                        >
+                          {FONT_OPTIONS.map((f) => (
+                            <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
+                              {f.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
+                        <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
+                          <input
+                            type="color"
+                            value={localConfig.pageNumberColor || "#94a3b8"}
+                            onChange={(e) => handleChange("pageNumberColor", e.target.value)}
+                            className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
+                          />
+                          <span className="font-mono text-[11px] text-slate-300 truncate">
+                            {localConfig.pageNumberColor || "#94a3b8"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Position Presets</span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange("pageNumberX", 80);
+                            handleChange("pageNumberY", 1246);
+                          }}
+                          className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                        >
+                          Bottom Left (Default)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange("pageNumberX", 540);
+                            handleChange("pageNumberY", 1246);
+                          }}
+                          className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                        >
+                          Bottom Center
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange("pageNumberX", 1000);
+                            handleChange("pageNumberY", 110);
+                          }}
+                          className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                        >
+                          Top Right
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 4. SWIPE INDICATOR (MID SLIDES) */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
+                        <ArrowRight className="w-4 h-4 text-emerald-400" />
+                        <span>4. Swipe Indicator Placement (Mid Slides CTA)</span>
+                      </div>
+                      <span className="font-mono text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-400/30 px-2 py-0.5 rounded-full">
+                        "{localConfig.swipeText || 'Swipe →'}" | X: {localConfig.swipeX ?? 1000}px | Y: {localConfig.swipeY ?? 1246}px
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Swipe CTA Label</label>
+                        <input
+                          type="text"
+                          value={localConfig.swipeText || "Swipe →"}
+                          onChange={(e) => handleChange("swipeText", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-sans focus:border-emerald-400 focus:outline-none"
+                          placeholder="e.g. Swipe →"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Family</label>
+                        <select
+                          value={localConfig.swipeFont || "Georgia"}
+                          onChange={(e) => handleChange("swipeFont", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-slate-100 font-sans focus:border-emerald-400 focus:outline-none cursor-pointer"
+                        >
+                          {FONT_OPTIONS.map((f) => (
+                            <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
+                              {f.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
+                        <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
+                          <input
+                            type="color"
+                            value={localConfig.swipeColor || "#94a3b8"}
+                            onChange={(e) => handleChange("swipeColor", e.target.value)}
+                            className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
+                          />
+                          <span className="font-mono text-[11px] text-slate-300">
+                            {localConfig.swipeColor || "#94a3b8"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.swipeX ?? 1000}
+                          onChange={(e) => handleChange("swipeX", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-emerald-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.swipeY ?? 1246}
+                          onChange={(e) => handleChange("swipeY", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-emerald-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.swipeFontSize ?? 24}
+                          onChange={(e) => handleChange("swipeFontSize", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-emerald-400 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 5. LAST SLIDE FOLLOW CTA */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div className="flex items-center gap-2 text-slate-100 font-semibold text-xs">
+                        <UserPlus className="w-4 h-4 text-purple-400" />
+                        <span>5. Last Slide Follow CTA Placement (Closing Slide)</span>
+                      </div>
+                      <span className="font-mono text-[11px] text-purple-400 bg-purple-500/10 border border-purple-400/30 px-2 py-0.5 rounded-full">
+                        "{localConfig.followText || 'Follow for more →'}"
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Closing Slide CTA Text</label>
+                        <input
+                          type="text"
+                          value={localConfig.followText || "Follow for more →"}
+                          onChange={(e) => handleChange("followText", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-sans focus:border-purple-400 focus:outline-none"
+                          placeholder="e.g. Follow for more →"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Family</label>
+                        <select
+                          value={localConfig.followFont || "Georgia"}
+                          onChange={(e) => handleChange("followFont", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-slate-100 font-sans focus:border-purple-400 focus:outline-none cursor-pointer"
+                        >
+                          {FONT_OPTIONS.map((f) => (
+                            <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
+                              {f.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Text Color</label>
+                        <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1">
+                          <input
+                            type="color"
+                            value={localConfig.followColor || "#94a3b8"}
+                            onChange={(e) => handleChange("followColor", e.target.value)}
+                            className="w-6 h-6 rounded bg-transparent border-0 cursor-pointer"
+                          />
+                          <span className="font-mono text-[11px] text-slate-300">
+                            {localConfig.followColor || "#94a3b8"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">X Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.followX ?? 1000}
+                          onChange={(e) => handleChange("followX", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-purple-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Y Position (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.followY ?? 1246}
+                          onChange={(e) => handleChange("followY", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-purple-400 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Font Size (px)</label>
+                        <input
+                          type="number"
+                          value={localConfig.followFontSize ?? 24}
+                          onChange={(e) => handleChange("followFontSize", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-mono focus:border-purple-400 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="block text-[11px] text-slate-400 mb-1.5 font-medium">Quick CTA Presets</span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {["Follow for more →", "Save for later 🔖", "Share with friends 🚀", "Read next collection →"].map((preset) => (
+                          <button
+                            key={preset}
+                            type="button"
+                            onClick={() => handleChange("followText", preset)}
+                            className="px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                          >
+                            {preset}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -1296,7 +1290,7 @@ export function GlobalLayoutSettingsPage() {
                       <span>Typography, Fonts & Text Sizing</span>
                     </h2>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      Configure font families, base sizes, and text colors across headlines, body paragraphs, and track badges.
+                      Configure font families, base sizes, and text colors across headlines, body paragraphs, and collection badges.
                     </p>
                   </div>
 
@@ -1448,59 +1442,59 @@ export function GlobalLayoutSettingsPage() {
                   </div>
 
                   {/* Slide Numbering & CTAs Typography */}
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-xl">
-                      <div className="text-slate-100 font-semibold text-xs border-b border-slate-800 pb-2 flex items-center gap-2">
-                        <Hash className="w-4 h-4 text-cyan-400" />
-                        <span>Footer Numbering & CTA Typography</span>
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-xl">
+                    <div className="text-slate-100 font-semibold text-xs border-b border-slate-800 pb-2 flex items-center gap-2">
+                      <Hash className="w-4 h-4 text-cyan-400" />
+                      <span>Footer Numbering & CTA Typography</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Page Number Font</label>
+                        <select
+                          value={localConfig.pageNumberFont || "Georgia"}
+                          onChange={(e) => handleChange("pageNumberFont", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 focus:border-cyan-400 focus:outline-none cursor-pointer"
+                        >
+                          {FONT_OPTIONS.map((f) => (
+                            <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
+                              {f.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Page Number Font</label>
-                          <select
-                            value={localConfig.pageNumberFont || "Georgia"}
-                            onChange={(e) => handleChange("pageNumberFont", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 focus:border-cyan-400 focus:outline-none cursor-pointer"
-                          >
-                            {FONT_OPTIONS.map((f) => (
-                              <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
-                                {f.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Swipe CTA Font</label>
+                        <select
+                          value={localConfig.swipeFont || "Georgia"}
+                          onChange={(e) => handleChange("swipeFont", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 focus:border-emerald-400 focus:outline-none cursor-pointer"
+                        >
+                          {FONT_OPTIONS.map((f) => (
+                            <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
+                              {f.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
 
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Swipe CTA Font</label>
-                          <select
-                            value={localConfig.swipeFont || "Georgia"}
-                            onChange={(e) => handleChange("swipeFont", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 focus:border-emerald-400 focus:outline-none cursor-pointer"
-                          >
-                            {FONT_OPTIONS.map((f) => (
-                              <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
-                                {f.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-slate-400 mb-1 font-medium">Follow CTA Font</label>
-                          <select
-                            value={localConfig.followFont || "Georgia"}
-                            onChange={(e) => handleChange("followFont", e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 focus:border-purple-400 focus:outline-none cursor-pointer"
-                          >
-                            {FONT_OPTIONS.map((f) => (
-                              <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
-                                {f.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                      <div>
+                        <label className="block text-slate-400 mb-1 font-medium">Follow CTA Font</label>
+                        <select
+                          value={localConfig.followFont || "Georgia"}
+                          onChange={(e) => handleChange("followFont", e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 focus:border-purple-400 focus:outline-none cursor-pointer"
+                        >
+                          {FONT_OPTIONS.map((f) => (
+                            <option key={f.value} value={f.value} className="bg-slate-900 text-slate-200">
+                              {f.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
+                  </div>
                 </div>
               )}
 
@@ -1689,7 +1683,7 @@ export function GlobalLayoutSettingsPage() {
                       <span>Theme, Aspect Ratio & Background Pattern</span>
                     </h2>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      Configure canvas aspect ratio, track colors, patterns, and font choices. Updates the Live Preview instantly.
+                      Configure canvas aspect ratio, collection colors, patterns, and font choices. Updates the Live Preview instantly.
                     </p>
                   </div>
 
@@ -1716,11 +1710,10 @@ export function GlobalLayoutSettingsPage() {
                           key={ratio.id}
                           type="button"
                           onClick={() => handleChange("aspectRatio", ratio.id)}
-                          className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${
-                            (localConfig.aspectRatio || "4:5") === ratio.id
-                              ? "bg-blue-600/20 border-blue-500 text-slate-100 shadow-lg shadow-blue-600/10 ring-1 ring-blue-500"
-                              : "bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200"
-                          }`}
+                          className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${(localConfig.aspectRatio || "4:5") === ratio.id
+                            ? "bg-blue-600/20 border-blue-500 text-slate-100 shadow-lg shadow-blue-600/10 ring-1 ring-blue-500"
+                            : "bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200"
+                            }`}
                         >
                           <div>
                             <div className="text-xs font-bold text-slate-100">{ratio.label}</div>
@@ -1738,12 +1731,12 @@ export function GlobalLayoutSettingsPage() {
                   <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-xl">
                     <div className="text-slate-100 font-semibold text-xs border-b border-slate-800 pb-2 flex items-center gap-2">
                       <Palette className="w-4 h-4 text-amber-400" />
-                      <span>Track Palette & Background Styles</span>
+                      <span>Collection Palette & Background Styles</span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                       <div>
-                        <label className="block text-slate-400 mb-1 font-medium">Primary Track Color</label>
+                        <label className="block text-slate-400 mb-1 font-medium">Primary Collection Color</label>
                         <div className="flex items-center gap-1.5">
                           <input
                             type="color"
@@ -1820,11 +1813,10 @@ export function GlobalLayoutSettingsPage() {
                               key={align}
                               type="button"
                               onClick={() => handleChange("textAlign", align)}
-                              className={`px-4 py-1.5 rounded-xl text-xs font-semibold capitalize border transition-all ${
-                                localConfig.textAlign === align
-                                  ? "bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-600/20"
-                                  : "bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200"
-                              }`}
+                              className={`px-4 py-1.5 rounded-xl text-xs font-semibold capitalize border transition-all ${localConfig.textAlign === align
+                                ? "bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-600/20"
+                                : "bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200"
+                                }`}
                             >
                               {align} Align
                             </button>
@@ -1838,11 +1830,10 @@ export function GlobalLayoutSettingsPage() {
                       <button
                         type="button"
                         onClick={() => handleChange("snapToGuides", !localConfig.snapToGuides)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
-                          localConfig.snapToGuides
-                            ? "bg-blue-600 text-white border-blue-500"
-                            : "bg-slate-950 text-slate-400 border-slate-800"
-                        }`}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${localConfig.snapToGuides
+                          ? "bg-blue-600 text-white border-blue-500"
+                          : "bg-slate-950 text-slate-400 border-slate-800"
+                          }`}
                       >
                         {localConfig.snapToGuides ? "Snap ON" : "Snap OFF"}
                       </button>

@@ -13,7 +13,7 @@ export default function WorkspaceLayout() {
     initializeTheme();
   }, [initAuth, initializeTheme]);
 
-  // All workspace views (Projects, Canvas Editor, Content Management, Tracks) share the unified Corporate Modern shell
+  // All workspace views (Projects, Canvas Editor, Content Management, Collections) share the unified Corporate Modern shell
   return (
     <div className="h-screen flex w-full bg-[#f8fafc] dark:bg-[#0f1117] text-gray-900 dark:text-slate-100 font-sans overflow-hidden">
       <WorkspaceSidebar />

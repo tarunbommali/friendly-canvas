@@ -9,12 +9,12 @@ import MemberManagementPage from './workspace/pages/MemberManagementPage';
 import RoleMatrixPage from './workspace/pages/RoleMatrixPage';
 import AuthLoginPage from './workspace/pages/AuthLoginPage';
 
-// Track Content Domain
-import ProjectOverviewPage from './projects/track-content/pages/ProjectOverviewPage';
-import TrackDetailPage from './projects/track-content/pages/TrackDetailPage';
-import ContentManagementPage from './projects/track-content/pages/ContentManagementPage';
-import DesignSystemPage from './projects/track-content/pages/DesignSystemPage';
-import NotFoundPage from './projects/track-content/pages/NotFoundPage';
+// Collection Content Domain
+import ProjectOverviewPage from './projects/collection-content/pages/ProjectOverviewPage';
+import CollectionDetailPage from './projects/collection-content/pages/CollectionDetailPage';
+import ContentManagementPage from './projects/collection-content/pages/ContentManagementPage';
+import DesignSystemPage from './projects/collection-content/pages/DesignSystemPage';
+import NotFoundPage from './projects/collection-content/pages/NotFoundPage';
 
 // Carousel Canvas Editor Domain
 import CarouselBuilderPage from './projects/carousel-editor/pages/CarouselBuilderPage';
@@ -63,22 +63,22 @@ export const router = createBrowserRouter([
       },
       // Canvas Studio Routes
       {
-        path: 'design/track/:trackId/post/:postId',
+        path: 'design/collection/:collectionId/post/:postId',
         element: <CarouselBuilderPage />,
         errorElement: <ErrorBoundary />,
       },
       {
-        path: 'design/track/:trackId/post/:postId/settings',
+        path: 'design/collection/:collectionId/post/:postId/settings',
         element: <GlobalLayoutSettingsPage />,
         errorElement: <ErrorBoundary />,
       },
       {
-        path: ':projectSlug/design/track/:trackId/post/:postId',
+        path: ':projectSlug/design/collection/:collectionId/post/:postId',
         element: <CarouselBuilderPage />,
         errorElement: <ErrorBoundary />,
       },
       {
-        path: ':projectSlug/design/track/:trackId/post/:postId/settings',
+        path: ':projectSlug/design/collection/:collectionId/post/:postId/settings',
         element: <GlobalLayoutSettingsPage />,
         errorElement: <ErrorBoundary />,
       },
@@ -86,7 +86,7 @@ export const router = createBrowserRouter([
         path: ':projectSlug/carousel-design',
         element: <DesignSystemPage />,
       },
-      // Track Content Hierarchy Routes
+      // Collection Content Hierarchy Routes
       {
         path: ':projectSlug/content',
         errorElement: <ErrorBoundary />,
@@ -96,11 +96,11 @@ export const router = createBrowserRouter([
             element: <ProjectOverviewPage />,
           },
           {
-            path: 'track/:trackId',
-            element: <TrackDetailPage />,
+            path: 'collection/:collectionId',
+            element: <CollectionDetailPage />,
           },
           {
-            path: 'track/:trackId/post/:postId',
+            path: 'collection/:collectionId/post/:postId',
             element: <ContentManagementPage />,
           },
         ],

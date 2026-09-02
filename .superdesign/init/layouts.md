@@ -2,7 +2,7 @@
 
 ## App Shell: WorkspaceLayout
 - **File**: `src/workspace/WorkspaceLayout.jsx`
-- **Description**: Root layout for all routes. Conditionally renders Navbar, TrackSidebar, BreadcrumbNav, and Toast. Passes data context to all child pages via React Router `<Outlet context>`.
+- **Description**: Root layout for all routes. Conditionally renders Navbar, Collectionsidebar, BreadcrumbNav, and Toast. Passes data context to all child pages via React Router `<Outlet context>`.
 
 ```jsx
 // src/workspace/WorkspaceLayout.jsx
@@ -11,8 +11,8 @@ import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-
 import Navbar from './Navbar'
 import BreadcrumbNav from './BreadcrumbNav'
 import Toast from './Toast'
-import TrackSidebar from '../projects/track-content/components/TrackSidebar'
-import { useTrackData } from '../projects/track-content/hooks/useTrackData'
+import Collectionsidebar from '../projects/collection-content/components/Collectionsidebar'
+import { useTrackData } from '../projects/collection-content/hooks/useTrackData'
 
 export default function WorkspaceLayout() {
   const location = useLocation()
@@ -25,7 +25,7 @@ export default function WorkspaceLayout() {
   const shouldShowSidebar = useMemo(() => {
     if (location.pathname.endsWith('/edit') || location.pathname.includes('/content')) return false
     return (
-      location.pathname.startsWith('/track') ||
+      location.pathname.startsWith('/collection') ||
       location.pathname.includes('carousel-design') ||
       location.pathname === '/system-design' ||
       location.pathname === '/design-system'
@@ -42,20 +42,20 @@ export default function WorkspaceLayout() {
       )}
       <div className="flex flex-1 relative">
         {shouldShowSidebar && (
-          <TrackSidebar
-            tracks={tracks} trackPalettes={trackPalettes}
-            activeTrack={activeTrack} activePost={activePost}
-            onSelectTrack={handleSelectTrack} onSelectPost={handleSelectPost}
-            postsByTrack={postsByTrack}
+          <Collectionsidebar
+            Collections={Collections} collectionPalettes={collectionPalettes}
+            activeCollection={activeCollection} activePost={activePost}
+            onSelectCollection={handleSelectTrack} onSelectPost={handleSelectPost}
+            postsByCollection={postsByCollection}
             isCollapsed={isSidebarCollapsed}
             onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
           />
         )}
         <main className={`flex-1 min-w-0 w-full ${isBuilderPage || isCreatePostPage ? 'p-0 max-w-none' : shouldShowSidebar ? 'p-4 md:p-8 max-w-7xl mx-auto' : 'p-4 md:p-8 max-w-6xl mx-auto'}`}>
           {!isBuilderPage && !isContentManagementPage && !isCreatePostPage && (
-            <BreadcrumbNav tracks={tracks} trackPalettes={trackPalettes} activeTrack={activeTrack} postsByTrack={postsByTrack} />
+            <BreadcrumbNav Collections={Collections} collectionPalettes={collectionPalettes} activeCollection={activeCollection} postsByCollection={postsByCollection} />
           )}
-          <Outlet context={{ activeTrack, currentTrackIndex, currentTrackPosts, trackPalettes, posts, postsByTrack, tracks, chapterCovers, designSystem, visualGlossary, onCopy, onSelectTrack, onSelectPost }} />
+          <Outlet context={{ activeCollection, currentTrackIndex, currentTrackPosts, collectionPalettes, posts, postsByCollection, Collections, chapterCovers, designSystem, visualGlossary, onCopy, onSelectCollection, onSelectPost }} />
         </main>
       </div>
       <Toast toast={clipboardStatus.type ? clipboardStatus : null} onClose={resetStatus} />
@@ -87,7 +87,7 @@ export default function WorkspaceLayout() {
   <div className="flex-1 max-w-lg mx-auto">
     <div className="relative flex items-center w-full">
       <Search className="w-4 h-4 absolute left-3 text-slate-400 pointer-events-none" />
-      <input type="text" className="w-full bg-[#1a1e2a] hover:bg-[#222736] focus:bg-[#222736] text-slate-200 text-xs md:text-sm pl-9 pr-7 py-1.5 rounded-lg border border-white/10 focus:border-cyan-400/60 focus:outline-none transition-all placeholder:text-slate-500 font-sans" placeholder="Search tracks, topics, slides…" />
+      <input type="text" className="w-full bg-[#1a1e2a] hover:bg-[#222736] focus:bg-[#222736] text-slate-200 text-xs md:text-sm pl-9 pr-7 py-1.5 rounded-lg border border-white/10 focus:border-cyan-400/60 focus:outline-none transition-all placeholder:text-slate-500 font-sans" placeholder="Search Collections, topics, slides…" />
     </div>
   </div>
   {/* Right: Actions */}

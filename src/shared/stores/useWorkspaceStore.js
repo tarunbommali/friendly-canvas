@@ -4,11 +4,8 @@ import { contentApi } from '../../infrastructure/api/contentApi';
 
 export const useWorkspaceStore = create((set, get) => ({
   projects: [],
-  activeProject: null,
-  tracks: [],
-  activeTrack: null,
+  collections: [],
   posts: [],
-  activePost: null,
   isLoading: false,
   error: null,
 
@@ -42,7 +39,6 @@ export const useWorkspaceStore = create((set, get) => ({
       await workspaceApi.deleteProject(projectId);
       set((state) => ({
         projects: state.projects.filter((p) => p._id !== projectId),
-        activeProject: state.activeProject?._id === projectId ? null : state.activeProject,
       }));
     } catch (err) {
       set({ error: err.message });
@@ -65,36 +61,36 @@ export const useWorkspaceStore = create((set, get) => ({
     }
   },
 
-  // Tracks
-  loadTracks: async (projectId) => {
+  // Collections (formerly Collections)
+  loadCollections: async (projectId) => {
     if (!projectId) return;
     set({ isLoading: true, error: null });
     try {
-      const tracks = await contentApi.getTracks(projectId);
-      set({ tracks, isLoading: false });
-      return tracks;
+      const collections = await contentApi.getCollections(projectId);
+      set({ collections, isLoading: false });
+      return collections;
     } catch (err) {
       set({ error: err.message, isLoading: false });
       throw err;
     }
   },
 
-  createTrack: async (projectId, trackData) => {
+  createCollection: async (projectId, collectionData) => {
     try {
-      const newTrack = await contentApi.createTrack(projectId, trackData);
-      set((state) => ({ tracks: [...state.tracks, newTrack] }));
-      return newTrack;
+      const newCollection = await contentApi.createCollection(projectId, collectionData);
+      set((state) => ({ collections: [...state.collections, newCollection] }));
+      return newCollection;
     } catch (err) {
       set({ error: err.message });
       throw err;
     }
   },
 
-  updateTrack: async (trackId, trackData) => {
+  updateCollection: async (collectionId, collectionData) => {
     try {
-      const updated = await contentApi.updateTrack(trackId, trackData);
+      const updated = await contentApi.updateCollection(collectionId, collectionData);
       set((state) => ({
-        tracks: state.tracks.map((t) => (t._id === trackId ? { ...t, ...updated } : t)),
+        collections: state.collections.map((c) => (c._id === collectionId ? { ...c, ...updated } : c)),
       }));
       return updated;
     } catch (err) {
@@ -103,11 +99,11 @@ export const useWorkspaceStore = create((set, get) => ({
     }
   },
 
-  deleteTrack: async (trackId) => {
+  deleteCollection: async (collectionId) => {
     try {
-      await contentApi.deleteTrack(trackId);
+      await contentApi.deleteCollection(collectionId);
       set((state) => ({
-        tracks: state.tracks.filter((t) => t._id !== trackId),
+        collections: state.collections.filter((c) => c._id !== collectionId),
       }));
     } catch (err) {
       set({ error: err.message });
@@ -115,25 +111,25 @@ export const useWorkspaceStore = create((set, get) => ({
     }
   },
 
-  reorderTracks: async (projectId, orderedIds) => {
-    const prev = get().tracks;
-    const trackMap = new Map(prev.map((t) => [t._id, t]));
-    const reordered = orderedIds.map((id, idx) => ({ ...trackMap.get(id), sortOrder: idx })).filter(Boolean);
-    set({ tracks: reordered });
+  reorderCollections: async (projectId, orderedIds) => {
+    const prev = get().collections;
+    const collectionMap = new Map(prev.map((c) => [c._id, c]));
+    const reordered = orderedIds.map((id, idx) => ({ ...collectionMap.get(id), sortOrder: idx })).filter(Boolean);
+    set({ collections: reordered });
 
     try {
-      await contentApi.reorderTracks(projectId, orderedIds);
+      await contentApi.reorderCollections(projectId, orderedIds);
     } catch (err) {
-      set({ tracks: prev, error: err.message });
+      set({ collections: prev, error: err.message });
     }
   },
 
   // Posts
-  loadPosts: async (trackId) => {
-    if (!trackId) return;
+  loadPosts: async (collectionId) => {
+    if (!collectionId) return;
     set({ isLoading: true, error: null });
     try {
-      const posts = await contentApi.getPosts(trackId);
+      const posts = await contentApi.getPosts(collectionId);
       set({ posts, isLoading: false });
       return posts;
     } catch (err) {

@@ -7,7 +7,7 @@ const User = require('./models/User');
 const Workspace = require('./models/Workspace');
 const WorkspaceMember = require('./models/WorkspaceMember');
 const Project = require('./models/Project');
-const Track = require('./models/Track');
+const Collection = require('./models/Collection');
 const Post = require('./models/Post');
 
 function loadDataset() {
@@ -37,7 +37,7 @@ async function seed() {
   await Workspace.deleteMany({});
   await WorkspaceMember.deleteMany({});
   await Project.deleteMany({});
-  await Track.deleteMany({});
+  await Collection.deleteMany({});
   await Post.deleteMany({});
 
   console.log('Seeding default Admin User...');
@@ -71,15 +71,15 @@ async function seed() {
     createdBy: user._id,
   });
 
-  const trackIdMap = {};
+  const collectionIdMap = {};
   let order = 0;
 
-  console.log('Seeding tracks for project...');
-  for (const [trackKey, meta] of Object.entries(data.trackPalettes || {})) {
-    const cover = (data.chapterCovers || []).find((c) => c.trackId === trackKey);
-    const track = await Track.create({
+  console.log('Seeding Collections for project...');
+  for (const [collectionKey, meta] of Object.entries(data.collectionPalettes || {})) {
+    const cover = (data.chapterCovers || []).find((c) => c.collectionId === collectionKey);
+    const coll = await Collection.create({
       project: project._id,
-      trackKey,
+      collectionKey,
       name: meta.name,
       palette: {
         name: meta.palette,
@@ -93,24 +93,24 @@ async function seed() {
       },
       sortOrder: order++,
     });
-    trackIdMap[trackKey] = track._id;
+    collectionIdMap[collectionKey] = coll._id;
   }
-  console.log(`Seeded ${Object.keys(trackIdMap).length} tracks.`);
+  console.log(`Seeded ${Object.keys(collectionIdMap).length} Collections.`);
 
   console.log('Seeding posts & slides with canvas isolation...');
   let postCount = 0;
   let postOrder = 0;
 
   for (const post of data.posts || []) {
-    const trackObjectId = trackIdMap[post.trackId];
-    if (!trackObjectId) {
-      console.warn(`Skipping post ${post.id}: track ${post.trackId} not found in map.`);
+    const collectionObjectId = collectionIdMap[post.collectionId];
+    if (!collectionObjectId) {
+      console.warn(`Skipping post ${post.id}: collection ${post.collectionId} not found in map.`);
       continue;
     }
 
     await Post.create({
       project: project._id,
-      track: trackObjectId,
+      collection: collectionObjectId,
       externalId: post.id,
       title: post.title,
       postNo: post.postNo,

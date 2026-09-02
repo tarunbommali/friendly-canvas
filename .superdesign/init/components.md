@@ -36,7 +36,7 @@ export default function Navbar({ searchTerm = '', setSearchTerm, currentPath = '
       <div className="flex-1 max-w-lg mx-auto">
         <div className="relative flex items-center w-full">
           <Search className="w-4 h-4 absolute left-3 text-slate-400 pointer-events-none" />
-          <input type="text" className="w-full bg-[#1a1e2a] hover:bg-[#222736] focus:bg-[#222736] text-slate-200 text-xs md:text-sm pl-9 pr-7 py-1.5 rounded-lg border border-white/10 focus:border-cyan-400/60 focus:outline-none transition-all placeholder:text-slate-500 font-sans" placeholder="Search tracks, topics, slides…" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          <input type="text" className="w-full bg-[#1a1e2a] hover:bg-[#222736] focus:bg-[#222736] text-slate-200 text-xs md:text-sm pl-9 pr-7 py-1.5 rounded-lg border border-white/10 focus:border-cyan-400/60 focus:outline-none transition-all placeholder:text-slate-500 font-sans" placeholder="Search Collections, topics, slides…" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
       </div>
       <div className="hidden md:flex items-center gap-2">

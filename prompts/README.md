@@ -1,6 +1,6 @@
 # SWE Notebook — Knowledge Base & Prompt Engineering Suite
 
-Welcome to the **SWE Notebook Prompt Engineering & Knowledge Base Suite**. This repository contains the complete design DNA, visual composition rules, reference guides, Custom GPT system prompts, and knowledge base files for generating world-class Instagram carousels (Tracks 1 to 21: *Zero to Hero*).
+Welcome to the **SWE Notebook Prompt Engineering & Knowledge Base Suite**. This repository contains the complete design DNA, visual composition rules, reference guides, Custom GPT system prompts, and knowledge base files for generating world-class Instagram carousels (Collections 1 to 21: *Zero to Hero*).
 
 ---
 
@@ -23,7 +23,7 @@ prompts/
 ├── reference/                         # Design assets & technical definitions
 │   ├── STYLE_GUIDE.md                 # UI elements, highlighters, code cards, terminal windows
 │   ├── VISUAL_GLOSSARY.md             # Standard technical symbols (CPU, Memory, Packet, DB, Model, Agent)
-│   ├── PALETTES.md                    # Exact hex colors (Primary, Accent, LightBg) for all 21 tracks
+│   ├── PALETTES.md                    # Exact hex colors (Primary, Accent, LightBg) for all 21 Collections
 │   └── PROMPT_LIBRARY.md              # Production-ready modular prompt snippets
 │
 └── customgpts/                        # Complete Custom GPT system prompts & instructions

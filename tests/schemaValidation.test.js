@@ -27,7 +27,7 @@ test('Canonical Schema: data.json Posts conform to v1.1.0 post contract', () => 
     )
     const schemaVersion = post.schemaVersion || '1.0.0'
     assert.ok(schemaVersion === '1.1.0' || schemaVersion === '1.0.0')
-    assert.ok(post.trackId || post.track?.id || post.TrackNo || post.Track, 'Track ID missing')
+    assert.ok(post.collectionId, 'Collection ID missing')
     assert.ok((post.slides || post.Slides).length > 0, 'Post must contain at least one slide')
   })
 })

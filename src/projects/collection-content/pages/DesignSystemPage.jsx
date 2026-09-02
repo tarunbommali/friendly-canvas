@@ -19,13 +19,13 @@ const CANVAS_SPEC = {
   'Font — Body': 'Inter / Clean Sans-Serif, pen underlines',
   'Font — Code / Tag': 'JetBrains Mono / Monospace',
   'Card Corners': '16px border-radius',
-  'Top-left chrome': 'Track number (T01) — monospace bold',
+  'Top-left chrome': 'Collection number (C01) — monospace bold',
   'Bottom-left chrome': 'Slide counter (1 / N) — monospace muted',
   'Bottom-right chrome': 'Swipe → — dark bold',
 }
 
 export default function DesignSystemPage() {
-  const { designSystem = {}, trackPalettes = {}, onCopy } = useOutletContext()
+  const { designSystem = {}, collectionPalettes = {}, onCopy } = useOutletContext()
   const { globalBg, setGlobalBg } = useGlobalBackgroundStyle()
 
   const typography = designSystem.Typography || {}
@@ -36,7 +36,7 @@ export default function DesignSystemPage() {
     onCopy?.(hex, `${label} Copied!`, hex)
   }
 
-  const sampleTrackColor = { primary: '#1E5FA8', accent: '#A9D0F5' }
+  const sampleCollectionColor = { primary: '#1E5FA8', accent: '#A9D0F5' }
 
   return (
     <div className="max-w-6xl mx-auto flex flex-col gap-8 pb-16 font-sans select-none">
@@ -53,21 +53,21 @@ export default function DesignSystemPage() {
             <Palette className="w-7 h-7 text-cyan-400" /> Carousel Design & Configuration
           </h1>
           <p className="text-xs md:text-sm text-slate-400 max-w-xl leading-relaxed m-0 font-sans">
-            SWE.notebook visual language — track color palettes, project background patterns, typography, canvas specs, and storage overrides.
+            SWE.notebook visual language — collection color palettes, project background patterns, typography, canvas specs, and storage overrides.
           </p>
         </div>
         <Link
-          to="/track/1/post/1"
+          to="/collection/1/post/1"
           className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 text-xs font-semibold no-underline transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer"
         >
-          <ArrowLeft className="w-3.5 h-3.5" /> Back to Tracks
+          <ArrowLeft className="w-3.5 h-3.5" /> Back to Collections
         </Link>
       </div>
 
       {/* Tabs */}
       <div className="flex items-center gap-1.5 border-b border-white/10 pb-0 overflow-x-auto">
         {[
-          { id: 'palettes', label: 'Track Palettes', icon: Palette },
+          { id: 'palettes', label: 'Collection Palettes', icon: Palette },
           { id: 'backgrounds', label: 'Project Backgrounds', icon: ImageIcon },
           { id: 'canvas', label: 'Canvas Spec', icon: Sliders },
           { id: 'typography', label: 'Typography', icon: Type },
@@ -77,11 +77,10 @@ export default function DesignSystemPage() {
           return (
             <button
               key={t.id}
-              className={`px-4 py-2.5 text-xs font-bold rounded-t-xl transition-all relative border-t border-x cursor-pointer flex items-center gap-1.5 ${
-                activeTab === t.id
-                  ? 'bg-[#1a1e2a] border-white/15 text-white border-b-transparent'
-                  : 'bg-transparent border-transparent text-slate-400 hover:text-slate-200'
-              }`}
+              className={`px-4 py-2.5 text-xs font-bold rounded-t-xl transition-all relative border-t border-x cursor-pointer flex items-center gap-1.5 ${activeTab === t.id
+                ? 'bg-[#1a1e2a] border-white/15 text-white border-b-transparent'
+                : 'bg-transparent border-transparent text-slate-400 hover:text-slate-200'
+                }`}
               onClick={() => setActiveTab(t.id)}
             >
               <TabIcon className="w-3.5 h-3.5" />
@@ -91,36 +90,36 @@ export default function DesignSystemPage() {
         })}
       </div>
 
-      {/* ── Track Palettes ── */}
+      {/* ── Collection Palettes ── */}
       {activeTab === 'palettes' && (
         <section className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
             <h2 className="font-serif font-bold text-2xl text-white m-0">
-              Track Color Palettes
+              Collection Color Palettes
             </h2>
             <span className="px-2.5 py-0.5 rounded-full bg-purple-500/15 border border-purple-400/30 text-purple-300 font-mono text-xs font-bold">
-              {Object.keys(trackPalettes).length} tracks
+              {Object.keys(collectionPalettes).length} Collections
             </span>
           </div>
           <p className="text-xs text-slate-400 m-0">
-            Click a swatch to copy the HEX value. Saturation and lightness bands are harmonized across all 21 tracks.
+            Click a swatch to copy the HEX value. Saturation and lightness bands are harmonized across all 21 Collections.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
-            {Object.entries(trackPalettes).map(([trackName, palette], idx) => {
-              const trackNum = String(idx + 1).padStart(2, '0')
+            {Object.entries(collectionPalettes).map(([collectionName, palette], idx) => {
+              const collectionNum = String(idx + 1).padStart(2, '0')
               return (
                 <div
-                  key={trackName}
+                  key={collectionName}
                   className="group rounded-2xl bg-[#1a1e2a] border border-white/10 p-4 flex flex-col justify-between gap-3 shadow-md hover:border-white/20 transition-all"
                 >
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center justify-between text-[11px] font-mono font-bold">
-                      <span className="text-cyan-400">T{trackNum}</span>
+                      <span className="text-cyan-400">C{collectionNum}</span>
                       <span className="text-slate-400 uppercase">{palette.palette || 'Custom'}</span>
                     </div>
                     <div className="font-serif font-bold text-sm text-white line-clamp-1">
-                      {trackName.replace(/^Track \d+ — /, '')}
+                      {collectionName.replace(/^Collection \d+ — /, '')}
                     </div>
                   </div>
 
@@ -128,7 +127,7 @@ export default function DesignSystemPage() {
                     <button
                       className="flex flex-col gap-1 p-2 rounded-xl text-left border border-white/10 hover:border-white/30 transition-all cursor-pointer"
                       style={{ backgroundColor: palette.primary }}
-                      onClick={() => handleCopyHex(palette.primary, `Track ${trackNum} Primary`)}
+                      onClick={() => handleCopyHex(palette.primary, `Collection ${collectionNum} Primary`)}
                       title="Click to copy Primary color HEX"
                     >
                       <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/80 drop-shadow-xs">
@@ -143,7 +142,7 @@ export default function DesignSystemPage() {
                     <button
                       className="flex flex-col gap-1 p-2 rounded-xl text-left border border-white/10 hover:border-white/30 transition-all cursor-pointer"
                       style={{ backgroundColor: palette.accent }}
-                      onClick={() => handleCopyHex(palette.accent, `Track ${trackNum} Accent`)}
+                      onClick={() => handleCopyHex(palette.accent, `Collection ${collectionNum} Accent`)}
                       title="Click to copy Accent color HEX"
                     >
                       <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-900/80">
@@ -203,12 +202,12 @@ export default function DesignSystemPage() {
             {/* Live Preview of Selected Project Background */}
             <div className="mt-4 pt-4 border-t border-white/10 flex flex-col md:flex-row items-center gap-6">
               <div className="w-full max-w-[300px] aspect-[4/5] bg-white text-slate-900 rounded-2xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden border border-slate-200 select-none">
-                <SlideBackground config={getBackgroundPreset(globalBg, sampleTrackColor)} seed={1} />
+                <SlideBackground config={getBackgroundPreset(globalBg, sampleCollectionColor)} seed={1} />
 
                 {/* Top header */}
                 <div className="relative z-1 flex items-center justify-between">
                   <span className="font-mono text-xs font-extrabold uppercase tracking-wider text-[#1E5FA8]">
-                    TRACK 01
+                    COLLECTION 01
                   </span>
                   <span className="flex-1 h-[2px] rounded-full bg-[#A9D0F5] opacity-80 ml-3" />
                 </div>
@@ -237,7 +236,7 @@ export default function DesignSystemPage() {
               <div className="flex-1 flex flex-col gap-3 text-xs text-slate-300">
                 <h4 className="font-serif font-bold text-lg text-white m-0">Why this matters:</h4>
                 <ul className="list-disc pl-4 space-y-1.5 text-slate-400">
-                  <li><strong>Project Consistency:</strong> Changes take effect instantly across all 21 curriculum tracks.</li>
+                  <li><strong>Project Consistency:</strong> Changes take effect instantly across all 21 curriculum Collections.</li>
                   <li><strong>Non-Destructive:</strong> Specific slides with per-slide overrides will keep their custom chosen styles.</li>
                   <li><strong>Export Ready:</strong> PNG downloads and clipboard captures render this active background accurately.</li>
                 </ul>
@@ -349,7 +348,7 @@ export default function DesignSystemPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Color Overrides:</span>
-                  <span className="text-slate-300 font-bold">{Object.keys(JSON.parse(localStorage.getItem('swe-notebook-track-colors') || '{}')).length} tracks</span>
+                  <span className="text-slate-300 font-bold">{Object.keys(JSON.parse(localStorage.getItem('swe-notebook-collection-colors') || '{}')).length} Collections</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Custom Assets:</span>
@@ -373,7 +372,7 @@ export default function DesignSystemPage() {
                   className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold transition-colors cursor-pointer"
                   onClick={() => {
                     if (confirm('Clear all color overrides?')) {
-                      localStorage.removeItem('swe-notebook-track-colors')
+                      localStorage.removeItem('swe-notebook-collection-colors')
                       window.location.reload()
                     }
                   }}
@@ -397,7 +396,7 @@ export default function DesignSystemPage() {
                   const data = {
                     globalBackground: globalBg,
                     slideOverrides: JSON.parse(localStorage.getItem('swe-notebook-slide-overrides') || '{}'),
-                    trackColors: JSON.parse(localStorage.getItem('swe-notebook-track-colors') || '{}'),
+                    collectionColors: JSON.parse(localStorage.getItem('swe-notebook-collection-colors') || '{}'),
                     slideAssets: JSON.parse(localStorage.getItem('swe-notebook-slide-assets') || '{}'),
                   }
                   onCopy?.(JSON.stringify(data, null, 2), 'Studio Config Copied!', 'Paste into a .json file to save.')

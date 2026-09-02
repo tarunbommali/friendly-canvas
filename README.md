@@ -42,19 +42,19 @@
                       │ 1. Content Management    │    │ 2. Carousel Editor       │
                       │ (/:slug/content)         │    │ (/:slug/design)          │
                       ├──────────────────────────┤    ├──────────────────────────┤
-                      │ • Tracks & Posts         │    │ • Interactive Fabric.js  │
+                      │ • Collections & Posts         │    │ • Interactive Fabric.js  │
                       │ • Headline, text &       │    │ • Live safe area guides  │
                       │   descriptionVisual      │    │ • Off-canvas AI prompt   │
                       │ • Slide storyboards      │    │ • Global layout settings │
                       └──────────────────────────┘    └──────────────────────────┘
 ```
 
-1. **Content Management (`src/projects/track-content/`)**:
-   - Manages the hierarchical curriculum structure: Tracks $\rightarrow$ Posts $\rightarrow$ Slides (`headline`, `text`, `descriptionVisual`, `imagesNeeded`).
+1. **Content Management (`src/projects/collection-content/`)**:
+   - Manages the hierarchical curriculum structure: Collections $\rightarrow$ Posts $\rightarrow$ Slides (`headline`, `text`, `descriptionVisual`, `imagesNeeded`).
    - Offers track browsing, post detail views, search, and design system documentation.
 2. **Carousel Design Editor (`src/projects/carousel-editor/`)**:
    - Interactive Fabric.js vector canvas editor for customizing slide visual elements.
-   - **`/:projectSlug/design/track/:trackId/post/:postId`**: Dynamically loads post slides, applies track color palettes, auto-positions text, and prepares PNG exports.
+   - **`/:projectSlug/design/collection/:collectionId/post/:postId`**: Dynamically loads post slides, applies track color palettes, auto-positions text, and prepares PNG exports.
    - **Global Layout & Theme Workbench (`/settings/layout`)**: 4-tab configuration panel (`positions`, `typography`, `margins`, `theme`) with real-time live preview synchronization.
 
 ---

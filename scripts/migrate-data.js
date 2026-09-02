@@ -16,11 +16,11 @@ const typography = rawDS.Typography || {
 
 const iconography =
   rawDS.Iconography ||
-  'Consistent line-art icon style, uniform stroke width, one accent color per track drawn from trackPalettes.'
+  'Consistent line-art icon style, uniform stroke width, one accent color per track drawn from collectionPalettes.'
 
 const externalAssetConvention = rawDS.ExternalAssetConvention || {
   purpose: 'Flags slides whose visualDirective calls for a real photo, not an icon/diagram.',
-  placeholderPattern: 'assets/photos/track{TT}_post{PPP}_slide{SS}.jpg',
+  placeholderPattern: 'assets/photos/collection{TT}_post{PPP}_slide{SS}.jpg',
   rule: 'Any slide without an externalAsset field uses the icon/diagram default.',
 }
 
@@ -32,14 +32,14 @@ const audioConvention = rawDS.AudioConvention || {
 const canvas = { width: 1080, height: 1350 }
 
 // 2. Track Palettes keyed by "01", "02", etc.
-const rawTrackPalettes = rawDS.TrackColorPalettes || {}
-const trackPalettes = {}
-const trackNames = Object.keys(rawTrackPalettes)
+const rawcollectionPalettes = rawDS.TrackColorPalettes || {}
+const collectionPalettes = {}
+const trackNames = Object.keys(rawcollectionPalettes)
 
 trackNames.forEach((trackName, idx) => {
-  const trackId = String(idx + 1).padStart(2, '0')
-  const entry = rawTrackPalettes[trackName] || {}
-  trackPalettes[trackId] = {
+  const collectionId = String(idx + 1).padStart(2, '0')
+  const entry = rawcollectionPalettes[trackName] || {}
+  collectionPalettes[collectionId] = {
     name: trackName,
     palette: entry.palette || entry.name || 'Default',
     primary: entry.primary || '#1E5FA8',
@@ -53,7 +53,7 @@ const visualGlossary = raw.VisualGlossary || {}
 // 4. Chapter Covers (Fixed & Standardized)
 const rawCovers = raw.ChapterCovers || []
 const chapterCovers = rawCovers.map((c, idx) => {
-  const trackId = String(idx + 1).padStart(2, '0')
+  const collectionId = String(idx + 1).padStart(2, '0')
   const trackName = trackNames[idx] || c.Track || `Track ${idx + 1}`
 
   const title = c.Title || c.CoverHeadline || trackName
@@ -62,7 +62,7 @@ const chapterCovers = rawCovers.map((c, idx) => {
   const visualDirective = c.VisualDirective || c.VisualPrompt || c.visualDirective || ''
 
   return {
-    trackId,
+    collectionId,
     title,
     coverHeadline,
     subtitle,
@@ -74,18 +74,18 @@ const chapterCovers = rawCovers.map((c, idx) => {
 const rawPosts = raw.Posts || []
 const posts = rawPosts.map((p, pIdx) => {
   // Extract track ID
-  let trackId = '01'
+  let collectionId = '01'
   if (p.track?.id) {
-    trackId = String(p.track.id).padStart(2, '0')
+    collectionId = String(p.track.id).padStart(2, '0')
   } else if (p.TrackNo) {
-    trackId = String(p.TrackNo).padStart(2, '0')
+    collectionId = String(p.TrackNo).padStart(2, '0')
   } else if (p.Track) {
     const foundIdx = trackNames.findIndex((name) => name === p.Track)
-    if (foundIdx >= 0) trackId = String(foundIdx + 1).padStart(2, '0')
+    if (foundIdx >= 0) collectionId = String(foundIdx + 1).padStart(2, '0')
   }
 
   const postNo = p.postNo || p.PostNo || pIdx + 1
-  const id = p.id || `post_t${trackId}_p${String(postNo).padStart(2, '0')}`
+  const id = p.id || `post_t${collectionId}_p${String(postNo).padStart(2, '0')}`
   const title = p.title || p.PostTitle || `Post ${postNo}`
   const isFirstPostInTrack = Boolean(p.isFirstPostInTrack ?? p.IsFirstPostInTrack ?? postNo === 1)
 
@@ -97,8 +97,8 @@ const posts = rawPosts.map((p, pIdx) => {
     searchTerms: Array.isArray(rawAudio.SearchTerms)
       ? rawAudio.SearchTerms
       : Array.isArray(rawAudio.searchTerms)
-      ? rawAudio.searchTerms
-      : ['tech education', 'coding carousel'],
+        ? rawAudio.searchTerms
+        : ['tech education', 'coding carousel'],
     note: rawAudio.Note || rawAudio.note || 'Pick a currently trending sound at time of posting.',
   }
 
@@ -114,7 +114,7 @@ const posts = rawPosts.map((p, pIdx) => {
   const rawSlides = p.slides || p.Slides || []
   const slides = rawSlides.map((s, sIdx) => {
     const slideNo = s.slideNo || s.SlideNo || sIdx + 1
-    const slideId = s.id || `slide_t${trackId}_p${String(postNo).padStart(2, '0')}_s${String(slideNo).padStart(2, '0')}`
+    const slideId = s.id || `slide_t${collectionId}_p${String(postNo).padStart(2, '0')}_s${String(slideNo).padStart(2, '0')}`
     const rawLayout = s.layout?.id || s.Layout || 'concept-explain'
 
     const slideContent = s.content || {}
@@ -151,7 +151,7 @@ const posts = rawPosts.map((p, pIdx) => {
     id,
     schemaVersion: '1.1.0',
     title,
-    trackId,
+    collectionId,
     postNo,
     isFirstPostInTrack,
     metadata,
@@ -172,7 +172,7 @@ const canonicalData = {
     canvas,
   },
   visualGlossary,
-  trackPalettes,
+  collectionPalettes,
   chapterCovers,
   posts,
 }
@@ -183,7 +183,7 @@ const outputJson = JSON.stringify(canonicalData, null, 2)
 const destPaths = [
   path.resolve('data.json'),
   path.resolve('src/shared/data/data.json'),
-  path.resolve('src/projects/track-content/data.json'),
+  path.resolve('src/projects/collection-content/data.json'),
 ]
 
 destPaths.forEach((dest) => {
@@ -193,6 +193,6 @@ destPaths.forEach((dest) => {
 })
 
 console.log(`Migration complete!`)
-console.log(`Tracks: ${Object.keys(trackPalettes).length}`)
+console.log(`Collections: ${Object.keys(collectionPalettes).length}`)
 console.log(`Chapter Covers: ${chapterCovers.length}`)
 console.log(`Posts: ${posts.length}`)

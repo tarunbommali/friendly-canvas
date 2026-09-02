@@ -4,16 +4,16 @@ function sortAndFormatData(filePath) {
   const raw = fs.readFileSync(filePath, 'utf8');
   const data = JSON.parse(raw);
 
-  // 1. Sort chapterCovers by trackId ("01", "02", ... "21")
+  // 1. Sort chapterCovers by collectionId ("01", "02", ... "21")
   if (Array.isArray(data.chapterCovers)) {
-    data.chapterCovers.sort((a, b) => parseInt(a.trackId, 10) - parseInt(b.trackId, 10));
+    data.chapterCovers.sort((a, b) => parseInt(a.collectionId, 10) - parseInt(b.collectionId, 10));
   }
 
   // 2. Sort posts by track and post number
   if (Array.isArray(data.posts)) {
     data.posts.sort((a, b) => {
-      const trackA = parseInt(a.trackId, 10) || 0;
-      const trackB = parseInt(b.trackId, 10) || 0;
+      const trackA = parseInt(a.collectionId, 10) || 0;
+      const trackB = parseInt(b.collectionId, 10) || 0;
       if (trackA !== trackB) return trackA - trackB;
 
       const postNoA = typeof a.postNo === 'number' ? a.postNo : parseInt((a.id || '').match(/\d+$/)?.[0] || '0', 10);
@@ -35,21 +35,21 @@ function sortAndFormatData(filePath) {
     }
   }
 
-  // Generate sorted trackPalettes keys "01" -> "21"
-  const paletteKeys = Object.keys(data.trackPalettes || {}).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+  // Generate sorted collectionPalettes keys "01" -> "21"
+  const paletteKeys = Object.keys(data.collectionPalettes || {}).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
 
-  const trackPalettesLines = [];
-  if (data.trackPalettes) {
-    trackPalettesLines.push('  "trackPalettes": {');
+  const collectionPalettesLines = [];
+  if (data.collectionPalettes) {
+    collectionPalettesLines.push('  "collectionPalettes": {');
     paletteKeys.forEach((key, idx) => {
       const isLast = idx === paletteKeys.length - 1;
-      const formattedObj = JSON.stringify(data.trackPalettes[key], null, 4)
+      const formattedObj = JSON.stringify(data.collectionPalettes[key], null, 4)
         .split('\n')
         .map((l, i) => (i === 0 ? `    "${key}": ${l}` : `    ${l}`))
         .join('\n');
-      trackPalettesLines.push(formattedObj + (isLast ? '' : ','));
+      collectionPalettesLines.push(formattedObj + (isLast ? '' : ','));
     });
-    trackPalettesLines.push('  },');
+    collectionPalettesLines.push('  },');
   }
 
   // Build root object fields in clean order
@@ -59,8 +59,8 @@ function sortAndFormatData(filePath) {
   if (data.canvas !== undefined) {
     rootFields.push(`  "canvas": ${JSON.stringify(data.canvas, null, 2).split('\n').map((l, i) => i === 0 ? l : `  ${l}`).join('\n')},`);
   }
-  if (trackPalettesLines.length > 0) {
-    rootFields.push(...trackPalettesLines);
+  if (collectionPalettesLines.length > 0) {
+    rootFields.push(...collectionPalettesLines);
   }
   if (data.chapterCovers !== undefined) {
     rootFields.push(`  "chapterCovers": ${JSON.stringify(data.chapterCovers, null, 2).split('\n').map((l, i) => i === 0 ? l : `  ${l}`).join('\n')},`);
@@ -78,6 +78,6 @@ sortAndFormatData('./data.json');
 if (fs.existsSync('./src/shared/data/data.json')) {
   sortAndFormatData('./src/shared/data/data.json');
 }
-if (fs.existsSync('./src/projects/track-content/data.json')) {
-  sortAndFormatData('./src/projects/track-content/data.json');
+if (fs.existsSync('./src/projects/collection-content/data.json')) {
+  sortAndFormatData('./src/projects/collection-content/data.json');
 }

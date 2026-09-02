@@ -17,8 +17,8 @@
  *    context, meant to look like an actual phone photo, not AI art.
  *
  * data.json is the source of truth for both. This file supports the
- * REAL schema shipped in data.json (trackId, headline/text/vibe,
- * trackPalettes keyed by id, lowercase chapterCovers) while staying
+ * REAL schema shipped in data.json (collectionId, headline/text/vibe,
+ * collectionPalettes keyed by id, lowercase chapterCovers) while staying
  * backward-compatible with the earlier PascalCase field names.
  */
 
@@ -141,11 +141,11 @@ function getLayoutRegistry(dataJson) {
   return registry && typeof registry === 'object' ? registry : {};
 }
 
-// data.json ships trackPalettes keyed by trackId (e.g. "01"). Older
-// contract used DesignSystem.TrackColorPalettes keyed by track name.
+// data.json ships collectionPalettes keyed by collectionId (e.g. "01"). Older
+// contract used DesignSystem.TrackColorPalettes keyed by collection name.
 // Support both.
-function getTrackPalettes(dataJson) {
-  return dataJson?.trackPalettes || getDesignSystem(dataJson).TrackColorPalettes || {};
+function getcollectionPalettes(dataJson) {
+  return dataJson?.collectionPalettes || getDesignSystem(dataJson).TrackColorPalettes || {};
 }
 
 function getPostSlides(post) {
@@ -188,20 +188,20 @@ function getSlideByLayout(post, layoutId) {
   return getPostSlides(post).find((s) => getSlideLayout(s) === layoutId);
 }
 
-// real data.json identifies a post's track only by id ("01", "10", ...).
-function getTrackId(post) {
-  return post?.trackId ?? post?.TrackId ?? post?.track?.id ?? null;
+// real data.json identifies a post's collection by id ("01", "10", ...).
+function getCollectionId(post) {
+  return post?.collectionId ?? null;
 }
 
-function getTrackName(post, dataJson) {
-  const explicit = post?.Track || post?.track?.name || post?.trackName;
-  if (explicit) return explicit;
+function getCollectionName(post, dataJson) {
+  const explicit = post?.collectionName || post?.collection?.name || post?.collection;
+  if (explicit && typeof explicit === 'string') return explicit;
 
-  const trackId = getTrackId(post);
-  if (trackId == null) return '';
+  const collectionId = getCollectionId(post);
+  if (collectionId == null) return '';
 
-  const entry = getTrackPalettes(dataJson)[trackId];
-  return entry?.name || `Track ${trackId}`;
+  const entry = getcollectionPalettes(dataJson)[collectionId];
+  return entry?.name || `Collection ${collectionId}`;
 }
 
 function getPostTitle(post) {
@@ -226,11 +226,11 @@ function resolveTrackPalette(post, explicitTrackColor, dataJson) {
     };
   }
 
-  const palettes = getTrackPalettes(dataJson);
+  const palettes = getcollectionPalettes(dataJson);
 
-  // Real schema: lookup by trackId ("01", "10", ...).
-  const trackId = getTrackId(post);
-  const byId = trackId != null ? palettes[trackId] : null;
+  // Real schema: lookup by collectionId ("01", "10", ...).
+  const collectionId = getCollectionId(post);
+  const byId = collectionId != null ? palettes[collectionId] : null;
   if (byId) {
     return {
       palette: byId.palette || 'Editorial',
@@ -239,9 +239,9 @@ function resolveTrackPalette(post, explicitTrackColor, dataJson) {
     };
   }
 
-  // Legacy schema: lookup by track name.
-  const trackName = getTrackName(post, dataJson);
-  const byName = palettes[trackName];
+  // Lookup by collection name.
+  const collectionName = getCollectionName(post, dataJson);
+  const byName = palettes[collectionName];
   if (byName) {
     return {
       palette: byName.palette || 'Editorial',
@@ -362,8 +362,8 @@ RUBBER-STAMP FIELD-NOTE TREATMENT:
 
 COLOR:
 - Ink: #111827.
-- One track primary ink.
-- One track accent ink.
+- One collection primary ink.
+- One collection accent ink.
 - Optional neutral only when required.
 - No rainbow palette.
 - No gradients.
@@ -434,7 +434,7 @@ SUBJECT HANDLING (avoids the "AI look"):
 
 COLOR:
 - Natural, believable color grading.
-- The track's primary/accent color may appear ONLY as a real object in the scene (sticky note, mug,
+- The collection's primary/accent color may appear ONLY as a real object in the scene (sticky note, mug,
   phone case, notebook cover, monitor bezel light) — never as a graphic overlay, filter, or background wash.
 - No neon glow, no gradient overlay, no artificial color-grade filter.
 
@@ -688,10 +688,10 @@ export function normalizeSWEPost(post, dataJson = null) {
   const palette = resolveTrackPalette(post, null, dataJson);
 
   return {
-    track: getTrackName(post, dataJson),
+    collection: getCollectionName(post, dataJson),
     postNo: post?.PostNo || post?.postNo || null,
     title: getPostTitle(post),
-    isFirstPostInTrack: post?.IsFirstPostInTrack ?? post?.isFirstPostInTrack ?? false,
+    isFirstPostInCollection: post?.IsFirstPostInCollection ?? post?.isFirstPostInCollection ?? false,
     palette,
     context: post?.Context || '',
     description: post?.Description || post?.description || '',
@@ -741,10 +741,10 @@ Do not invent a different topic or replace the supplied VisualDirective.
 POST:
 "${getPostTitle(post)}"
 
-TRACK:
-"${getTrackName(post, dataJson)}"
+COLLECTION:
+"${getCollectionName(post, dataJson)}"
 
-TRACK PALETTE:
+COLLECTION PALETTE:
 - Palette: ${palette.palette}
 - Primary: ${palette.primary}
 - Accent: ${palette.accent}
@@ -848,7 +848,7 @@ FINAL QUALITY CHECK:
 4. Does it obey the supplied layout contract?
 5. Is the canonical glossary language respected where applicable?
 6. Does it look genuinely carved and stamped?
-7. Are colors restrained to the track palette?
+7. Are colors restrained to the collection palette?
 8. Is the concept recognizable without the slide text?
 9. Is there no paper/background/card/frame?
 10. Is it completely free of 3D/rendered aesthetics?
@@ -875,8 +875,8 @@ POST:
 POST NUMBER:
 ${normalized.postNo ?? 'n/a'}
 
-TRACK:
-"${normalized.track}"
+COLLECTION:
+"${normalized.collection}"
 
 PALETTE:
 - ${palette.palette}
@@ -900,7 +900,7 @@ CAROUSEL CONTINUITY:
 - Reuse canonical glossary forms consistently.
 - Reuse process/arrow language when process slides recur.
 - Reuse comparison logic when comparison slides recur.
-- Keep the track palette consistent.
+- Keep the collection palette consistent.
 - Each slide still has ONE conceptual job.
 
 SLIDE MANIFEST:
@@ -1092,7 +1092,7 @@ export function generateRealImagePrompt(post, imageIndex = 1, totalImages = 1, d
   return `REAL PHOTO HERO IMAGE GENERATOR — SWE NOTEBOOK (${styleMode.toUpperCase()})
 
 SOURCE OF TRUTH:
-Derived from data.json post "${getPostTitle(post)}" (Track: "${trackName}").
+Derived from data.json post "${getPostTitle(post)}" (Collection: "${collectionName}").
 Do not invent a different topic.
 
 IMAGE:
@@ -1107,7 +1107,7 @@ ${payload.scene}
 FRAMING:
 ${payload.angle}
 
-TRACK COLOR CUE (use only as a believable real object color, never as an overlay):
+COLLECTION COLOR CUE (use only as a believable real object color, never as an overlay):
 - Primary: ${palette.primary}
 - Accent: ${palette.accent}
 
@@ -1124,7 +1124,7 @@ FINAL CHECK:
 1. Would this pass as a real phone photo, not an AI/illustrated image?
 2. Does it evoke the post's concept without literally illustrating or labeling it?
 3. Is any face avoided, or kept safely partial (hands/screen/silhouette only)?
-4. Is the track color present only as a real object, never as a filter/overlay?
+4. Is the collection color present only as a real object, never as a filter/overlay?
 5. Is there zero on-image text, logo, or watermark?
 
 If any answer is NO, regenerate.`;
@@ -1149,7 +1149,7 @@ export function generatePostRealAssetBundle(post, dataJson = null, styleMode = '
 
   return {
     postTitle: getPostTitle(post),
-    track: getTrackName(post, dataJson),
+    collection: getCollectionName(post, dataJson),
     imageCount: prompts.length,
     prompts,
     caption: generateCaptionText(post),
@@ -1195,8 +1195,8 @@ ${hashtagStr}`;
 // ─────────────────────────────────────────────────────────────
 
 export function generateCoverPrompt(cover, styleMode = 'minimal', dataJson = null) {
-  const trackId = cover?.trackId ?? cover?.TrackId ?? null;
-  const paletteEntry = trackId != null ? getTrackPalettes(dataJson)[trackId] : null;
+  const collectionId = cover?.collectionId ?? cover?.collectionId ?? null;
+  const paletteEntry = collectionId != null ? getcollectionPalettes(dataJson)[collectionId] : null;
 
   const primary =
     cover?.Primary ||
@@ -1217,7 +1217,8 @@ export function generateCoverPrompt(cover, styleMode = 'minimal', dataJson = nul
     cover?.headline ||
     cover?.Title ||
     cover?.title ||
-    cover?.Track ||
+    cover?.Collection ||
+    cover?.collection ||
     paletteEntry?.name ||
     'SWE Notebook';
 
@@ -1225,15 +1226,15 @@ export function generateCoverPrompt(cover, styleMode = 'minimal', dataJson = nul
 
   const directive = cover?.VisualDirective || cover?.visualDirective || cover?.vibe || 'Minimal editorial chapter cover.';
 
-  const track = cover?.Track || cover?.track || paletteEntry?.name || (trackId != null ? `Track ${trackId}` : '');
+  const collection = cover?.Collection || cover?.collection || paletteEntry?.name || (collectionId != null ? `Collection ${collectionId}` : '');
 
   return `SWE NOTEBOOK — CHAPTER COVER GENERATOR
 
 SOURCE:
 Use the ChapterCovers entry from data.json as the source of truth.
 
-TRACK:
-"${track}"
+COLLECTION:
+"${collection}"
 
 TITLE:
 "${title}"
@@ -1263,7 +1264,7 @@ COVER-SPECIFIC RULES:
 - Use the supplied primary/accent colors.
 - Keep typography dominant.
 - Use one simple bridge visual at most.
-- Do not illustrate the entire track.
+- Do not illustrate the entire collection.
 - Keep at least 40% breathing room.
 - No gradient.
 - No 3D.
@@ -1318,13 +1319,13 @@ export function findSWEPostByTitle(dataJson, title) {
   return maps.byTitle.get(target) || null;
 }
 
-// Matches by trackId (real schema, e.g. "10") OR by track name (legacy schema).
-export function findChapterCover(dataJson, trackIdOrName) {
-  const target = String(trackIdOrName ?? '').trim().toLowerCase();
+// Matches by collectionId (real schema, e.g. "10") OR by collection name (legacy schema).
+export function findChapterCover(dataJson, collectionIdOrName) {
+  const target = String(collectionIdOrName ?? '').trim().toLowerCase();
 
   return getChapterCovers(dataJson).find((cover) => {
-    const id = String(cover?.trackId ?? cover?.TrackId ?? '').trim().toLowerCase();
-    const name = String(cover?.Track ?? cover?.track ?? '').trim().toLowerCase();
+    const id = String(cover?.collectionId ?? '').trim().toLowerCase();
+    const name = String(cover?.Collection ?? cover?.collection ?? cover?.name ?? cover?.headline ?? '').trim().toLowerCase();
     return id === target || name === target;
   });
 }

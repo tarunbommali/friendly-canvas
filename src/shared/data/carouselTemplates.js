@@ -7,7 +7,7 @@ export const CAROUSEL_TEMPLATES = {
     elements: [
       {
         type: 'badge',
-        content: '[ TRACK 01 · SEPIA ]',
+        content: '[ COLLECTION 01 · SEPIA ]',
         x: 40,
         y: 80,
         width: 160,
@@ -30,7 +30,7 @@ export const CAROUSEL_TEMPLATES = {
       },
       {
         type: 'text',
-        content: 'Humans have always needed to calculate, track, and remember more than our brains could hold on their own.',
+        content: 'Humans have always needed to calculate, record, and remember more than our brains could hold on their own.',
         x: 40,
         y: 310,
         width: 460,

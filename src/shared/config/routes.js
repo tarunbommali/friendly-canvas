@@ -12,14 +12,14 @@ export const routes = {
   // Project Content Hub
   contentHub: (projectSlug = 'swe-notebook') => `/${projectSlug}/content`,
   contentHubCollection: (projectSlug = 'swe-notebook', collectionId = '1') =>
-    `/${projectSlug}/content/track/${collectionId}`,
+    `/${projectSlug}/content/collection/${collectionId}`,
   contentHubPost: (projectSlug = 'swe-notebook', collectionId = '1', postId = '1') =>
-    `/${projectSlug}/content/track/${collectionId}/post/${postId}`,
+    `/${projectSlug}/content/collection/${collectionId}/post/${postId}`,
 
   // Design Studio
   designStudioNew: () => '/design/new',
   designStudioForPost: (projectSlug = 'swe-notebook', collectionId = '1', postId = '1') =>
-    `/${projectSlug}/design/track/${collectionId}/post/${postId}`,
+    `/${projectSlug}/design/collection/${collectionId}/post/${postId}`,
   designStudioCustom: (postId) => `/design/${postId}`,
 
   // Brand Kit
@@ -32,6 +32,6 @@ export const routes = {
   templateEdit: (collectionId, layoutId) => `/layout-builder/collection/${collectionId}/edit/${layoutId}`,
 
   // Collection Browsing
-  collection: (collectionId = '1') => `/track/${collectionId}`,
-  collectionPost: (collectionId = '1', postId = '1') => `/track/${collectionId}/post/${postId}`,
+  collection: (collectionId = '1') => `/collection/${collectionId}`,
+  collectionPost: (collectionId = '1', postId = '1') => `/collection/${collectionId}/post/${postId}`,
 }

@@ -2,7 +2,7 @@
  * taxonomy.js
  * ───────────
  * Config-driven terminology for the multi-project workspace.
- * Allows project-level overrides (e.g. "Collection" -> "Track" / "Chapter" / "Series").
+ * Allows project-level overrides (e.g. "Collection" -> "Module" / "Chapter" / "Series").
  */
 
 export const defaultTaxonomy = {

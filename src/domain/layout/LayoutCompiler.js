@@ -6,9 +6,9 @@
 export function compileLayoutToElements({
   layoutId = 'concept-explain',
   content = {},
-  trackPalette = { primary: '#1E5FA8', accent: '#A9D0F5' },
+  collectionPalette = { primary: '#1E5FA8', accent: '#A9D0F5' },
   slideNo = 1,
-  trackName = '',
+  collectionName = '',
 } = {}) {
   const elements = []
 
@@ -16,16 +16,16 @@ export function compileLayoutToElements({
     elements.push({
       id: `el_badge_${slideNo}`,
       type: 'badge',
-      content: trackName || 'CHAPTER COVER',
-      fill: trackPalette.primary || '#1E5FA8',
-      accentColor: trackPalette.accent || '#A9D0F5',
+      content: collectionName || 'CHAPTER COVER',
+      fill: collectionPalette.primary || '#1E5FA8',
+      accentColor: collectionPalette.accent || '#A9D0F5',
     })
     elements.push({
       id: `el_headline_${slideNo}`,
       type: 'headline',
       content: content.title || '',
-      fill: trackPalette.primary || '#1E5FA8',
-      accentColor: trackPalette.accent || '#A9D0F5',
+      fill: collectionPalette.primary || '#1E5FA8',
+      accentColor: collectionPalette.accent || '#A9D0F5',
     })
     elements.push({
       id: `el_text_${slideNo}`,
@@ -38,7 +38,7 @@ export function compileLayoutToElements({
       id: `el_headline_${slideNo}`,
       type: 'headline',
       content: content.title || '',
-      fill: trackPalette.primary || '#1E5FA8',
+      fill: collectionPalette.primary || '#1E5FA8',
     })
     elements.push({
       id: `el_col_left_${slideNo}`,
@@ -57,7 +57,7 @@ export function compileLayoutToElements({
       id: `el_headline_${slideNo}`,
       type: 'headline',
       content: content.title || '',
-      fill: trackPalette.primary || '#1E5FA8',
+      fill: collectionPalette.primary || '#1E5FA8',
     })
     if (content.body) {
       elements.push({

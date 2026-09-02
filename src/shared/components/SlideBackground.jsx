@@ -20,15 +20,15 @@ export function setStoredGlobalBackground(value) {
 }
 
 /**
- * getBackgroundPreset(type, trackColor, options)
+ * getBackgroundPreset(type, collectionColor, options)
  * ------------------------------------------------
- * Convenience factory: pass a background type + the track's
+ * Convenience factory: pass a background type + the collection's
  * { primary, accent } and get a config object that already looks good,
  * without hand-writing color stops for every card.
  */
-export function getBackgroundPreset(type, trackColor = {}, options = {}) {
-  const primary = trackColor?.primary || '#1E5FA8'
-  const accent = trackColor?.accent || '#A9D0F5'
+export function getBackgroundPreset(type, collectionColor = {}, options = {}) {
+  const primary = collectionColor?.primary || '#1E5FA8'
+  const accent = collectionColor?.accent || '#A9D0F5'
   const resolvedType = type || getStoredGlobalBackground()
 
   const presets = {

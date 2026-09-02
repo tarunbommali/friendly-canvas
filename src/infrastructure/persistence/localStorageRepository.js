@@ -106,4 +106,4 @@ export const customPostsRepo = new LocalStorageRepository('swe-custom-carousel-p
 export const layoutCollectionsRepo = new LocalStorageRepository('swe-layout-collections', [])
 export const slideOverridesRepo = new LocalStorageRepository('swe-notebook-slide-overrides', {})
 export const slideAssetsRepo = new LocalStorageRepository('swe-notebook-slide-assets', {})
-export const trackColorsRepo = new LocalStorageRepository('swe-notebook-track-colors', {})
+export const collectionColorsRepo = new LocalStorageRepository('swe-notebook-collection-colors', {})

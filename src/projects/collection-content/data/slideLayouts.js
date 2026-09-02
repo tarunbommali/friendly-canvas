@@ -70,9 +70,9 @@ export function resolveLayoutId(slide = {}, totalSlides = 7) {
  * Prepare layout data from a slide object.
  * Maps data.json slide fields to the slot schema expected by LayoutCategorys.
  */
-export function prepareLayoutData(slide = {}, post = {}, trackColor = {}) {
-  const trackStr = post?.Track || post?.track?.name || 'Track 1'
-  const trackNo = String(trackStr.match(/\d+/)?.[0] || post?.track?.id || '1').padStart(2, '0')
+export function prepareLayoutData(slide = {}, post = {}, collectionColor = {}) {
+  const collectionStr = post?.collectionName || post?.collection?.name || post?.collection || 'Collection 1'
+  const collectionNo = String(collectionStr.match(/\d+/)?.[0] || post?.collectionId || '1').padStart(2, '0')
 
   const title = slide.SlideTitle || slide.content?.title || slide.title || 'Untitled'
   const content = slide.Content || slide.content?.body || slide.content?.content || slide.content?.explanation || (typeof slide.content === 'string' ? slide.content : '')
@@ -86,10 +86,10 @@ export function prepareLayoutData(slide = {}, post = {}, trackColor = {}) {
     visualDirective,
     backgroundType,
 
-    // Track context
-    trackNo,
-    trackName: trackStr,
-    trackColor: trackColor || post?.track?.palette || { primary: '#1E5FA8', accent: '#A9D0F5' },
+    // Collection context
+    collectionNo,
+    collectionName: collectionStr,
+    collectionColor: collectionColor || post?.palette || { primary: '#1E5FA8', accent: '#A9D0F5' },
 
     // Pass raw slide for LayoutCategorys that need extra fields
     _raw: slide,

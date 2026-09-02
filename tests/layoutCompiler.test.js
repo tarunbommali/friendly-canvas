@@ -10,10 +10,10 @@ test('LayoutCompiler: compiles hook-open layout into badge, headline, and text e
       body: 'They transform computation into physical actions.',
       visualDirective: 'Parchement style',
     },
-    trackPalette: { primary: '#8B5E3C', accent: '#D9C7A3', name: 'Sepia' },
+    collectionPalette: { primary: '#8B5E3C', accent: '#D9C7A3', name: 'Sepia' },
     slideNo: 1,
     totalSlides: 7,
-    trackName: 'Track 1 — Why Computers Exist',
+    collectionName: 'Collection 1 — Why Computers Exist',
   })
 
   assert.ok(elements.length >= 3, 'Must produce at least 3 elements')

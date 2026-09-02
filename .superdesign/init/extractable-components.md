@@ -17,16 +17,16 @@
 - Description: Root app shell with conditional Navbar, sidebar, breadcrumb, and outlet
 - Extractable props:
   - `hideNavbar` (boolean, derived) — hides Navbar on /design/* routes
-  - `shouldShowSidebar` (boolean, derived) — shows TrackSidebar on /track/* routes
+  - `shouldShowSidebar` (boolean, derived) — shows Collectionsidebar on /collection/* routes
 - Hardcoded: bg-[#0f1117], text-slate-100, flex-col layout structure
 
-### TrackSidebar
-- Source: `src/projects/track-content/components/TrackSidebar.jsx`
+### Collectionsidebar
+- Source: `src/projects/collection-content/components/Collectionsidebar.jsx`
 - Category: layout
-- Description: Collapsible left sidebar listing content tracks and their posts
+- Description: Collapsible left sidebar listing content Collections and their posts
 - Extractable props:
   - `isCollapsed` (boolean, default: false)
-  - `activeTrack` (string) — currently selected track name
+  - `activeCollection` (string) — currently selected collection name
   - `activePost` (object) — currently selected post
 - Hardcoded: sidebar width, collapse toggle icon, track pill styling
 
@@ -73,6 +73,6 @@
 - Category: basic
 - Description: Contextual breadcrumb trail showing current track and post position
 - Extractable props:
-  - `activeTrack` (string)
-  - `postsByTrack` (object)
+  - `activeCollection` (string)
+  - `postsByCollection` (object)
 - Hardcoded: separator style, "Home" label, chevron icon

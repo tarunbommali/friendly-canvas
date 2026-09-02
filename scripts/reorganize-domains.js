@@ -17,7 +17,7 @@ function copyDirRecursive(src, dest) {
 }
 
 // 1. Copy track-content -> library
-copyDirRecursive(path.resolve('src/projects/track-content'), path.resolve('src/projects/library'))
+copyDirRecursive(path.resolve('src/projects/collection-content'), path.resolve('src/projects/library'))
 
 // 2. Copy carousel-editor -> design-studio
 copyDirRecursive(path.resolve('src/projects/carousel-editor'), path.resolve('src/projects/design-studio'))

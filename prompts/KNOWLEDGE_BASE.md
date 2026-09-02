@@ -1,7 +1,7 @@
 # SWE Notebook: Complete Master Knowledge Base for AI Prompt Generation
 
 ## 1. Executive Summary & Brand Purpose
-**SWE Notebook: Zero to Hero** is a multi-track visual curriculum (Tracks 1 to 21) teaching computer science, software engineering, systems design, and AI agents through high-retention, publication-grade Instagram carousels.
+**SWE Notebook: Zero to Hero** is a multi-track visual curriculum (Collections 1 to 21) teaching computer science, software engineering, systems design, and AI agents through high-retention, publication-grade Instagram carousels.
 
 Every post is an educational storyboard composed of 7 vertical (4:5) slides designed with Swiss editorial typography, tactile paper textures, track-specific color harmonies, and structured information layouts.
 
@@ -38,9 +38,9 @@ To maximize retention and engagement, each slide position follows a distinct vis
 
 ---
 
-## 4. Track Palettes Reference (All 21 Tracks)
+## 4. Track Palettes Reference (All 21 Collections)
 
-| Track # | Track Name | Palette Name | Primary (`#HEX`) | Accent (`#HEX`) |
+| Track # | collection name | Palette Name | Primary (`#HEX`) | Accent (`#HEX`) |
 | :---: | :--- | :--- | :--- | :--- |
 | **01** | Track 1 — Why Computers Exist | Sepia | `#8B5E3C` | `#D9C7A3` |
 | **02** | Track 2 — How a Computer Actually Works | Tech Blue | `#1E5FA8` | `#A9D0F5` |
@@ -67,7 +67,7 @@ To maximize retention and engagement, each slide position follows a distinct vis
 ---
 
 ## 5. Visual Glossary of Standard Technical Icons
-- **CPU**: Square silicon chip with pin connectors on 4 sides and glowing circuit tracks.
+- **CPU**: Square silicon chip with pin connectors on 4 sides and glowing circuit Collections.
 - **Memory/RAM**: Stacked horizontal memory address bars with hex register cells.
 - **Client/Server**: Device node (laptop) connected via packet wire to server rack.
 - **Database**: 3-tier cylinder icon with data layers.

@@ -136,7 +136,7 @@ The editor environment shifts to **Zinc-950** for the main backdrop. Interactive
 
 ## Layout & Spacing
 
-This design system uses an **8px grid system** for general layout and a **4px baseline** for high-density components (like the Tracks list or Property panels).
+This design system uses an **8px grid system** for general layout and a **4px baseline** for high-density components (like the Collections list or Property panels).
 
 ### Workspace Layout
 - **Navigation:** A fixed 280px left sidebar for global navigation.
@@ -163,7 +163,7 @@ The design system utilizes **Soft** roundedness (4px - 8px) to feel modern yet s
 
 - **Standard Elements:** Buttons, Inputs, and Small Cards use `0.25rem` (4px) corner radius.
 - **Large Containers:** Project Cards and Modals use `0.5rem` (8px) corner radius.
-- **Contextual Shapes:** Slide thumbnails in the "Tracks" view maintain the aspect ratio of the canvas (4:5) with a slight 2px radius.
+- **Contextual Shapes:** Slide thumbnails in the "Collections" view maintain the aspect ratio of the canvas (4:5) with a slight 2px radius.
 
 ## Components
 

@@ -1,11 +1,11 @@
 /**
  * useSlideOverrides.js
  * ─────────────────────
- * Persists per-slide field overrides and track color overrides using LocalStorageRepository.
+ * Persists per-slide field overrides and collection color overrides using LocalStorageRepository.
  */
 
 import { useState, useCallback, useEffect } from 'react'
-import { slideOverridesRepo, trackColorsRepo } from '../../../infrastructure/persistence/localStorageRepository'
+import { slideOverridesRepo, collectionColorsRepo } from '../../../infrastructure/persistence/localStorageRepository'
 
 const GLOBAL_BG_KEY = 'swe_notebook_global_bg_style'
 
@@ -49,27 +49,27 @@ export function useGlobalBackgroundStyle() {
   return [globalBg, setGlobalBg]
 }
 
-export function useTrackColorOverride(trackName) {
-  const [colors, setColors] = useState(() => trackColorsRepo.get() || {})
+export function useCollectionColorOverride(collectionName) {
+  const [colors, setColors] = useState(() => collectionColorsRepo.get() || {})
 
-  const override = colors[trackName] || null
+  const override = colors[collectionName] || null
 
-  const setTrackColor = useCallback((palette) => {
+  const setCollectionColor = useCallback((palette) => {
     setColors(prev => {
-      const next = { ...prev, [trackName]: palette }
-      trackColorsRepo.set(next)
+      const next = { ...prev, [collectionName]: palette }
+      collectionColorsRepo.set(next)
       return next
     })
-  }, [trackName])
+  }, [collectionName])
 
-  const clearTrackColor = useCallback(() => {
+  const clearCollectionColor = useCallback(() => {
     setColors(prev => {
       const next = { ...prev }
-      delete next[trackName]
-      trackColorsRepo.set(next)
+      delete next[collectionName]
+      collectionColorsRepo.set(next)
       return next
     })
-  }, [trackName])
+  }, [collectionName])
 
   return {
     colorOverride: override,

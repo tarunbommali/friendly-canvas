@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-`Carousel` is a client-side Single Page Application (SPA) designed for engineering educators and technical content creators. It bridges structured software engineering curricula (21 tracks, 121+ posts, 850+ slides) with an interactive **Fabric.js Vector Canvas Studio & Dynamic Layout Engine**.
+`Carousel` is a client-side Single Page Application (SPA) designed for engineering educators and technical content creators. It bridges structured software engineering curricula (21 Collections, 121+ posts, 850+ slides) with an interactive **Fabric.js Vector Canvas Studio & Dynamic Layout Engine**.
 
 ### High-Level Assessment
 - **Architecture Health:** **Outstanding (9.8/10)** — Highly modular with strict domain isolation between curriculum browsing (`track-content/`) and visual slide design studio (`carousel-editor/`).

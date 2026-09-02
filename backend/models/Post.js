@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, models } = require('mongoose');
 
 const SLIDE_LAYOUTS = [
   'hook-open',
@@ -49,7 +49,7 @@ const slideSchema = new Schema(
 const postSchema = new Schema(
   {
     project: { type: Schema.Types.ObjectId, ref: 'Project', required: true, index: true },
-    track: { type: Schema.Types.ObjectId, ref: 'Track', required: true, index: true },
+    collection: { type: Schema.Types.ObjectId, ref: 'Collection', required: true, index: true },
     externalId: { type: String, required: true },
     title: { type: String, required: true },
     postNo: { type: Number, required: true },
@@ -58,11 +58,11 @@ const postSchema = new Schema(
     assets: { type: [String], default: [] },
     slides: [slideSchema],
   },
-  { timestamps: true }
+  { timestamps: true, suppressReservedKeysWarning: true }
 );
 
-postSchema.index({ track: 1, postNo: 1 }, { unique: true });
-postSchema.index({ track: 1, sortOrder: 1 });
+postSchema.index({ collection: 1, postNo: 1 }, { unique: true });
+postSchema.index({ collection: 1, sortOrder: 1 });
 postSchema.index({ project: 1, sortOrder: 1 });
 
-module.exports = model('Post', postSchema);
+module.exports = models.Post || model('Post', postSchema);

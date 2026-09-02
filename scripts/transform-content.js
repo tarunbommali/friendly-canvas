@@ -97,7 +97,7 @@ function transformHeadline(slide) {
 }
 
 // ─── Text transformations ────────────────────────────────────────────────────
-function transformText(slide, post, trackId) {
+function transformText(slide, post, collectionId) {
   const t = (slide.text || '').trim()
   const layout = slide.layout
 
@@ -107,7 +107,7 @@ function transformText(slide, post, trackId) {
   if (layout === 'recap-close') {
     const recapPattern = /^Quick recap — this post covered:/i
     if (recapPattern.test(t)) {
-      return buildRecapTakeaway(post, trackId)
+      return buildRecapTakeaway(post, collectionId)
     }
     return t
   }
@@ -133,7 +133,7 @@ function transformText(slide, post, trackId) {
     const genericReal =
       /^This isn't just theory — ".*?" is something you'll actually run into on your first real project, in an interview, or debugging production at 2AM\./i
     if (genericReal.test(t)) {
-      return buildRealWorldText(slide.headline, post, trackId)
+      return buildRealWorldText(slide.headline, post, collectionId)
     }
 
     // Pattern 2: "The most common mistake with "X": rushing past it..."
@@ -154,25 +154,25 @@ function transformText(slide, post, trackId) {
   // ── Hook-open slides ──────────────────────────────────────────────────────
   // Soften overly academic openers but preserve the core content.
   if (layout === 'hook-open') {
-    return softenHookText(t, trackId)
+    return softenHookText(t, collectionId)
   }
 
   // ── Click-beat slides (concept-explain, process-flow, comparison) ─────────
   // Apply DNA voice: talk to the reader, plain English first.
-  return softenClickText(t, trackId)
+  return softenClickText(t, collectionId)
 }
 
 // ─── Recap takeaway builder ───────────────────────────────────────────────────
 // Generates a single memorable sentence per post, not a topic list.
-function buildRecapTakeaway(post, trackId) {
-  const analogy = DOMAIN_ANALOGIES[trackId]
+function buildRecapTakeaway(post, collectionId) {
+  const analogy = DOMAIN_ANALOGIES[collectionId]
   const title = post.title.toLowerCase()
 
   if (analogy) {
     return `${title} — remember: ${analogy}. save this so the mental model sticks.`
   }
 
-  // Generic fallback for tracks without a registered analogy
+  // Generic fallback for Collections without a registered analogy
   return `${title} is the kind of thing that clicks once, then you see it everywhere. save this post for when you need to explain it.`
 }
 
@@ -224,7 +224,7 @@ function softenClickText(text) {
 }
 
 // ─── CTA builder ─────────────────────────────────────────────────────────────
-function buildCTA(post, trackId, isFinale) {
+function buildCTA(post, collectionId, isFinale) {
   if (isFinale) {
     return 'save this series and share it with someone who needs to see the whole stack explained right — start to finish, no skips'
   }
@@ -239,27 +239,27 @@ function transformChapterCover(cover) {
   const existingText = (cover.text || '').trim()
 
   // Append series bookmark nudge if not already there
-  const bookmarkNudge = 'bookmark this — 21 tracks, one complete system.'
+  const bookmarkNudge = 'bookmark this — 21 Collections, one complete system.'
   const text = existingText.endsWith(bookmarkNudge)
     ? existingText
     : existingText.replace(/\.$/, '') + ' ' + bookmarkNudge
 
   return {
-    trackId: cover.trackId,
+    collectionId: cover.collectionId,
     headline: cover.headline,
     text,
-    vibe: 'full-bleed chapter title card — track name large and bold, subtitle lighter weight, high-contrast on brand colour',
+    vibe: 'full-bleed chapter title card — collection name large and bold, subtitle lighter weight, high-contrast on brand colour',
   }
 }
 
 // ─── Slide transformer ────────────────────────────────────────────────────────
-function transformSlide(slide, post, trackId, isLastSlide) {
+function transformSlide(slide, post, collectionId, isLastSlide) {
   const newSlide = {
     id: slide.id,
     slideNo: slide.slideNo,
     layout: slide.layout,
-    headline: transformHeadline(slide, post, trackId),
-    text: transformText(slide, post, trackId),
+    headline: transformHeadline(slide, post, collectionId),
+    text: transformText(slide, post, collectionId),
   }
 
   // Add vibe only where staging genuinely matters
@@ -269,7 +269,7 @@ function transformSlide(slide, post, trackId, isLastSlide) {
   // Add CTA only on the last slide of each post
   if (isLastSlide) {
     const isFinale = slide.layout === 'next-up' && slide.headline === 'Series Finale'
-    newSlide.cta = buildCTA(post, trackId, isFinale)
+    newSlide.cta = buildCTA(post, collectionId, isFinale)
   }
 
   // Fields deliberately dropped: descriptionVisual, imagesNeeded
@@ -300,12 +300,12 @@ function main() {
   let realWorldRewriteCount = 0
 
   data.posts = (data.posts || []).map((post) => {
-    const trackId = post.trackId
+    const collectionId = post.collectionId
     const slides = post.slides || []
 
     const newSlides = slides.map((slide, idx) => {
       const isLastSlide = idx === slides.length - 1
-      const newSlide = transformSlide(slide, post, trackId, isLastSlide)
+      const newSlide = transformSlide(slide, post, collectionId, isLastSlide)
 
       // Tally stats
       totalSlides++
@@ -326,7 +326,7 @@ function main() {
     return {
       id: post.id,
       title: post.title,
-      trackId: post.trackId,
+      collectionId: post.collectionId,
       postNo: post.postNo,
       slides: newSlides,
     }

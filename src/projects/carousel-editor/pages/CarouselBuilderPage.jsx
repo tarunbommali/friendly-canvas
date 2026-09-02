@@ -17,7 +17,7 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
 
   const rawSlides = post.slides || [];
   const totalPages = Math.max(1, rawSlides.length);
-  const badgeText = `${post.collectionName || 'Track ' + (post.trackId || 1)}`;
+  const badgeText = `${post.collectionName || 'Collection ' + (post.collectionId || 1)}`;
 
   const primaryColor = themeConfig.primaryColor || THEME.colors.accent;
   const headlineFont = themeConfig.headlineFont || THEME.typography.headline.fontFamily || "Instrument Serif";
@@ -127,7 +127,8 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       generateSlideImagePrompt(
         {
           ...post,
-          Track: post.collectionName || post.Track,
+          Collection: post.collectionName || post.Collection || post.name,
+          collectionName: post.collectionName,
           PostTitle: post.title || post.PostTitle,
         },
         {
@@ -149,8 +150,8 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       assetName: Array.isArray(slide.assetName)
         ? slide.assetName
         : (slide.assets || [])
-            .map((asset) => asset?.name || asset?.label || asset)
-            .filter((name) => typeof name === "string" && name.length > 0),
+          .map((asset) => asset?.name || asset?.label || asset)
+          .filter((name) => typeof name === "string" && name.length > 0),
       bgPattern,
     };
   });
@@ -174,21 +175,21 @@ export function CarouselBuilderPage() {
   useEditorKeyboardShortcuts();
 
   const navigate = useNavigate();
-  const { postId, trackId, projectSlug } = useParams();
-  const { designs, collectionIdMap, trackPalettes } = useCollectionData();
+  const { postId, collectionId, projectSlug } = useParams();
+  const { designs, collectionIdMap, collectionPalettes } = useCollectionData();
 
   const setDocument = useCarouselStore((state) => state.setDocument);
   const [mobileDrawer, setMobileDrawer] = useState(null); // 'slides' | 'properties' | null
 
   const currentPost = useMemo(() => {
     if (!designs || designs.length === 0) return null;
-    const numTrack = parseInt(trackId, 10);
+    const numTrack = parseInt(collectionId, 10);
     const numPost = parseInt(postId, 10);
 
-    if (postId && trackId) {
+    if (postId && collectionId) {
       const p = designs.find(
         (d) =>
-          (String(d.trackId) === String(trackId) || parseInt(d.trackId, 10) === numTrack) &&
+          (String(d.collectionId) === String(collectionId) || parseInt(d.collectionId, 10) === numTrack) &&
           (String(d.id) === String(postId) ||
             parseInt(d.postNo, 10) === numPost ||
             parseInt(d.designNo, 10) === numPost)
@@ -204,21 +205,21 @@ export function CarouselBuilderPage() {
       );
       if (p) return p;
     }
-    if (trackId) {
+    if (collectionId) {
       return (
         designs.find(
-          (d) => String(d.trackId) === String(trackId) || parseInt(d.trackId, 10) === numTrack
+          (d) => String(d.collectionId) === String(collectionId) || parseInt(d.collectionId, 10) === numTrack
         ) || null
       );
     }
     return null;
-  }, [designs, postId, trackId]);
+  }, [designs, postId, collectionId]);
 
   const handleOpenSettingsPage = () => {
-    if (projectSlug && trackId && postId) {
-      navigate(`/${projectSlug}/design/track/${trackId}/post/${postId}/settings`);
-    } else if (trackId && postId) {
-      navigate(`/design/track/${trackId}/post/${postId}/settings`);
+    if (projectSlug && collectionId && postId) {
+      navigate(`/${projectSlug}/design/collection/${collectionId}/post/${postId}/settings`);
+    } else if (collectionId && postId) {
+      navigate(`/design/collection/${collectionId}/post/${postId}/settings`);
     } else if (postId) {
       navigate(`/design/${postId}/settings`);
     } else {
@@ -230,13 +231,13 @@ export function CarouselBuilderPage() {
 
   // Initialize clean blank canvas when opening standalone editor (/canvas-editor)
   useEffect(() => {
-    if (!postId && !trackId) {
+    if (!postId && !collectionId) {
       if (loadedPostIdRef.current === 'blank_canvas_session') return;
       loadedPostIdRef.current = 'blank_canvas_session';
 
       useCarouselStore.getState().setPostContext({
         postId: null,
-        trackId: null,
+        collectionId: null,
         projectSlug: null,
       });
 
@@ -300,7 +301,7 @@ export function CarouselBuilderPage() {
 
       setDocument(blankStarterDoc, { resetRegistry: true });
     }
-  }, [postId, trackId, setDocument]);
+  }, [postId, collectionId, setDocument]);
 
   // Dynamically load post slides when opening a specific design/post
   useEffect(() => {
@@ -310,8 +311,8 @@ export function CarouselBuilderPage() {
     loadedPostIdRef.current = postKey;
 
     const palette =
-      collectionIdMap[currentPost.trackId] ||
-      trackPalettes[currentPost.collectionName] ||
+      collectionIdMap[currentPost.collectionId] ||
+      collectionPalettes[currentPost.collectionName] ||
       currentPost.trackColor ||
       {};
 
@@ -335,14 +336,14 @@ export function CarouselBuilderPage() {
     if (convertedDoc) {
       useCarouselStore.getState().setPostContext({
         postId: currentPost.id || currentPost.postId || currentPost.postNo,
-        trackId: currentPost.trackId || trackId,
+        collectionId: currentPost.collectionId || collectionId,
         projectSlug,
       });
       setDocument(convertedDoc, { resetRegistry: true });
       useCarouselStore.getState().applyGlobalLayoutConfigToAllSlides();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPost, postId, trackId, projectSlug]);
+  }, [currentPost, postId, collectionId, projectSlug]);
 
   return (
     <div className="flex flex-col h-full w-full bg-slate-100 dark:bg-[#0f1117] text-gray-900 dark:text-slate-100 overflow-hidden font-sans select-none min-h-0 relative">

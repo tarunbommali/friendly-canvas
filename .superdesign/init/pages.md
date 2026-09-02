@@ -1,7 +1,7 @@
 # Pages — Friendly Canvas (Dependency Trees)
 
 ## / (Home Page)
-Entry: `src/projects/track-content/pages/HomePage.jsx`
+Entry: `src/projects/collection-content/pages/HomePage.jsx`
 Dependencies:
 - `src/workspace/WorkspaceLayout.jsx` (shell)
   - `src/workspace/Navbar.jsx`
@@ -10,33 +10,33 @@ Dependencies:
   - `src/workspace/Toast.jsx`
 - `src/shared/styles/index.css`
 
-Summary: Main landing page showing all content tracks as cards, featured/recent posts, and quick-access links. Dark themed with cyan accent. Tracks presented as a grid of colored cards.
+Summary: Main landing page showing all content Collections as cards, featured/recent posts, and quick-access links. Dark themed with cyan accent. Collections presented as a grid of colored cards.
 
 ---
 
-## /track/:trackId (Track Page)
-Entry: `src/projects/track-content/pages/TrackPage.jsx`
+## /collection/:collectionId (Track Page)
+Entry: `src/projects/collection-content/pages/collectionPage.jsx`
 Dependencies:
 - `src/workspace/WorkspaceLayout.jsx` (shell + sidebar)
   - `src/workspace/Navbar.jsx`
-  - `src/projects/track-content/components/TrackSidebar.jsx`
+  - `src/projects/collection-content/components/Collectionsidebar.jsx`
   - `src/workspace/BreadcrumbNav.jsx`
 
 Summary: Lists all posts within a specific learning track. Left sidebar shows track navigation. Main area shows post cards in grid.
 
 ---
 
-## /track/:trackId/post/:postId (Post Page)
-Entry: `src/projects/track-content/pages/PostPage.jsx`
+## /collection/:collectionId/post/:postId (Post Page)
+Entry: `src/projects/collection-content/pages/PostPage.jsx`
 Dependencies:
 - `src/workspace/WorkspaceLayout.jsx` (shell + sidebar)
-- `src/projects/track-content/routes/PostRoute.jsx`
+- `src/projects/collection-content/routes/PostRoute.jsx`
 
 Summary: Individual post detail view. Shows post content, carousel slides preview, and next/prev navigation.
 
 ---
 
-## /design/track/:trackId/post/:postId (Carousel Builder — MAIN EDITOR)
+## /design/collection/:collectionId/post/:postId (Carousel Builder — MAIN EDITOR)
 Entry: `src/projects/carousel-editor/pages/CarouselBuilderPage.jsx`
 Dependencies:
 - `src/workspace/WorkspaceLayout.jsx` (shell — NO Navbar)
@@ -72,7 +72,7 @@ Layout structure:
 
 ---
 
-## /design/track/:trackId/post/:postId/settings (Global Layout Settings)
+## /design/collection/:collectionId/post/:postId/settings (Global Layout Settings)
 Entry: `src/projects/carousel-editor/pages/GlobalLayoutSettingsPage.jsx`
 Dependencies:
 - `src/workspace/WorkspaceLayout.jsx` (shell — NO Navbar)
@@ -84,10 +84,10 @@ Summary: Settings page for carousel global layout config: background, typography
 ---
 
 ## /:projectSlug/content (Content Management)
-Entry: `src/projects/track-content/pages/ContentManagementPage.jsx`
+Entry: `src/projects/collection-content/pages/ContentManagementPage.jsx`
 Dependencies:
 - `src/workspace/WorkspaceLayout.jsx` (shell — NO Navbar)
-- `src/projects/track-content/hooks/useTrackData.js`
+- `src/projects/collection-content/hooks/useTrackData.js`
 - `src/shared/data/data.json`
 
 Summary: Content management dashboard. Track/post list on left, post editor/viewer on right. No navbar. Wide two-column layout.
@@ -95,19 +95,19 @@ Summary: Content management dashboard. Track/post list on left, post editor/view
 ---
 
 ## /:projectSlug/carousel-design (Design System Page)
-Entry: `src/projects/track-content/pages/DesignSystemPage.jsx`
+Entry: `src/projects/collection-content/pages/DesignSystemPage.jsx`
 Dependencies:
 - `src/workspace/WorkspaceLayout.jsx` (shell + Navbar)
-- `src/projects/track-content/hooks/useTrackData.js`
+- `src/projects/collection-content/hooks/useTrackData.js`
 
 Summary: Visual design system reference page. Shows all theme tokens, typography samples, color palettes, and component previews.
 
 ---
 
 ## /search (Search Page)
-Entry: `src/projects/track-content/pages/SearchPage.jsx`
+Entry: `src/projects/collection-content/pages/SearchPage.jsx`
 Dependencies:
 - `src/workspace/WorkspaceLayout.jsx` (shell + Navbar)
-- `src/projects/track-content/hooks/useTrackData.js`
+- `src/projects/collection-content/hooks/useTrackData.js`
 
-Summary: Search results page. Search bar at top (synced with navbar). Filtered list of matching posts/tracks below.
+Summary: Search results page. Search bar at top (synced with navbar). Filtered list of matching posts/Collections below.

@@ -9,7 +9,7 @@ description: Comprehensive React architecture review focusing on component bound
 Act as a Staff React Engineer auditing component hierarchy, state flow, hooks lifecycle, render performance, and UI resilience.
 
 ## Scope for `friendly-canvas`
-Audits `src/workspace/`, `src/projects/track-content/`, `src/projects/carousel-editor/`, `src/domain/`, and `src/router.jsx`.
+Audits `src/workspace/`, `src/projects/collection-content/`, `src/projects/carousel-editor/`, `src/domain/`, and `src/router.jsx`.
 
 ## Review Checklist
 
@@ -20,7 +20,7 @@ Audits `src/workspace/`, `src/projects/track-content/`, `src/projects/carousel-e
 ### 2. State Management & Single Source of Truth
 - Audit Zustand store design (`carouselStore.js`), selector granularity, and transient update patterns.
 - Check for duplicate or conflicting state between URL params, local component state, and global stores.
-- Identify stale state bugs when navigating between tracks or carousel projects.
+- Identify stale state bugs when navigating between Collections or carousel projects.
 
 ### 3. Hook Lifecycles & Dependency Hygiene
 - Audit all `useEffect`, `useCallback`, and `useMemo` hooks for exhaustive dependencies.

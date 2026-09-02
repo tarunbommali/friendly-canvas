@@ -4,7 +4,7 @@ const connectDB = require('./config/db');
 const User = require('./models/User');
 const Workspace = require('./models/Workspace');
 const Project = require('./models/Project');
-const Track = require('./models/Track');
+const Collection = require('./models/Collection');
 const Post = require('./models/Post');
 const app = require('./server');
 const { seed } = require('./seed');
@@ -68,15 +68,15 @@ async function runTests() {
   const totalUsers = await User.countDocuments();
   const totalWorkspaces = await Workspace.countDocuments();
   const totalProjects = await Project.countDocuments();
-  const totalTracks = await Track.countDocuments();
+  const totalCollections = await Collection.countDocuments();
   const totalPosts = await Post.countDocuments();
 
   assert(totalUsers >= 1, `Expected >= 1 user, found ${totalUsers}`);
   assert(totalWorkspaces >= 1, `Expected >= 1 workspace, found ${totalWorkspaces}`);
   assert(totalProjects >= 1, `Expected >= 1 project, found ${totalProjects}`);
-  assert(totalTracks === 20, `Expected 20 tracks, found ${totalTracks}`);
+  assert(totalCollections === 20, `Expected 20 Collections, found ${totalCollections}`);
   assert(totalPosts >= 100, `Expected >= 100 posts, found ${totalPosts}`);
-  console.log(`✓ TC-SED-01 Passed: Verified ${totalWorkspaces} workspace, ${totalProjects} project, ${totalTracks} tracks, and ${totalPosts} posts.`);
+  console.log(`✓ TC-SED-01 Passed: Verified ${totalWorkspaces} workspace, ${totalProjects} project, ${totalCollections} Collections, and ${totalPosts} posts.`);
 
   // Step 2: Start Server & Test Auth Endpoints
   console.log('[Level 2] Starting Server & Testing Auth & RBAC (TC-AUTH-01)...');
@@ -107,24 +107,24 @@ async function runTests() {
   assert(projRes.status === 200, `Projects query failed: ${projRes.status}`);
   assert(projRes.body.length >= 1, 'Projects array empty');
   const project = projRes.body[0];
-  assert(project.trackCount === 20, `Expected trackCount 20, got ${project.trackCount}`);
+  assert(project.collectionCount === 20 || project.trackCount === 20, `Expected collectionCount 20, got ${project.collectionCount}`);
   assert(project.postCount >= 100, `Expected postCount >= 100, got ${project.postCount}`);
   assert(project.slideCount >= 500, `Expected slideCount >= 500, got ${project.slideCount}`);
-  console.log(`✓ TC-PROJ-01 Passed: Aggregated metrics computed dynamically: ${project.trackCount} tracks, ${project.postCount} posts, ${project.slideCount} slides.`);
+  console.log(`✓ TC-PROJ-01 Passed: Aggregated metrics computed dynamically: ${project.collectionCount || project.trackCount} Collections, ${project.postCount} posts, ${project.slideCount} slides.`);
 
-  // Step 4: Track Aggregation & Sorting (TC-TRK-01)
-  console.log('[Level 4] Testing Track Metrics Aggregation & Sorting (TC-TRK-01)...');
-  const tracksRes = await request(`/api/tracks?projectId=${project._id}`);
-  assert(tracksRes.status === 200, `Tracks query failed: ${tracksRes.status}`);
-  assert(tracksRes.body.length === 20, `Expected 20 tracks, got ${tracksRes.body.length}`);
-  const firstTrack = tracksRes.body[0];
-  assert(firstTrack.postCount > 0, `Track postCount must be > 0, got ${firstTrack.postCount}`);
-  assert(firstTrack.slideCount > 0, `Track slideCount must be > 0, got ${firstTrack.slideCount}`);
-  console.log(`✓ TC-TRK-01 Passed: Track 01 metrics verified: ${firstTrack.postCount} posts, ${firstTrack.slideCount} slides.`);
+  // Step 4: Collection Aggregation & Sorting (TC-COL-01)
+  console.log('[Level 4] Testing Collection Metrics Aggregation & Sorting (TC-COL-01)...');
+  const collectionsRes = await request(`/api/collections?projectId=${project._id}`);
+  assert(collectionsRes.status === 200, `Collections query failed: ${collectionsRes.status}`);
+  assert(collectionsRes.body.length === 20, `Expected 20 Collections, got ${collectionsRes.body.length}`);
+  const firstCollection = collectionsRes.body[0];
+  assert(firstCollection.postCount > 0, `Collection postCount must be > 0, got ${firstCollection.postCount}`);
+  assert(firstCollection.slideCount > 0, `Collection slideCount must be > 0, got ${firstCollection.slideCount}`);
+  console.log(`✓ TC-COL-01 Passed: Collection 01 metrics verified: ${firstCollection.postCount} posts, ${firstCollection.slideCount} slides.`);
 
   // Step 5: Post & Isolated Canvas Mutation (TC-CVS-01)
   console.log('[Level 5] Testing Slide Content & Isolated Canvas Persistence (TC-CVS-01)...');
-  const postsRes = await request(`/api/posts?trackId=${firstTrack._id}`);
+  const postsRes = await request(`/api/posts?collectionId=${firstCollection._id}`);
   assert(postsRes.status === 200, `Posts query failed: ${postsRes.status}`);
   const post = postsRes.body[0];
   assert(post.slides.length > 0, 'Post has no slides');
