@@ -204,6 +204,7 @@ export function composeSlide(
     backgroundColor = "#ffffff",
     autoLayout = true,
     textAlign = "left",
+    watermarkBadge,
   } = {}
 ) {
   let elements = autoLayout ? autoLayoutContent(contentElements) : [...contentElements];
@@ -220,6 +221,7 @@ export function composeSlide(
     accent,
     textAlign,
     slideId,
+    watermarkBadge,
   });
 
   return {

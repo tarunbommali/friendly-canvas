@@ -125,15 +125,20 @@ function getPosts(dataJson) {
 }
 
 function getChapterCovers(dataJson) {
-  return asArray(dataJson?.ChapterCovers || dataJson?.chapterCovers);
+  return (dataJson?.collections || []).map((c) => ({
+    collectionId: String(c.collectionId).padStart(2, '0'),
+    collectionName: c.collectionName,
+    heading: c.collectionName,
+    bodyText: c.collectionDescription || '',
+  }));
 }
 
 function getVisualGlossary(dataJson) {
-  return dataJson?.VisualGlossary || dataJson?.visualGlossary || {};
+  return dataJson?.visualGlossary || {};
 }
 
 function getDesignSystem(dataJson) {
-  return dataJson?.DesignSystem || {};
+  return dataJson?.designSystem || {};
 }
 
 function getLayoutRegistry(dataJson) {
@@ -141,23 +146,35 @@ function getLayoutRegistry(dataJson) {
   return registry && typeof registry === 'object' ? registry : {};
 }
 
-// data.json ships collectionPalettes keyed by collectionId (e.g. "01"). Older
-// contract used DesignSystem.TrackColorPalettes keyed by collection name.
-// Support both.
 function getcollectionPalettes(dataJson) {
-  return dataJson?.collectionPalettes || getDesignSystem(dataJson).TrackColorPalettes || {};
+  const map = {};
+  (dataJson?.collections || []).forEach((c) => {
+    const idStr = String(c.collectionId).padStart(2, '0');
+    const numStr = String(parseInt(idStr, 10));
+    const design = c.collectionDesign || {};
+    const paletteObj = {
+      name: c.collectionName,
+      palette: design.palette || 'Default',
+      primary: design.primary || '#2563eb',
+      accent: design.accent || '#93c5fd',
+    };
+    map[idStr] = paletteObj;
+    map[numStr] = paletteObj;
+    if (c.collectionName) map[c.collectionName] = paletteObj;
+  });
+  return map;
 }
 
 function getPostSlides(post) {
-  return asArray(post?.Slides || post?.slides);
+  return asArray(post?.slides);
 }
 
 function getSlideTitle(slide, fallback = 'Untitled') {
-  return slide?.SlideTitle || slide?.headline || slide?.title || fallback;
+  return slide?.heading || fallback;
 }
 
 function getSlideContent(slide) {
-  return slide?.Content || slide?.text || slide?.content || '';
+  return slide?.bodyText || '';
 }
 
 function getSlideLayout(slide) {
@@ -1213,25 +1230,21 @@ export function generateCoverPrompt(cover, styleMode = 'minimal', dataJson = nul
     DEFAULT_ACCENT;
 
   const title =
-    cover?.CoverHeadline ||
-    cover?.headline ||
-    cover?.Title ||
-    cover?.title ||
-    cover?.Collection ||
-    cover?.collection ||
+    cover?.collectionName ||
+    cover?.heading ||
     paletteEntry?.name ||
     'SWE Notebook';
 
-  const subtitle = cover?.Subtitle || cover?.subtitle || cover?.text || '';
+  const subtitle = cover?.collectionDescription || cover?.bodyText || '';
 
   const directive = cover?.VisualDirective || cover?.visualDirective || cover?.vibe || 'Minimal editorial chapter cover.';
 
-  const collection = cover?.Collection || cover?.collection || paletteEntry?.name || (collectionId != null ? `Collection ${collectionId}` : '');
+  const collection = cover?.collectionName || paletteEntry?.name || (collectionId != null ? `Collection ${collectionId}` : '');
 
   return `SWE NOTEBOOK — CHAPTER COVER GENERATOR
 
 SOURCE:
-Use the ChapterCovers entry from data.json as the source of truth.
+Use the collections entry from data.json as the source of truth.
 
 COLLECTION:
 "${collection}"
@@ -1325,7 +1338,7 @@ export function findChapterCover(dataJson, collectionIdOrName) {
 
   return getChapterCovers(dataJson).find((cover) => {
     const id = String(cover?.collectionId ?? '').trim().toLowerCase();
-    const name = String(cover?.Collection ?? cover?.collection ?? cover?.name ?? cover?.headline ?? '').trim().toLowerCase();
+    const name = String(cover?.collectionName ?? cover?.heading ?? '').trim().toLowerCase();
     return id === target || name === target;
   });
 }

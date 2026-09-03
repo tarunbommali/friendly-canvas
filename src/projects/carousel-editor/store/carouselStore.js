@@ -13,6 +13,7 @@ import {
   isDirectiveRectElement,
   isBackgroundRect,
   isPageNumberElement,
+  isWatermarkElement,
   isSwipeElement,
   isChromeBadgeElement,
   formatPageLabel,
@@ -57,6 +58,9 @@ function syncChromePagination(slides) {
       ...slide,
       elements: (slide.elements || []).map((el) => {
         if (isPageNumberElement(el)) {
+          if (el.type === "image") {
+            return el;
+          }
           return { ...el, text: formatPageLabel(pageIndex, total) };
         }
         if (isSwipeElement(el)) {
@@ -133,29 +137,72 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
     originX = "right";
   }
 
-  const activeElements = (slide.elements || []).filter((el) => !isBackgroundRect(el));
+  const showSlideNumbers = Boolean(config.showSlideNumbers);
+  const activeElements = (slide.elements || []).filter((el) => {
+    if (isBackgroundRect(el)) return false;
+    if (!showSlideNumbers && isPageNumberElement(el)) return false;
+    return true;
+  });
   const updatedElements = activeElements.map((el) => {
     if (isChromeBadgeElement(el)) {
       return {
         ...el,
         x: config.badgeX ?? alignX,
-        y: config.badgeY ?? (safeArea.top + 24),
-        fontSize: config.badgeFontSize ?? el.fontSize ?? 20,
+        y: config.badgeY ?? THEME.chrome.badge.y,
+        fontSize: config.badgeFontSize ?? THEME.typography.badge.fontSize,
         fontFamily: config.badgeFont || el.fontFamily || THEME.typography.badge?.fontFamily || "Playfair Display",
         fill: config.badgeColor || config.primaryColor || el.fill,
         text: config.badgeText !== undefined && config.badgeText !== "" ? config.badgeText : el.text,
         originX,
+        originY: "top",
         textAlign,
       };
     }
     if (isPageNumberElement(el)) {
       return {
         ...el,
-        x: config.pageNumberX ?? safeArea.left,
-        y: config.pageNumberY ?? (safeArea.bottom - 24),
-        fontSize: config.pageNumberFontSize ?? THEME.typography.footer.fontSize,
-        fontFamily: config.pageNumberFont || el.fontFamily || THEME.typography.footer.fontFamily || "Georgia",
-        fill: config.pageNumberColor || THEME.colors.footer,
+        x: config.pageNumberX ?? contentZone.right,
+        y: config.pageNumberY ?? (config.badgeY ?? THEME.chrome.badge.y),
+        fontSize: config.pageNumberFontSize ?? (config.badgeFontSize ?? THEME.typography.badge.fontSize),
+        fontFamily: config.pageNumberFont || (config.badgeFont || el.fontFamily || THEME.typography.badge.fontFamily || "Playfair Display"),
+        fill: config.pageNumberColor || "#94a3b8",
+        originX: "right",
+        originY: "top",
+        textAlign: "right",
+      };
+    }
+    const bottomBadgeFontSize =
+      config.footerFontSize ??
+      config.swipeFontSize ??
+      config.watermarkFontSize ??
+      THEME.typography.footer.fontSize;
+
+    const bottomBadgeFont =
+      config.footerFont ??
+      config.swipeFont ??
+      config.watermarkFont ??
+      THEME.typography.footer.fontFamily ??
+      "Georgia";
+
+    const bottomBadgeColor =
+      config.footerColor ??
+      config.swipeColor ??
+      config.watermarkColor ??
+      THEME.colors.footer;
+
+    if (isWatermarkElement(el)) {
+      return {
+        ...el,
+        x: config.watermarkX ?? contentZone.x,
+        y: config.watermarkY ?? THEME.chrome.swipeIndicator.y,
+        fontSize: bottomBadgeFontSize,
+        fontFamily: bottomBadgeFont,
+        fill: bottomBadgeColor,
+        fontWeight: "normal",
+        fontStyle: "normal",
+        originX: "left",
+        originY: "top",
+        textAlign: "left",
       };
     }
     if (isSwipeElement(el)) {
@@ -165,21 +212,19 @@ function applyConfigToSlide(slide, config, { isLastSlide, canvasWidth, canvasHei
       return {
         ...el,
         x: isFollow
-          ? (config.followX ?? safeArea.right)
-          : (config.swipeX ?? safeArea.right),
+          ? (config.followX ?? contentZone.right)
+          : (config.swipeX ?? contentZone.right),
         originX: isFollow ? (config.followOriginX || "right") : (config.swipeOriginX || "right"),
+        originY: "top",
         y: isFollow
-          ? (config.followY ?? (safeArea.bottom - 24))
-          : (config.swipeY ?? (safeArea.bottom - 24)),
-        fontSize: isFollow
-          ? (config.followFontSize ?? 24)
-          : (config.swipeFontSize ?? 24),
-        fontFamily: isFollow
-          ? (config.followFont || config.swipeFont || el.fontFamily || "Georgia")
-          : (config.swipeFont || el.fontFamily || "Georgia"),
-        fill: isFollow
-          ? config.followColor || THEME.colors.footer
-          : config.swipeColor || THEME.colors.footer,
+          ? (config.followY ?? THEME.chrome.swipeIndicator.y)
+          : (config.swipeY ?? THEME.chrome.swipeIndicator.y),
+        fontSize: bottomBadgeFontSize,
+        fontFamily: bottomBadgeFont,
+        fill: bottomBadgeColor,
+        fontWeight: "normal",
+        fontStyle: "normal",
+        textAlign: "right",
         text: isFollow
           ? config.followText || "Follow for more →"
           : config.swipeText || "Swipe →",

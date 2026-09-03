@@ -11,10 +11,13 @@ const SLIDE_LAYOUTS = [
 
 const resourceSchema = new Schema(
   {
+    label: { type: String, default: null },
+    url: { type: String, default: null },
     youtubeLink: { type: String, default: null },
+    blog: { type: String, default: null },
     blogUrl: { type: String, default: null },
   },
-  { _id: false }
+  { _id: false, strict: false }
 );
 
 const canvasDocumentSchema = new Schema(
@@ -36,8 +39,8 @@ const slideSchema = new Schema(
     externalId: { type: String, default: () => `slide_${Date.now()}` },
     slideNo: { type: Number, required: true },
     layout: { type: String, default: 'concept-explain' },
-    headline: { type: String, default: '' },
-    text: { type: String, default: '' },
+    heading: { type: String, default: '' },
+    bodyText: { type: String, default: '' },
     imagePrompt: { type: String, default: '' },
     visualDirective: { type: Schema.Types.Mixed, default: '' },
     assets: { type: [String], default: [] },

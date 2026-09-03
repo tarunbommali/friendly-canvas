@@ -4,6 +4,7 @@ import { buildHeadlineStyles, buildBodyStyles } from "./textAnnotations";
 import {
   isHeadlineElement,
   isPageNumberElement,
+  isWatermarkElement,
   isSwipeElement,
 } from "../theme/elementClassify";
 
@@ -44,13 +45,14 @@ function withMeta(element, options = {}, extras = {}) {
   const isHeadline = isHeadlineElement(element);
   const isPageNum = isPageNumberElement(element);
   const isSwipe = isSwipeElement(element);
+  const isWatermark = isWatermarkElement(element);
 
   let lockConfig = chromeLock(element);
   let selectable = !element.isChrome;
   let evented = !element.isChrome;
 
   if (isLayoutMode) {
-    if (isHeadline || isPageNum || isSwipe) {
+    if (isHeadline || isPageNum || isSwipe || isWatermark) {
       selectable = true;
       evented = true;
       lockConfig = {
@@ -91,6 +93,7 @@ function withMeta(element, options = {}, extras = {}) {
       isHeadline,
       isPageNumber: isPageNum,
       isSwipe,
+      isWatermark,
     },
     ...SELECTION_CONTROL_CONFIG,
     selectable,
@@ -247,6 +250,13 @@ export function createFabricObject(element, options = {}) {
         applyImageSize(fabricImg, element, imgElement);
         if (fabricImg.canvas) {
           fabricImg.canvas.renderAll();
+        }
+      };
+
+      imgElement.onerror = () => {
+        if (imgElement.crossOrigin) {
+          imgElement.crossOrigin = null;
+          imgElement.src = element.src;
         }
       };
 

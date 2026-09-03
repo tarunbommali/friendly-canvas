@@ -9,7 +9,7 @@ import {
   ChevronDown,
   GripVertical,
 } from "lucide-react";
-import { renderSlideToDataUrl } from "../canvas/exportRenderer";
+import { renderSlideToDataUrl, getExportFilename } from "../canvas/exportRenderer";
 
 export function SlideThumbnails() {
   const listRef = useRef(null);
@@ -46,14 +46,11 @@ export function SlideThumbnails() {
   const downloadSingleSlide = async (e, slide, index) => {
     e.stopPropagation();
     try {
-      const safeTitle = (document.metadata.title || "carousel")
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "-");
-
+      const filename = getExportFilename(document, index, "png");
       const dataUrl = await renderSlideToDataUrl(slide, document.metadata, 2);
       const link = window.document.createElement("a");
       link.href = dataUrl;
-      link.download = `${safeTitle}-slide-${index + 1}.png`;
+      link.download = filename;
       link.click();
     } catch (err) {
       console.error("Failed to export slide as PNG:", err);
@@ -199,7 +196,14 @@ export function SlideThumbnails() {
                     className="w-full aspect-[4/5] flex flex-col justify-between p-2 overflow-hidden relative"
                     style={{ backgroundColor: slide.backgroundColor || "#ffffff" }}
                   >
-                    <div className="space-y-0.5">
+                    {/* Top Row: Eyebrow Badge */}
+                    <div className="flex items-center justify-between text-[6.5px] font-mono text-gray-400 dark:text-slate-500 mb-0.5">
+                      <span className="truncate max-w-full font-serif font-bold text-amber-900/80 dark:text-amber-400/80">
+                        {slide.elements.find((e) => e.type === "badge" || e.id?.includes("badge"))?.text || ""}
+                      </span>
+                    </div>
+
+                    <div className="space-y-0.5 my-auto">
                       <div className="text-[9px] font-bold text-gray-900 line-clamp-2 leading-tight">
                         {slide.elements.find((e) => e.type === "headline" || e.id?.includes("head") || e.id?.includes("title"))?.text ||
                          slide.elements.find((e) => e.type === "headline" || e.id?.includes("head") || e.id?.includes("title"))?.content ||
@@ -210,6 +214,15 @@ export function SlideThumbnails() {
                          slide.elements.find((e) => e.type === "body" || (e.type === "text" && !e.id?.includes("head") && !e.id?.includes("title")))?.content ||
                          ""}
                       </div>
+                    </div>
+                    {/* Bottom Row: Both Bottom Badges in Identical Size */}
+                    <div className="flex items-center justify-between text-[6.5px] font-mono text-gray-400 dark:text-slate-500 mt-auto">
+                      <span className="truncate max-w-[60%] tracking-tight">
+                        {slide.elements?.find((e) => e.id?.includes("watermark"))?.text || "@swe.notebook"}
+                      </span>
+                      <span className="truncate max-w-[40%] tracking-tight text-right">
+                        {slide.elements?.find((e) => e.id?.includes("swipe") || e.id?.includes("follow"))?.text || (index === document.slides.length - 1 ? "Follow for more →" : "Swipe →")}
+                      </span>
                     </div>
                   </div>
 

@@ -45,7 +45,7 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
     const contentElements = [];
 
     // Main Title filling full safeArea contentZone width (840px)
-    const rawTitle = slide.headline || slide.title || slide.SlideTitle || (typeof slide.content === 'object' ? slide.content?.title : '') || `Slide ${slideNo}`;
+    const rawTitle = slide.heading || `Slide ${slideNo}`;
 
     contentElements.push({
       id: `el_head_${slideId}`,
@@ -65,7 +65,7 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
     });
 
     // Body Text with auto-calculated dynamic Y offset to prevent overlaps
-    const rawBody = slide.text || slide.body || slide.Content || (typeof slide.content === 'object' ? slide.content?.body : '') || "";
+    const rawBody = slide.bodyText || "";
     if (rawBody) {
       const titleLineCount = Math.min(3, Math.ceil(rawTitle.length / 28) || 1);
       const dynamicBodyY = THEME.contentZone.y + (titleLineCount * 110) + 20;
@@ -120,6 +120,7 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
       accent: primaryColor,
       backgroundColor: bgColor,
       textAlign,
+      watermarkBadge: post.watermarkBadge || themeConfig.watermarkBadge || "@swe.notebook",
     });
 
     const rawImagePrompt =
@@ -160,6 +161,10 @@ function convertPostToCarouselDoc(post, themeConfig = {}) {
     schemaVersion: 1,
     metadata: {
       title: post.title || post.PostTitle || `Design #${post.designNo || 1}`,
+      collectionNumber: String(post.collectionId || post.collectionNumber || "01"),
+      collectionId: String(post.collectionId || "01"),
+      postNo: String(post.postNo ?? post.designNo ?? 1),
+      postId: String(post.id || post.postNo || 1),
       width: THEME.canvas.width,
       height: THEME.canvas.height,
       aspectRatio: "4:5",
@@ -176,7 +181,7 @@ export function CarouselBuilderPage() {
 
   const navigate = useNavigate();
   const { postId, collectionId, projectSlug } = useParams();
-  const { designs, collectionIdMap, collectionPalettes } = useCollectionData();
+  const { designs, collectionIdMap, collectionThemes, watermarkBadge } = useCollectionData();
 
   const setDocument = useCarouselStore((state) => state.setDocument);
   const [mobileDrawer, setMobileDrawer] = useState(null); // 'slides' | 'properties' | null
@@ -312,7 +317,7 @@ export function CarouselBuilderPage() {
 
     const palette =
       collectionIdMap[currentPost.collectionId] ||
-      collectionPalettes[currentPost.collectionName] ||
+      collectionThemes[currentPost.collectionName] ||
       currentPost.trackColor ||
       {};
 
@@ -330,6 +335,7 @@ export function CarouselBuilderPage() {
       headlineColor: globalConfig.headlineColor || "#0f172a",
       bodyColor: globalConfig.bodyColor || "#475569",
       textAlign: globalConfig.textAlign || "left",
+      watermarkBadge: currentPost.watermarkBadge || watermarkBadge || "@swe.notebook",
     };
 
     const convertedDoc = convertPostToCarouselDoc(currentPost, initialThemeConfig);

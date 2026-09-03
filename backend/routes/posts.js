@@ -78,8 +78,8 @@ router.post('/', requireRole('editor'), async (req, res, next) => {
           externalId: `slide_${externalId}_s01`,
           slideNo: 1,
           layout: 'hook-open',
-          headline: title || 'New Hook Headline',
-          text: 'Supporting narrative for the concept.',
+          heading: title || 'New Hook Headline',
+          bodyText: 'Supporting narrative for the concept.',
           canvas: {
             version: 1,
             width: 1080,
@@ -170,7 +170,7 @@ router.patch('/reorder/bulk', requireRole('editor'), async (req, res, next) => {
 // POST /api/posts/:postId/slides - add slide
 router.post('/:postId/slides', requireRole('editor'), async (req, res, next) => {
   try {
-    const { layout, headline, text, visualDirective } = req.body;
+    const { layout, heading, bodyText, visualDirective } = req.body;
     const post = await Post.findById(req.params.postId);
     if (!post) return res.status(404).json({ error: 'Post not found' });
 
@@ -181,8 +181,8 @@ router.post('/:postId/slides', requireRole('editor'), async (req, res, next) => 
       externalId,
       slideNo: nextSlideNo,
       layout: layout || 'concept-explain',
-      headline: headline || `Slide ${nextSlideNo} Headline`,
-      text: text || 'Slide body description text.',
+      heading: heading || `Slide ${nextSlideNo} Heading`,
+      bodyText: bodyText || 'Slide body description text.',
       visualDirective: visualDirective || {},
       canvas: {
         version: 1,
@@ -208,15 +208,15 @@ router.post('/:postId/slides', requireRole('editor'), async (req, res, next) => 
 // PATCH /api/posts/:postId/slides/:slideId - update slide content
 router.patch('/:postId/slides/:slideId', requireRole('editor'), async (req, res, next) => {
   try {
-    const { headline, text, layout, visualDirective } = req.body;
+    const { heading, bodyText, layout, visualDirective } = req.body;
     const post = await Post.findById(req.params.postId);
     if (!post) return res.status(404).json({ error: 'Post not found' });
 
     const slide = post.slides.id(req.params.slideId) || post.slides.find((s) => s.externalId === req.params.slideId);
     if (!slide) return res.status(404).json({ error: 'Slide not found' });
 
-    if (headline !== undefined) slide.headline = headline;
-    if (text !== undefined) slide.text = text;
+    if (heading !== undefined) slide.heading = heading;
+    if (bodyText !== undefined) slide.bodyText = bodyText;
     if (layout !== undefined) slide.layout = layout;
     if (visualDirective !== undefined) slide.visualDirective = visualDirective;
 

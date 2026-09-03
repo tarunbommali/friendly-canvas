@@ -54,7 +54,8 @@ export const THEME = {
   },
   chrome: {
     badge: { x: 540, y: 140 },
-    pageNumber: { x: 140, y: 1210 },
-    swipeIndicator: { x: 940, y: 1210 },
+    pageNumber: { x: 940, y: 140 }, // Top-right corner mirroring eyebrow tag
+    watermark: { x: 140, y: 1255 }, // Bottom-left footer on top of safe area line
+    swipeIndicator: { x: 940, y: 1255 }, // Bottom-right footer on top of safe area line
   },
 };

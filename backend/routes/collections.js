@@ -32,10 +32,10 @@ router.get('/', async (req, res, next) => {
       },
       {
         $project: {
-          collectionKey: 1,
-          name: 1,
-          palette: 1,
-          cover: 1,
+          collectionId: 1,
+          collectionName: 1,
+          collectionDescription: 1,
+          collectionDesign: 1,
           sortOrder: 1,
           project: 1,
           createdAt: 1,
@@ -65,7 +65,7 @@ router.get('/:collectionId', async (req, res, next) => {
   try {
     const { collectionId } = req.params;
     const isObjectId = mongoose.Types.ObjectId.isValid(collectionId);
-    const query = isObjectId ? { _id: collectionId } : { collectionKey: collectionId };
+    const query = isObjectId ? { _id: collectionId } : { collectionId };
 
     const collection = await Collection.findOne(query);
     if (!collection) return res.status(404).json({ error: 'Collection not found' });
@@ -79,26 +79,40 @@ router.get('/:collectionId', async (req, res, next) => {
 router.post('/', requireRole('editor'), async (req, res, next) => {
   try {
     const projectId = req.params.projectId || req.body.projectId;
-    const { collectionKey, name, palette, cover } = req.body;
+    const {
+      collectionId,
+      collectionName,
+      collectionDescription,
+      collectionDesign,
+    } = req.body;
 
-    if (!projectId || !collectionKey || !name) {
-      return res.status(400).json({ error: 'projectId, collectionKey, and name are required' });
+    const finalId = (collectionId || '').trim();
+    const finalName = (collectionName || '').trim();
+
+    if (!projectId || !finalId || !finalName) {
+      return res.status(400).json({ error: 'projectId, collectionId, and collectionName are required' });
     }
 
-    const existing = await Collection.findOne({ project: projectId, collectionKey });
+    const existing = await Collection.findOne({ project: projectId, collectionId: finalId });
     if (existing) {
-      return res.status(409).json({ error: `Collection "${collectionKey}" already exists in this project` });
+      return res.status(409).json({ error: `Collection "${finalId}" already exists in this project` });
     }
 
     const maxSort = await Collection.findOne({ project: projectId }).sort('-sortOrder');
     const sortOrder = maxSort ? maxSort.sortOrder + 1 : 0;
 
+    const design = collectionDesign || { palette: 'Default', primary: '#2563eb', accent: '#93c5fd' };
+
     const collection = await Collection.create({
       project: projectId,
-      collectionKey: collectionKey.trim(),
-      name: name.trim(),
-      palette: palette || { name: 'Default', primary: '#2563eb', accent: '#93c5fd' },
-      cover: cover || { headline: name.trim(), text: '', vibe: '' },
+      collectionId: finalId,
+      collectionName: finalName,
+      collectionDescription: collectionDescription || '',
+      collectionDesign: {
+        palette: design.palette || 'Default',
+        primary: design.primary || '#2563eb',
+        accent: design.accent || '#93c5fd',
+      },
       sortOrder,
     });
 

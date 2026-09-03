@@ -75,34 +75,37 @@ async function seed() {
   let order = 0;
 
   console.log('Seeding Collections for project...');
-  for (const [collectionKey, meta] of Object.entries(data.collectionPalettes || {})) {
-    const cover = (data.chapterCovers || []).find((c) => c.collectionId === collectionKey);
+  const collectionsSource = data.collections || [];
+
+  for (const item of collectionsSource) {
+    const collectionKey = String(item.collectionId).padStart(2, '0');
+    const name = item.collectionName || `Collection ${collectionKey}`;
+    const design = item.collectionDesign || {};
     const coll = await Collection.create({
       project: project._id,
-      collectionKey,
-      name: meta.name,
-      palette: {
-        name: meta.palette,
-        primary: meta.primary,
-        accent: meta.accent,
-      },
-      cover: {
-        headline: cover?.headline ?? meta.name,
-        text: cover?.text ?? '',
-        vibe: cover?.vibe ?? '',
+      collectionId: collectionKey,
+      collectionName: name,
+      collectionDescription: item.collectionDescription || '',
+      collectionDesign: {
+        palette: design.palette || 'Default',
+        primary: design.primary || '#2563eb',
+        accent: design.accent || '#93c5fd',
       },
       sortOrder: order++,
     });
     collectionIdMap[collectionKey] = coll._id;
+    // Also map unpadded if single digit for safety
+    collectionIdMap[String(parseInt(collectionKey, 10))] = coll._id;
   }
-  console.log(`Seeded ${Object.keys(collectionIdMap).length} Collections.`);
+  console.log(`Seeded ${Object.keys(collectionIdMap).length} Collection mappings.`);
 
   console.log('Seeding posts & slides with canvas isolation...');
   let postCount = 0;
   let postOrder = 0;
 
   for (const post of data.posts || []) {
-    const collectionObjectId = collectionIdMap[post.collectionId];
+    const collKey = String(post.collectionId).padStart(2, '0');
+    const collectionObjectId = collectionIdMap[collKey] || collectionIdMap[post.collectionId];
     if (!collectionObjectId) {
       console.warn(`Skipping post ${post.id}: collection ${post.collectionId} not found in map.`);
       continue;
@@ -116,16 +119,19 @@ async function seed() {
       postNo: post.postNo,
       sortOrder: postOrder++,
       resources: (post.resources ?? []).map((r) => ({
+        label: r.label ?? null,
+        url: r.url ?? null,
         youtubeLink: orNull(r.youtubeLink),
         blogUrl: orNull(r.blog || r.blogUrl),
+        blog: orNull(r.blog || r.blogUrl),
       })),
       assets: post.assets ?? [],
       slides: (post.slides || []).map((s) => ({
         externalId: s.id,
         slideNo: s.slideNo,
         layout: s.layout || 'concept-explain',
-        headline: s.headline || '',
-        text: s.text || '',
+        heading: s.heading || '',
+        bodyText: s.bodyText || '',
         visualDirective: s.visualDirective || {},
         canvas: {
           version: 1,

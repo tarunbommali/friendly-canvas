@@ -217,7 +217,7 @@ export default function ProjectOverviewPage() {
                       {cleanTitle}
                     </h3>
                     <p className="text-xs text-gray-500 dark:text-slate-400 truncate mt-0.5">
-                      {collection.cover?.headline || `${postCount} curated lesson posts and visual carousels.`}
+                      {collection.collectionDescription || `${postCount} curated lesson posts and visual carousels.`}
                     </p>
                   </div>
                 </div>

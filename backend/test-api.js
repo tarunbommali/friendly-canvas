@@ -130,13 +130,13 @@ async function runTests() {
   assert(post.slides.length > 0, 'Post has no slides');
   const slide = post.slides[0];
 
-  // Update slide headline
+  // Update slide heading
   const updateSlideRes = await request(`/api/posts/${post._id}/slides/${slide._id}`, {
     method: 'PATCH',
-    body: { headline: 'Automated Test Slide Headline' },
+    body: { heading: 'Automated Test Slide Heading' },
   });
   assert(updateSlideRes.status === 200, `Slide update failed: ${updateSlideRes.status}`);
-  assert(updateSlideRes.body.headline === 'Automated Test Slide Headline', 'Headline did not persist');
+  assert(updateSlideRes.body.heading === 'Automated Test Slide Heading', 'Heading did not persist');
 
   // Update isolated canvas document
   const canvasPayload = {

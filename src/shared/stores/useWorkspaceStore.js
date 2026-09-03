@@ -147,11 +147,13 @@ export const useWorkspaceStore = create((set, get) => ({
           ...post,
           slides: post.slides.map((s) => {
             if (s._id !== slideId && s.externalId !== slideId) return s;
+            const resolvedHeading = updates.heading ?? s.heading;
+            const resolvedBodyText = updates.bodyText ?? s.bodyText;
             return {
               ...s,
               ...updates,
-              headline: updates.headline ?? updates.title ?? s.headline,
-              text: updates.text ?? updates.body ?? s.text,
+              heading: resolvedHeading,
+              bodyText: resolvedBodyText,
               visualDirective: updates.visualDirective ?? s.visualDirective,
             };
           }),

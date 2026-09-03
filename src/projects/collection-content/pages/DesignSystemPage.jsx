@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import SlideBackground, { getBackgroundPreset, BACKGROUND_TYPE_OPTIONS } from '../../../shared/components/SlideBackground'
 import { useGlobalBackgroundStyle } from '../hooks/useSlideOverrides'
+import { useCollectionData } from '../../../shared/hooks/useCollectionData'
 
 const CANVAS_SPEC = {
   'Aspect Ratio': '4:5 (1080 × 1350 px)',
@@ -25,7 +26,10 @@ const CANVAS_SPEC = {
 }
 
 export default function DesignSystemPage() {
-  const { designSystem = {}, collectionPalettes = {}, onCopy } = useOutletContext()
+  const outletCtx = useOutletContext() || {}
+  const { collectionThemes = {}, designSystem = {} } = useCollectionData()
+  const collectionPalettes = collectionThemes
+  const onCopy = outletCtx.onCopy
   const { globalBg, setGlobalBg } = useGlobalBackgroundStyle()
 
   const typography = designSystem.Typography || {}

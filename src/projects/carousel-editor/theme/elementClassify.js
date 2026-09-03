@@ -81,6 +81,12 @@ export function isPageNumberElement(el) {
   return id.includes("chrome_page_number") || id.includes("page_number") || id.includes("slide_no");
 }
 
+export function isWatermarkElement(el) {
+  if (!el) return false;
+  const id = typeof el.id === "string" ? el.id : "";
+  return id.includes("chrome_watermark") || id.includes("watermark");
+}
+
 export function isSwipeElement(el) {
   if (!el) return false;
   const id = typeof el.id === "string" ? el.id : "";
@@ -94,9 +100,7 @@ export function isChromeBadgeElement(el) {
 }
 
 export function formatPageLabel(pageIndex, totalPages) {
-  const page = String(pageIndex).padStart(2, "0");
-  const total = String(totalPages).padStart(2, "0");
-  return `${page} / ${total}`;
+  return `${pageIndex}/${totalPages}`;
 }
 
 export function createElementId(type) {

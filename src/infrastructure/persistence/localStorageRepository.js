@@ -107,3 +107,4 @@ export const layoutCollectionsRepo = new LocalStorageRepository('swe-layout-coll
 export const slideOverridesRepo = new LocalStorageRepository('swe-notebook-slide-overrides', {})
 export const slideAssetsRepo = new LocalStorageRepository('swe-notebook-slide-assets', {})
 export const collectionColorsRepo = new LocalStorageRepository('swe-notebook-collection-colors', {})
+export const postResourcesRepo = new LocalStorageRepository('swe-notebook-post-resources', {})

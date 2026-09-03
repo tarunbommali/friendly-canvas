@@ -1,29 +1,40 @@
 import { useState, useMemo, useCallback } from 'react';
-import data from '../../../shared/data/data.json';
+import projectData from '../../../shared/data/project.json';
 import { contentApi } from '../../../infrastructure/api/contentApi';
+import { postResourcesRepo } from '../../../infrastructure/persistence/localStorageRepository';
 
 export function useProjectData(projectSlug = 'swe-notebook') {
   const [overrides, setOverrides] = useState({});
+  const [postResources, setPostResources] = useState(() => postResourcesRepo.get() || {});
 
   const project = useMemo(() => {
-    const rawcollectionPalettes = data.collectionPalettes || {};
+    const rawCollections = Array.isArray(projectData.collections) ? projectData.collections : [];
     const collectionPalettes = {};
 
-    Object.entries(rawcollectionPalettes).forEach(([collectionId, val]) => {
-      collectionPalettes[collectionId] = val;
-      collectionPalettes[String(parseInt(collectionId, 10))] = val;
-      if (val.name) collectionPalettes[val.name] = val;
+    rawCollections.forEach((c) => {
+      const idStr = String(c.collectionId).padStart(2, '0');
+      const design = c.collectionDesign || {};
+      const pObj = {
+        name: c.collectionName,
+        palette: design.palette || 'Default',
+        primary: design.primary || '#2563eb',
+        accent: design.accent || '#93c5fd',
+      };
+      collectionPalettes[idStr] = pObj;
+      collectionPalettes[String(parseInt(idStr, 10))] = pObj;
+      if (c.collectionName) collectionPalettes[c.collectionName] = pObj;
     });
 
     return {
       id: 'swe-notebook',
-      slug: data.slug || 'swe-notebook',
-      title: data.name || 'SWE Notebook',
-      description:
-        'Complete Software Engineering Zero to Hero curriculum. Includes collection-wise content management, post inspectors, interactive live slide studio, prompt copiers, and slide override editors.',
+      slug: projectData.slug || 'swe-notebook',
+      title: projectData.name || 'SWE Notebook',
+      description: projectData.description || 'Complete Software Engineering Zero to Hero curriculum. Includes collection-wise content management, post inspectors, interactive live slide studio, prompt copiers, and slide override editors.',
+      watermarkBadge: projectData.watermarkBadge || '@swe.notebook',
+      slidesConfig: projectData.slides || {},
       stats: {
-        collectionCount: Object.keys(rawcollectionPalettes).length,
-        postCount: (data.posts || []).length,
+        collectionCount: rawCollections?.length,
+        postCount: (projectData?.posts || []).length,
       },
       config: {
         collectionPalettes,
@@ -51,19 +62,46 @@ export function useProjectData(projectSlug = 'swe-notebook') {
   }, []);
 
   const collections = useMemo(() => {
-    const rawPalettes = data.collectionPalettes || {};
-    const rawPosts = data.posts || [];
+    const rawCollections = Array.isArray(projectData.collections) ? projectData.collections : [];
+    const rawPosts = projectData.posts || [];
 
-    const collectionEntries = Object.entries(rawPalettes)
-      .map(([collectionId, p]) => {
-        const match = p.name?.match(/\d+/);
-        const collectionNo = match ? parseInt(match[0], 10) : parseInt(collectionId, 10);
-        return { collectionId: String(collectionNo).padStart(2, '0'), collectionNo, title: p.name, palette: p };
+    const collectionEntries = rawCollections
+      .map((c) => {
+        const idStr = String(c.collectionId).padStart(2, '0');
+        const collectionNo = parseInt(idStr, 10);
+        const name = c.collectionName || `Collection ${idStr}`;
+        const design = c.collectionDesign || {};
+        const palette = {
+          name,
+          palette: design.palette || 'Default',
+          primary: design.primary || '#2563eb',
+          accent: design.accent || '#93c5fd',
+        };
+        return {
+          collectionId: idStr,
+          collectionNo,
+          collectionName: name,
+          title: name,
+          collectionDescription: c.collectionDescription || '',
+          collectionDesign: design,
+          palette,
+        };
       })
       .sort((a, b) => a.collectionNo - b.collectionNo);
 
-    return collectionEntries.map(({ collectionId, collectionNo, title: collectionName, palette }) => {
-      const matchingPosts = rawPosts.filter((p) => p.collectionId === collectionId);
+    return collectionEntries.map((cEntry) => {
+      const {
+        collectionId,
+        collectionNo,
+        collectionName,
+        collectionDescription,
+        collectionDesign,
+        palette,
+      } = cEntry;
+      const matchingPosts = rawPosts.filter((p) => {
+        const pCollId = String(p.collectionId).padStart(2, '0');
+        return pCollId === collectionId || String(p.collectionId) === String(collectionNo);
+      });
 
       const posts = matchingPosts.map((p, pIdx) => {
         const postNo = p.postNo || pIdx + 1;
@@ -74,10 +112,8 @@ export function useProjectData(projectSlug = 'swe-notebook') {
           const slideNo = s.slideNo || sIdx + 1;
           const slideId =
             s.id || `slide_t${collectionId}_p${String(postNo).padStart(2, '0')}_s${String(slideNo).padStart(2, '0')}`;
-          const legacyKey = `${collectionName}|${postNo}|${slideNo}`;
-          const slideOverride = overrides[slideId] || overrides[legacyKey] || {};
+          const slideOverride = overrides[slideId] || {};
           const layoutId =
-            slideOverride.Layout ||
             slideOverride.layout ||
             (typeof s.layout === 'string' ? s.layout : s.layout?.id) ||
             'concept-explain';
@@ -85,6 +121,21 @@ export function useProjectData(projectSlug = 'swe-notebook') {
           const audio = p.metadata?.suggestedAudio || {};
           const audioTitle =
             typeof audio === 'string' ? audio : audio.mood || 'Lo-fi Tech Beats / Deep Focus Ambient';
+
+          const finalHeading =
+            slideOverride.heading ??
+            s.heading ??
+            `Slide ${slideNo}`;
+
+          const finalBodyText =
+            slideOverride.bodyText ??
+            s.bodyText ??
+            '';
+
+          const visualDirective =
+            slideOverride.visualDirective ??
+            s.visualDirective ??
+            '';
 
           return {
             id: slideId,
@@ -94,36 +145,13 @@ export function useProjectData(projectSlug = 'swe-notebook') {
             slideType,
             archetypeKey: slideType,
             layout: layoutId,
-            headline: slideOverride.title ?? slideOverride.SlideTitle ?? s.headline ?? s.title ?? `Slide ${slideNo}`,
-            text: slideOverride.body ?? slideOverride.Content ?? s.text ?? s.body ?? '',
-            visualDirective:
-              slideOverride.visualDirective ??
-              slideOverride.VisualDirective ??
-              s.visualDirective ??
-              s.descriptionVisual ??
-              '',
+            heading: finalHeading,
+            bodyText: finalBodyText,
+            visualDirective,
             content: {
-              title:
-                slideOverride.title ??
-                slideOverride.SlideTitle ??
-                s.headline ??
-                s.title ??
-                s.content?.title ??
-                `Slide ${slideNo}`,
-              body:
-                slideOverride.body ??
-                slideOverride.Content ??
-                s.text ??
-                s.body ??
-                s.content?.body ??
-                '',
-              visualDirective:
-                slideOverride.visualDirective ??
-                slideOverride.VisualDirective ??
-                s.visualDirective ??
-                s.descriptionVisual ??
-                s.content?.visualDirective ??
-                '',
+              heading: finalHeading,
+              bodyText: finalBodyText,
+              visualDirective,
             },
             elements: s.elements || [],
             slideConfig: s.config || { width: 1080, height: 1350, background: '#F8F7F4' },
@@ -141,8 +169,12 @@ export function useProjectData(projectSlug = 'swe-notebook') {
           };
         });
 
+        const savedResources = postResources[postId] || (p.id ? postResources[p.id] : undefined);
+        const effectiveResources = savedResources !== undefined ? savedResources : (p.resources || []);
+
         return {
           id: postId,
+          rawId: p.id,
           collectionId,
           order: postNo,
           postNo,
@@ -152,52 +184,45 @@ export function useProjectData(projectSlug = 'swe-notebook') {
           slideCount: slides.length,
           palette,
           slides,
+          resources: effectiveResources,
+          assets: p.assets || [],
+          watermarkBadge: projectData.watermarkBadge || '@swe.notebook',
           metadata: p.metadata || { description: '', hashtags: [], suggestedAudio: '' },
         };
       });
 
       return {
         id: collectionId,
+        collectionId,
         projectId: 'swe-notebook',
         order: collectionNo,
         collectionNo,
         slug: `collection-${collectionId}`,
         title: collectionName,
+        collectionName,
+        collectionDescription,
+        collectionDesign,
         postCount: posts.length,
         palette,
         posts,
       };
     });
-  }, [overrides]);
+  }, [overrides, postResources]);
 
   const updateSlideContent = useCallback(
-    (postId, slideId, contentUpdates, collectionName, postNo, slideNo) => {
+    (postId, slideId, contentUpdates) => {
       setOverrides((prev) => {
         const existingSlideId = prev[slideId] || {};
-        const pascalUpdates = {};
-        if (contentUpdates.title !== undefined) pascalUpdates.SlideTitle = contentUpdates.title;
-        if (contentUpdates.body !== undefined) pascalUpdates.Content = contentUpdates.body;
-        if (contentUpdates.visualDirective !== undefined)
-          pascalUpdates.VisualDirective = contentUpdates.visualDirective;
-
-        const updatedObj = { ...existingSlideId, ...contentUpdates, ...pascalUpdates };
-        const nextOverrides = { ...prev, [slideId]: updatedObj };
-
-        if (collectionName && postNo && slideNo) {
-          const legacyKey = `${collectionName}|${postNo}|${slideNo}`;
-          const existingLegacy = prev[legacyKey] || {};
-          nextOverrides[legacyKey] = { ...existingLegacy, ...updatedObj };
-        }
-
-        return nextOverrides;
+        const updatedObj = { ...existingSlideId, ...contentUpdates };
+        return { ...prev, [slideId]: updatedObj };
       });
 
       // Background API sync
       if (postId && slideId) {
         contentApi
           .updateSlide(postId, slideId, {
-            headline: contentUpdates.title,
-            text: contentUpdates.body,
+            heading: contentUpdates.heading,
+            bodyText: contentUpdates.bodyText,
             visualDirective: contentUpdates.visualDirective,
           })
           .catch((err) => {
@@ -208,5 +233,17 @@ export function useProjectData(projectSlug = 'swe-notebook') {
     []
   );
 
-  return { project, collections, updateSlideContent };
+  const updatePostResources = useCallback((postId, newResources) => {
+    setPostResources((prev) => {
+      const updated = { ...prev, [postId]: newResources };
+      postResourcesRepo.set(updated);
+      return updated;
+    });
+
+    contentApi.updatePost(postId, { resources: newResources }).catch((err) => {
+      console.debug('Background post resources sync not available or offline:', err.message);
+    });
+  }, []);
+
+  return { project, collections, updateSlideContent, updatePostResources };
 }

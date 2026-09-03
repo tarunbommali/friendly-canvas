@@ -1,7 +1,7 @@
 import { Canvas, Rect, Circle, Textbox, FabricImage, Pattern } from "fabric";
-import { getPatternDataUrl } from "./patterns";
-import { buildHeadlineStyles, buildBodyStyles } from "./textAnnotations";
-import { THEME } from "../theme/theme";
+import { getPatternDataUrl } from "./patterns.js";
+import { buildHeadlineStyles, buildBodyStyles } from "./textAnnotations.js";
+import { THEME } from "../theme/theme.js";
 
 /**
  * Renders a slide onto an offscreen Fabric canvas and waits for all images
@@ -212,4 +212,57 @@ export async function renderSlideToDataUrl(slide, metadata, multiplier = 2) {
   fabric.dispose();
 
   return dataUrl;
+}
+
+/**
+ * Generates canonical export filenames in the format:
+ * collection_{collectionNumber}_post_{postNo}[_slide_{slideNumber}].{ext}
+ */
+export function getExportFilename(document, index = null, extension = "png") {
+  const metadata = document?.metadata || {};
+  let collectionNumber = metadata.collectionNumber || metadata.collectionId || null;
+  let postNo = metadata.postNo ?? metadata.postId ?? null;
+
+  // Fallback to URL if not present in metadata
+  if (!collectionNumber || !postNo) {
+    if (typeof window !== "undefined" && window.location?.pathname) {
+      const colMatch = window.location.pathname.match(/collection\/([^/]+)/);
+      const postMatch = window.location.pathname.match(/post\/([^/]+)/);
+      if (colMatch && !collectionNumber) collectionNumber = colMatch[1];
+      if (postMatch && !postNo) postNo = postMatch[1];
+    }
+  }
+
+  // Normalize collectionNumber: if it's a number/single digit, pad to 2 digits (e.g. "1" -> "01")
+  if (collectionNumber) {
+    const num = parseInt(collectionNumber, 10);
+    if (!isNaN(num) && String(collectionNumber).length <= 2) {
+      collectionNumber = String(num).padStart(2, "0");
+    }
+  } else {
+    collectionNumber = "01";
+  }
+
+  // Normalize postNo: if it's "post_t01_p01", extract the number (1)
+  if (postNo) {
+    const pMatch = String(postNo).match(/p(\d+)/i) || String(postNo).match(/_(\d+)$/);
+    if (pMatch) {
+      postNo = parseInt(pMatch[1], 10);
+    }
+  } else {
+    postNo = "1";
+  }
+
+  const baseName = `collection_${collectionNumber}_post_${postNo}`;
+
+  if (extension === "json") {
+    return `${baseName}.json`;
+  }
+
+  const totalSlides = document?.slides?.length || 1;
+  if (totalSlides > 1 && index !== null && index !== undefined) {
+    return `${baseName}_slide_${index + 1}.${extension}`;
+  }
+
+  return `${baseName}.${extension}`;
 }

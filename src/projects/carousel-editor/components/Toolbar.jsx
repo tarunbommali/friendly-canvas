@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useCarouselStore } from "../store/carouselStore";
-import { renderSlideToDataUrl } from "../canvas/exportRenderer";
+import { renderSlideToDataUrl, getExportFilename } from "../canvas/exportRenderer";
 import { routes } from "../../../shared/config/routes";
 import {
   Type,
@@ -174,7 +174,7 @@ export function Toolbar({ onOpenSettings, currentPost, mobileDrawer, onToggleMob
     const url = URL.createObjectURL(blob);
     const a = window.document.createElement("a");
     a.href = url;
-    a.download = `${document.metadata.title || "carousel"}-${Date.now()}.json`;
+    a.download = getExportFilename(document, null, "json");
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -204,16 +204,13 @@ export function Toolbar({ onOpenSettings, currentPost, mobileDrawer, onToggleMob
     const slides = document.slides;
     if (!slides || slides.length === 0) return;
 
-    const safeTitle = (document.metadata.title || "carousel")
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, "-");
-
     for (let i = 0; i < slides.length; i++) {
       try {
+        const filename = getExportFilename(document, i, "png");
         const dataUrl = await renderSlideToDataUrl(slides[i], document.metadata, 2);
         const link = window.document.createElement("a");
         link.href = dataUrl;
-        link.download = `${safeTitle}-slide-${i + 1}.png`;
+        link.download = filename;
         link.click();
         // Small gap between downloads so the browser doesn't block them
         await new Promise((r) => setTimeout(r, 100));
