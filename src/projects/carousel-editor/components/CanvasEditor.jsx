@@ -5,65 +5,32 @@ import { renderSlide } from "../canvas/renderer";
 import { attachSnapGuideEngine } from "../canvas/snapGuideEngine";
 import { getLayoutBounds } from "../theme/layoutBounds";
 
-export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
-  const containerRef = useRef(null);
-  const canvasRef = useRef(null);
-  const fabricRef = useRef(null);
-  const isRenderingRef = useRef(false);
-  const isEditingTextRef = useRef(false);
-  const snapEngineRef = useRef(null);
-
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-
-  const document = useCarouselStore((state) => state.document);
+// ──────────────────────────────────────────────
+// 1. useCanvasZoom – handles container resize & wheel zoom
+// ──────────────────────────────────────────────
+function useCanvasZoom(containerRef, canvasWidth, canvasHeight) {
   const zoom = useCarouselStore((state) => state.zoom);
   const setZoom = useCarouselStore((state) => state.setZoom);
-  const selectElement = useCarouselStore((state) => state.selectElement);
-  const updateElement = useCarouselStore((state) => state.updateElement);
-  const deleteElement = useCarouselStore((state) => state.deleteElement);
-  const showSafeAreaGuides = useCarouselStore(
-    (state) => state.showSafeAreaGuides
-  );
   const isZoomLocked = useCarouselStore((state) => state.isZoomLocked);
-  const globalLayoutConfig = useCarouselStore(
-    (state) => state.globalLayoutConfig
-  );
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
-  const activeSlide = document.slides.find(
-    (s) => s.id === document.activeSlideId
-  );
-
-  const layoutBounds = getLayoutBounds(globalLayoutConfig, document.metadata);
-  const canvasWidth = layoutBounds.canvas.width;
-  const canvasHeight = layoutBounds.canvas.height;
-
-  const isLayoutModeRef = useRef(isLayoutMode);
-  const onLayoutChangeRef = useRef(onLayoutChange);
-
-  useEffect(() => {
-    isLayoutModeRef.current = isLayoutMode;
-    onLayoutChangeRef.current = onLayoutChange;
-  }, [isLayoutMode, onLayoutChange]);
-
+  // ResizeObserver
   useEffect(() => {
     if (!containerRef.current) return;
-
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
         setContainerSize({ width, height });
       }
     });
-
     observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [containerRef]);
 
-  // ── Mouse Wheel: prevent window scroll & adjust canvas zoom if unlocked ────
+  // Wheel zoom
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-
     const handleWheel = (e) => {
       e.preventDefault();
       if (isZoomLocked) return;
@@ -72,107 +39,55 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
       const nextZoom = Math.min(Math.max(zoom * factor, 0.2), 3);
       setZoom(Number(nextZoom.toFixed(2)));
     };
-
     el.addEventListener("wheel", handleWheel, { passive: false });
     return () => el.removeEventListener("wheel", handleWheel);
-  }, [zoom, setZoom, isZoomLocked]);
+  }, [zoom, setZoom, isZoomLocked, containerRef]);
 
-  // ── Window Scroll Lock: Ensure window never scrolls out of viewport bounds ──
-  useEffect(() => {
-    const handleWindowScroll = () => {
-      if (window.scrollY !== 0 || window.scrollX !== 0) {
-        window.scrollTo(0, 0);
-      }
-    };
-    window.addEventListener("scroll", handleWindowScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleWindowScroll);
-  }, []);
-
-  // ── Keyboard: arrow-key nudge + Delete/Backspace + Enter to edit ─────────
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isEditingTextRef.current) return;
-      
-      // Don't intercept when typing in an input / textarea / contenteditable
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      ) {
-        return;
-      }
-
-      const selectedElementId = useCarouselStore.getState().selectedElementId;
-      if (!selectedElementId) return;
-
-      const currentSlide = useCarouselStore
-        .getState()
-        .document.slides.find(
-          (s) => s.id === useCarouselStore.getState().document.activeSlideId
-        );
-      const el = currentSlide?.elements.find((el) => el.id === selectedElementId);
-      if (!el) return;
-
-      const step = e.shiftKey ? 10 : 1;
-
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        updateElement(selectedElementId, { x: (el.x ?? 0) - step });
-        syncFabricPosition(selectedElementId, (el.x ?? 0) - step, el.y ?? 0);
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        updateElement(selectedElementId, { x: (el.x ?? 0) + step });
-        syncFabricPosition(selectedElementId, (el.x ?? 0) + step, el.y ?? 0);
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        updateElement(selectedElementId, { y: (el.y ?? 0) - step });
-        syncFabricPosition(selectedElementId, el.x ?? 0, (el.y ?? 0) - step);
-      } else if (e.key === "ArrowDown") {
-        e.preventDefault();
-        updateElement(selectedElementId, { y: (el.y ?? 0) + step });
-        syncFabricPosition(selectedElementId, el.x ?? 0, (el.y ?? 0) + step);
-      } else if (e.key === "Delete" || e.key === "Backspace") {
-        if (!isLayoutMode) {
-          e.preventDefault();
-          deleteElement(selectedElementId);
-        }
-      }
-    };
-
-    const syncFabricPosition = (id, x, y) => {
-      if (!fabricRef.current) return;
-      const obj = fabricRef.current
-        .getObjects()
-        .find((o) => (o.get?.("data")?.id || o.data?.id) === id);
-      if (obj) {
-        obj.set({ left: x, top: y });
-        fabricRef.current.renderAll();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [updateElement, deleteElement, isLayoutMode]);
-
+  // Compute effective scale
   const padding = 48;
   const availableWidth = Math.max(100, containerSize.width - padding);
   const availableHeight = Math.max(100, containerSize.height - padding);
-
   const fitScale = Math.min(
     availableWidth / canvasWidth,
     availableHeight / canvasHeight
   );
-
   const effectiveScale = (fitScale > 0 ? fitScale : 0.45) * zoom;
 
+  return { containerSize, effectiveScale };
+}
+
+// ──────────────────────────────────────────────
+// 2. useFabricCanvas – initializes Fabric.js and sets up events
+// ──────────────────────────────────────────────
+function useFabricCanvas(
+  canvasRef,
+  isLayoutMode,
+  onLayoutChange,
+  canvasWidth,
+  canvasHeight
+) {
+  const fabricRef = useRef(null);
+  const isEditingTextRef = useRef(false);
+  const snapEngineRef = useRef(null);
+  const isRenderingRef = useRef(false);
+  const isLayoutModeRef = useRef(isLayoutMode);
+  const onLayoutChangeRef = useRef(onLayoutChange);
+
+  // Keep refs up to date
+  useEffect(() => {
+    isLayoutModeRef.current = isLayoutMode;
+    onLayoutChangeRef.current = onLayoutChange;
+  }, [isLayoutMode, onLayoutChange]);
+
+  // Initialize Fabric canvas and attach events
   useEffect(() => {
     if (!canvasRef.current) return;
 
+    // Dispose previous canvas
     if (fabricRef.current) {
       try {
         fabricRef.current.dispose();
-      } catch {
-        // ignore
-      }
+      } catch {}
       fabricRef.current = null;
     }
 
@@ -185,6 +100,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
     fabricRef.current = canvas;
     useCarouselStore.getState().setFabricCanvas(canvas);
 
+    // --- Event handlers ---
     const onTextSelectionChanged = () => {
       const activeObj = canvas.getActiveObject();
       if (
@@ -229,7 +145,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
       }
       const id = obj?.get?.("data")?.id || obj?.data?.id;
       if (id) {
-        selectElement(id);
+        useCarouselStore.getState().selectElement(id);
         if (id !== useCarouselStore.getState().activeTextSelection?.elementId) {
           useCarouselStore.getState().setActiveTextSelection(null);
         }
@@ -250,7 +166,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
       }
       const id = obj?.get?.("data")?.id || obj?.data?.id;
       if (id) {
-        selectElement(id);
+        useCarouselStore.getState().selectElement(id);
         if (id !== useCarouselStore.getState().activeTextSelection?.elementId) {
           useCarouselStore.getState().setActiveTextSelection(null);
         }
@@ -259,7 +175,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
 
     const onSelectionCleared = () => {
       if (isRenderingRef.current) return;
-      selectElement(null);
+      useCarouselStore.getState().selectElement(null);
       useCarouselStore.getState().setActiveTextSelection(null);
     };
 
@@ -272,7 +188,6 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
         const posX = Math.round(target.left ?? 0);
         const posY = Math.round(target.top ?? 0);
         const layoutUpdates = {};
-
         if (target.data?.isHeadline) {
           layoutUpdates.headlineX = posX;
           layoutUpdates.headlineY = posY;
@@ -288,7 +203,6 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
           layoutUpdates.followX = posX;
           layoutUpdates.followY = posY;
         }
-
         if (Object.keys(layoutUpdates).length > 0) {
           useCarouselStore.getState().setGlobalLayoutConfig(layoutUpdates);
           useCarouselStore.getState().applyGlobalLayoutConfigToAllSlides();
@@ -307,7 +221,6 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
       };
 
       const type = target.type;
-
       if (type === "rect") {
         updates.width = Math.round(target.width * (target.scaleX || 1));
         updates.height = Math.round(target.height * (target.scaleY || 1));
@@ -319,12 +232,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
         updates.text = target.text;
         updates.width = Math.round(target.width * (target.scaleX || 1));
         updates.fontSize = Math.round(target.fontSize * (target.scaleY || 1));
-        target.set({
-          width: updates.width,
-          fontSize: updates.fontSize,
-          scaleX: 1,
-          scaleY: 1,
-        });
+        target.set({ width: updates.width, fontSize: updates.fontSize, scaleX: 1, scaleY: 1 });
       } else if (type === "image" || type === "Image") {
         updates.width = Math.round(target.getScaledWidth?.() ?? target.width * (target.scaleX || 1));
         updates.height = Math.round(target.getScaledHeight?.() ?? target.height * (target.scaleY || 1));
@@ -333,8 +241,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
         updates.originX = target.originX;
         updates.originY = target.originY;
       }
-
-      updateElement(id, updates);
+      useCarouselStore.getState().updateElement(id, updates);
     };
 
     const onTextChanged = (event) => {
@@ -342,18 +249,14 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
       const target = event.target;
       const id = target?.get?.("data")?.id || target?.data?.id;
       if (id && target.text !== undefined) {
-        updateElement(id, { text: target.text });
+        useCarouselStore.getState().updateElement(id, { text: target.text });
       }
     };
 
     const onDoubleClick = (event) => {
       const target = event.target;
       if (!target) return;
-      if (
-        target.type === "textbox" ||
-        target.type === "i-text" ||
-        target.type === "text"
-      ) {
+      if (target.type === "textbox" || target.type === "i-text" || target.type === "text") {
         target.enterEditing();
         if (target.hiddenTextarea) {
           target.hiddenTextarea.focus({ preventScroll: true });
@@ -383,10 +286,11 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
         if (target.styles && Object.keys(target.styles).length > 0) {
           updates.styles = JSON.parse(JSON.stringify(target.styles));
         }
-        updateElement(id, updates);
+        useCarouselStore.getState().updateElement(id, updates);
       }
     };
 
+    // Attach events
     canvas.on("mouse:dblclick", onDoubleClick);
     canvas.on("text:editing:entered", onEditingEntered);
     canvas.on("text:editing:exited", onEditingExited);
@@ -398,10 +302,12 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
     canvas.on("object:modified", onObjectModified);
     canvas.on("text:changed", onTextChanged);
 
+    // Snap guide engine
     snapEngineRef.current = attachSnapGuideEngine(canvas, {
       isEnabled: () => useCarouselStore.getState().snapToGuides,
     });
 
+    // Cleanup
     return () => {
       useCarouselStore.getState().setFabricCanvas(null);
       canvas.off("mouse:dblclick", onDoubleClick);
@@ -416,31 +322,37 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
       canvas.off("text:changed", onTextChanged);
       if (snapEngineRef.current) {
         try {
-          if (typeof snapEngineRef.current.detach === "function") {
-            snapEngineRef.current.detach();
-          } else if (typeof snapEngineRef.current.dispose === "function") {
-            snapEngineRef.current.dispose();
-          }
-        } catch {
-          // ignore
-        }
+          if (typeof snapEngineRef.current.detach === "function") snapEngineRef.current.detach();
+          else if (typeof snapEngineRef.current.dispose === "function") snapEngineRef.current.dispose();
+        } catch {}
         snapEngineRef.current = null;
       }
-      try {
-        canvas.dispose();
-      } catch {
-        // ignore
-      }
+      try { canvas.dispose(); } catch {}
       fabricRef.current = null;
     };
-    // Fabric canvas is mounted once on component attachment
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [canvasRef, canvasWidth, canvasHeight]); // only run on mount when canvas ref changes
 
+  return { fabricRef, isEditingTextRef, snapEngineRef, isRenderingRef };
+}
+
+// ──────────────────────────────────────────────
+// 3. useCanvasRenderer – re‑renders the slide when data changes
+// ──────────────────────────────────────────────
+function useCanvasRenderer(
+  fabricRef,
+  isEditingTextRef,
+  isRenderingRef,
+  activeSlide,
+  metadata,
+  canvasWidth,
+  canvasHeight,
+  globalLayoutConfig,
+  isLayoutMode
+) {
   useEffect(() => {
     if (!fabricRef.current || !activeSlide) return;
 
-    // Do not rebuild/clear canvas while the user is actively typing directly inside a text element
+    // Do not rebuild while user is editing text
     const activeObj = fabricRef.current.getActiveObject();
     if (activeObj?.isEditing || isEditingTextRef.current) {
       return;
@@ -448,14 +360,14 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
 
     isRenderingRef.current = true;
 
-    renderSlide(fabricRef.current, activeSlide, {
-      ...document.metadata,
-      width: canvasWidth,
-      height: canvasHeight,
-    }, {
-      isLayoutMode,
-    });
+    renderSlide(
+      fabricRef.current,
+      activeSlide,
+      { ...metadata, width: canvasWidth, height: canvasHeight },
+      { isLayoutMode }
+    );
 
+    // Restore selection
     const selectedId = useCarouselStore.getState().selectedElementId;
     if (selectedId) {
       const obj = fabricRef.current
@@ -472,7 +384,202 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [activeSlide, document.metadata, canvasWidth, canvasHeight, globalLayoutConfig, isLayoutMode]);
+  }, [
+    fabricRef,
+    isEditingTextRef,
+    isRenderingRef,
+    activeSlide,
+    metadata,
+    canvasWidth,
+    canvasHeight,
+    globalLayoutConfig,
+    isLayoutMode,
+  ]);
+}
+
+// ──────────────────────────────────────────────
+// 4. useCanvasKeyboard – arrow keys and delete
+// ──────────────────────────────────────────────
+function useCanvasKeyboard(fabricRef, isEditingTextRef, isLayoutMode) {
+  const updateElement = useCarouselStore((state) => state.updateElement);
+  const deleteElement = useCarouselStore((state) => state.deleteElement);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (isEditingTextRef.current) return;
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      const selectedElementId = useCarouselStore.getState().selectedElementId;
+      if (!selectedElementId) return;
+
+      const currentSlide = useCarouselStore
+        .getState()
+        .document.slides.find(
+          (s) => s.id === useCarouselStore.getState().document.activeSlideId
+        );
+      const el = currentSlide?.elements.find((el) => el.id === selectedElementId);
+      if (!el) return;
+
+      const step = e.shiftKey ? 10 : 1;
+
+      const syncFabricPosition = (id, x, y) => {
+        if (!fabricRef.current) return;
+        const obj = fabricRef.current
+          .getObjects()
+          .find((o) => (o.get?.("data")?.id || o.data?.id) === id);
+        if (obj) {
+          obj.set({ left: x, top: y });
+          fabricRef.current.renderAll();
+        }
+      };
+
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        const newX = (el.x ?? 0) - step;
+        updateElement(selectedElementId, { x: newX });
+        syncFabricPosition(selectedElementId, newX, el.y ?? 0);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        const newX = (el.x ?? 0) + step;
+        updateElement(selectedElementId, { x: newX });
+        syncFabricPosition(selectedElementId, newX, el.y ?? 0);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const newY = (el.y ?? 0) - step;
+        updateElement(selectedElementId, { y: newY });
+        syncFabricPosition(selectedElementId, el.x ?? 0, newY);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const newY = (el.y ?? 0) + step;
+        updateElement(selectedElementId, { y: newY });
+        syncFabricPosition(selectedElementId, el.x ?? 0, newY);
+      } else if (e.key === "Delete" || e.key === "Backspace") {
+        if (!isLayoutMode) {
+          e.preventDefault();
+          deleteElement(selectedElementId);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [fabricRef, isEditingTextRef, isLayoutMode, updateElement, deleteElement]);
+}
+
+// ──────────────────────────────────────────────
+// 5. SafeAreaGuides component
+// ──────────────────────────────────────────────
+function SafeAreaGuides({ layoutBounds }) {
+  return (
+    <div
+      className="absolute border-[3px] border-dashed border-blue-500/80 pointer-events-none rounded-2xl flex flex-col justify-between p-2 z-30 shadow-[0_0_15px_rgba(37,99,235,0.15)]"
+      style={{
+        top: `${layoutBounds.safeArea.top}px`,
+        left: `${layoutBounds.safeArea.left}px`,
+        width: `${layoutBounds.safeArea.width}px`,
+        height: `${layoutBounds.safeArea.height}px`,
+      }}
+    >
+      <div className="flex justify-between items-center text-xs font-mono text-blue-700 font-bold bg-blue-50/95 px-2.5 py-1 rounded-md w-max border border-blue-300 shadow-sm backdrop-blur-xs">
+        <span>
+          SAFE AREA (Top/Bottom: {layoutBounds.safeArea.top}px, L/R:{" "}
+          {layoutBounds.safeArea.left}px)
+        </span>
+      </div>
+
+      <div
+        className="absolute border-2 border-dashed border-amber-500/80 pointer-events-none rounded-xl overflow-hidden shadow-[0_0_10px_rgba(245,158,11,0.1)]"
+        style={{
+          top: `${layoutBounds.contentZone.top - layoutBounds.safeArea.top}px`,
+          left: `${layoutBounds.contentZone.left - layoutBounds.safeArea.left}px`,
+          width: `${layoutBounds.contentZone.width}px`,
+          height: `${layoutBounds.contentZone.height}px`,
+        }}
+      >
+        <span className="absolute top-1 left-2 text-[11px] font-mono font-bold text-amber-800 bg-amber-50/95 px-2 py-0.5 rounded border border-amber-300 shadow-sm backdrop-blur-xs">
+          CONTENT ZONE (Top: {layoutBounds.contentZone.top}px, Bottom:{" "}
+          {layoutBounds.contentZone.bottom}px)
+        </span>
+        <div className="w-full h-full grid grid-cols-4 gap-4 px-2 opacity-40 pointer-events-none">
+          <div className="border-x border-amber-400/60 h-full" />
+          <div className="border-x border-amber-400/60 h-full" />
+          <div className="border-x border-amber-400/60 h-full" />
+          <div className="border-x border-amber-400/60 h-full" />
+        </div>
+      </div>
+
+      <div className="flex justify-between items-center text-xs font-mono text-blue-700 font-bold bg-blue-50/95 px-2.5 py-1 rounded-md w-max self-end border border-blue-300 shadow-sm backdrop-blur-xs">
+        <span>
+          Safe Area ({layoutBounds.safeArea.width}x{layoutBounds.safeArea.height})
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────
+// 6. Main CanvasEditor component
+// ──────────────────────────────────────────────
+export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
+  const containerRef = useRef(null);
+  const canvasRef = useRef(null);
+
+  // Store state
+  const document = useCarouselStore((state) => state.document);
+  const globalLayoutConfig = useCarouselStore((state) => state.globalLayoutConfig);
+  const showSafeAreaGuides = useCarouselStore((state) => state.showSafeAreaGuides);
+
+  // Layout bounds and dimensions
+  const layoutBounds = getLayoutBounds(globalLayoutConfig, document.metadata);
+  const canvasWidth = layoutBounds.canvas.width;
+  const canvasHeight = layoutBounds.canvas.height;
+
+  const activeSlide = document.slides.find(
+    (s) => s.id === document.activeSlideId
+  );
+
+  // Hooks
+  const { effectiveScale } = useCanvasZoom(containerRef, canvasWidth, canvasHeight);
+
+  const {
+    fabricRef,
+    isEditingTextRef,
+    snapEngineRef,
+    isRenderingRef,
+  } = useFabricCanvas(
+    canvasRef,
+    isLayoutMode,
+    onLayoutChange,
+    canvasWidth,
+    canvasHeight
+  );
+
+  useCanvasRenderer(
+    fabricRef,
+    isEditingTextRef,
+    isRenderingRef,
+    activeSlide,
+    document.metadata,
+    canvasWidth,
+    canvasHeight,
+    globalLayoutConfig,
+    isLayoutMode
+  );
+
+  useCanvasKeyboard(fabricRef, isEditingTextRef, isLayoutMode);
+
+  // Global scroll lock
+  useEffect(() => {
+    const handleWindowScroll = () => {
+      if (window.scrollY !== 0 || window.scrollX !== 0) {
+        window.scrollTo(0, 0);
+      }
+    };
+    window.addEventListener("scroll", handleWindowScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleWindowScroll);
+  }, []);
 
   return (
     <div
@@ -490,55 +597,7 @@ export function CanvasEditor({ isLayoutMode = false, onLayoutChange }) {
       >
         <canvas ref={canvasRef} />
 
-        {showSafeAreaGuides && (
-          <div
-            className="absolute border-[3px] border-dashed border-blue-500/80 pointer-events-none rounded-2xl flex flex-col justify-between p-2 z-30 shadow-[0_0_15px_rgba(37,99,235,0.15)]"
-            style={{
-              top: `${layoutBounds.safeArea.top}px`,
-              left: `${layoutBounds.safeArea.left}px`,
-              width: `${layoutBounds.safeArea.width}px`,
-              height: `${layoutBounds.safeArea.height}px`,
-            }}
-          >
-            <div className="flex justify-between items-center text-xs font-mono text-blue-700 font-bold bg-blue-50/95 px-2.5 py-1 rounded-md w-max border border-blue-300 shadow-sm backdrop-blur-xs">
-              <span>
-                SAFE AREA (Top/Bottom: {layoutBounds.safeArea.top}px, L/R:{" "}
-                {layoutBounds.safeArea.left}px)
-              </span>
-            </div>
-
-            {/* Inner Content Zone Boundary with 4-Column Grid Guides */}
-            <div
-              className="absolute border-2 border-dashed border-amber-500/80 pointer-events-none rounded-xl overflow-hidden shadow-[0_0_10px_rgba(245,158,11,0.1)]"
-              style={{
-                top: `${layoutBounds.contentZone.top - layoutBounds.safeArea.top}px`,
-                left: `${layoutBounds.contentZone.left - layoutBounds.safeArea.left}px`,
-                width: `${layoutBounds.contentZone.width}px`,
-                height: `${layoutBounds.contentZone.height}px`,
-              }}
-            >
-              <span className="absolute top-1 left-2 text-[11px] font-mono font-bold text-amber-800 bg-amber-50/95 px-2 py-0.5 rounded border border-amber-300 shadow-sm backdrop-blur-xs">
-                CONTENT ZONE (Top: {layoutBounds.contentZone.top}px, Bottom:{" "}
-                {layoutBounds.contentZone.bottom}px)
-              </span>
-
-              {/* 4 Column Grid Overlay Lines (Clean Outlines, No Color Fill Obscuring Text) */}
-              <div className="w-full h-full grid grid-cols-4 gap-4 px-2 opacity-40 pointer-events-none">
-                <div className="border-x border-amber-400/60 h-full" />
-                <div className="border-x border-amber-400/60 h-full" />
-                <div className="border-x border-amber-400/60 h-full" />
-                <div className="border-x border-amber-400/60 h-full" />
-              </div>
-            </div>
-
-            <div className="flex justify-between items-center text-xs font-mono text-blue-700 font-bold bg-blue-50/95 px-2.5 py-1 rounded-md w-max self-end border border-blue-300 shadow-sm backdrop-blur-xs">
-              <span>
-                Safe Area ({layoutBounds.safeArea.width}x
-                {layoutBounds.safeArea.height})
-              </span>
-            </div>
-          </div>
-        )}
+        {showSafeAreaGuides && <SafeAreaGuides layoutBounds={layoutBounds} />}
       </div>
     </div>
   );
